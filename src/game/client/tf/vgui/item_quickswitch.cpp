@@ -614,6 +614,8 @@ void CItemQuickSwitchPanel::UpdateEquippedItem( void )
 	{
 		m_pEquippedLabel->SetVisible( bEquipped );
 	}
+
+	m_bLoadoutHasChanged = true;
 }
 
 //-----------------------------------------------------------------------------

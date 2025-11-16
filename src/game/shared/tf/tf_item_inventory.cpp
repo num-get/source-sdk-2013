@@ -49,6 +49,7 @@
 using namespace GCSDK;
 
 #define LOCAL_LOADOUT_FILE		"cfg/local_loadout.txt"
+#define LOCAL_LOADOUT_RESERVE   65536
 
 #ifdef CLIENT_DLL
 //-----------------------------------------------------------------------------
@@ -297,7 +298,7 @@ bool CTFInventoryManager::EquipItemInLoadout( int iClass, int iSlot, itemid_t iI
 		return m_LocalInventory.ClearLoadoutSlot( iClass, iSlot );
 
 	CEconItemView *pItem = m_LocalInventory.GetInventoryItemByItemID( iItemID );
-	if (iItemID < 65536)
+	if (iItemID < LOCAL_LOADOUT_RESERVE)
 	{
 		int count = TFInventoryManager()->GetModItemCount();
 		for (int i = 0; i < count; i++)
@@ -926,6 +927,7 @@ CTFPlayerInventory::CTFPlayerInventory()
 {
 	m_aInventoryItems.SetLessContext( this );
 #ifdef CLIENT_DLL
+	m_bTauntLoaded = true;
 	for ( int i = 0; i < TF_TEAM_COUNT; ++i ) 
 		m_CachedBaseTextureLowRes[ i ].SetLessFunc( DefLessFunc( itemid_t ) );
 
@@ -1043,7 +1045,7 @@ void CTFPlayerInventory::LoadLocalLoadout()
 
 					CEconItemView *pItem = GetInventoryItemByItemID(uItemId);
 
-					if (uItemId < 65536)
+					if (uItemId < LOCAL_LOADOUT_RESERVE)
 					{
 						int count = TFInventoryManager()->GetModItemCount();
 						for (int i = 0; i < count; i++)
@@ -1068,6 +1070,88 @@ void CTFPlayerInventory::LoadLocalLoadout()
 
 	//GTFGCClientSystem()->LocalInventoryChanged();
 	TFInventoryManager()->QueueGCInventoryChangeNotification();
+}
+
+void CTFPlayerInventory::LoadLocalLoadoutNoNotification()
+{
+	if (GetOwner() != steamapicontext->SteamUser()->GetSteamID())
+		return;
+
+	if (!g_pFullFileSystem) {
+		return;
+	}
+
+	KeyValues *pLoadoutKV = new KeyValues("local_loadout");
+	if (!pLoadoutKV->LoadFromFile(g_pFullFileSystem, LOCAL_LOADOUT_FILE, "MOD"))
+	{
+		SaveLocalLoadout( true, true );
+
+		if ( !pLoadoutKV->LoadFromFile( g_pFullFileSystem, LOCAL_LOADOUT_FILE, "MOD" ) )
+		{
+			Warning( "Unable to parse local_loadout.txt into keyvalues.\n" );
+			return;
+		}
+	}
+
+	KeyValues *pActivePresetKV = pLoadoutKV->FindKey("active_preset");
+	if (pActivePresetKV) 
+	{
+		for (int iClass = 1; iClass < TF_CLASS_COUNT_ALL; ++iClass)
+		{
+			const char* pszClassName = g_aPlayerClassNames_NonLocalized[iClass];
+			int activePreset = pActivePresetKV->GetInt(pszClassName);
+			m_ActivePreset[iClass] = activePreset;
+		}
+	}
+
+	int numPresets = static_cast<int>(GetItemSchema()->GetNumAllowedItemPresets());
+	for (int iPreset = 0; iPreset < numPresets; ++iPreset)
+	{
+		char szPreset[256];
+		V_snprintf(szPreset, sizeof(szPreset), "%i", iPreset);
+		KeyValues* pPresetKV = pLoadoutKV->FindKey(szPreset);
+		if (!pPresetKV)
+			continue;
+
+		FOR_EACH_TRUE_SUBKEY(pPresetKV, pClassKey)
+		{
+			const char *pszClassName = pClassKey->GetName();
+			const int iClass = GetClassIndexFromString(pszClassName, TF_CLASS_COUNT_ALL);
+
+			FOR_EACH_SUBKEY(pClassKey, pLoadoutEntry)
+			{
+				const int iSlot = V_atoi(pLoadoutEntry->GetName());
+				const itemid_t uItemId = pLoadoutEntry->GetUint64();
+
+				m_PresetItems[iPreset][iClass][iSlot] = uItemId;
+
+				if (iPreset == m_ActivePreset[iClass]) {
+					m_LoadoutItems[iClass][iSlot] = uItemId;
+
+					CEconItemView *pItem = GetInventoryItemByItemID(uItemId);
+
+					if (uItemId < LOCAL_LOADOUT_RESERVE)
+					{
+						int count = TFInventoryManager()->GetModItemCount();
+						for (int i = 0; i < count; i++)
+						{
+							CEconItemView *pTempItem = TFInventoryManager()->GetModItem(i);
+							if ( pTempItem->GetItemID() == uItemId )
+							{
+								pItem = pTempItem;
+							}
+						}
+					}
+
+					if (pItem) {
+						pItem->GetSOCData()->Equip(iClass, iSlot);
+					}
+				}
+			}
+		}
+	}
+
+	pLoadoutKV->deleteThis();
 }
 
 //-----------------------------------------------------------------------------
@@ -1141,7 +1225,7 @@ void CTFPlayerInventory::EquipLocal(uint64 ulItemID, equipped_class_t unClass, e
 
 	// Unequip whatever was previously in the slot.
 	itemid_t ulPreviousItem = m_LoadoutItems[unClass][unSlot];
-	if (ulPreviousItem != 0 && ulPreviousItem < 65536)
+	if (ulPreviousItem != 0 && ulPreviousItem < LOCAL_LOADOUT_RESERVE)
 	{
 		int count = TFInventoryManager()->GetModItemCount();
 		for (int i = 0; i < count; i++)
@@ -1162,7 +1246,7 @@ void CTFPlayerInventory::EquipLocal(uint64 ulItemID, equipped_class_t unClass, e
 	}
 
 	// Equip the new item and add it to our loadout.
-	if (ulItemID < 65536)
+	if (ulItemID < LOCAL_LOADOUT_RESERVE)
 	{
 		int count = TFInventoryManager()->GetModItemCount();
 		CEconItemView* pItem;
@@ -1191,6 +1275,12 @@ void CTFPlayerInventory::EquipLocal(uint64 ulItemID, equipped_class_t unClass, e
 	m_PresetItems[activePreset][unClass][unSlot] = ulItemID;
 
 	//GTFGCClientSystem()->LocalInventoryChanged();
+	//TFInventoryManager()->QueueGCInventoryChangeNotification();
+	C_TFPlayer* pPlayer = C_TFPlayer::GetLocalTFPlayer();
+	if ( pPlayer )
+	{
+		pPlayer->Inventory()->ReloadTaunt();
+	}
 #endif
 }
 
@@ -1568,6 +1658,14 @@ CEconItemView *CTFPlayerInventory::GetItemInLoadout( int iClass, int iSlot )
 	if ( iSlot < 0 || iSlot >= CLASS_LOADOUT_POSITION_COUNT )
 		return NULL;
 
+#ifdef CLIENT_DLL
+	if ( !m_bTauntLoaded )
+	{
+		m_bTauntLoaded = true;
+		LoadLocalLoadoutNoNotification();
+	}
+#endif
+
 	if ( iClass == GEconItemSchema().GetAccountIndex() )
 	{
 		return GetInventoryItemByItemID( m_AccountLoadoutItems[ iSlot ] );
@@ -1587,7 +1685,7 @@ CEconItemView *CTFPlayerInventory::GetItemInLoadout( int iClass, int iSlot )
 			if ( pItem && AreSlotsConsideredIdentical( pItem->GetStaticData()->GetEquipType(), pItem->GetStaticData()->GetLoadoutSlot( iClass ), iSlot ) )
 				return pItem;
 
-			if (m_LoadoutItems[iClass][iSlot] < 65536)
+			if (m_LoadoutItems[iClass][iSlot] < LOCAL_LOADOUT_RESERVE)
 			{
 				int count = TFInventoryManager()->GetModItemCount();
 				for (int i = 0; i < count; i++)
@@ -1624,21 +1722,6 @@ CEconItemView *CTFPlayerInventory::GetCacheServerItemInLoadout( int iClass, int 
 		// we need to validate their position on the server when we retrieve them.
 		if ( pItem && AreSlotsConsideredIdentical( pItem->GetStaticData()->GetEquipType(), pItem->GetStaticData()->GetLoadoutSlot( iClass ), iSlot ) )
 			return pItem;
-
-		if (m_CachedServerLoadoutItems[iClass][iSlot] < 65536)
-		{
-			int count = TFInventoryManager()->GetModItemCount();
-			for (int i = 0; i < count; i++)
-			{
-				CEconItemView* pItem = TFInventoryManager()->GetModItem(i);
-				if (pItem && pItem->GetItemDefIndex() == m_CachedServerLoadoutItems[iClass][iSlot])
-				{
-					if (pItem && AreSlotsConsideredIdentical(pItem->GetStaticData()->GetEquipType(), pItem->GetStaticData()->GetLoadoutSlot(iClass), iSlot))
-						return pItem;
-				}
-			}
-			return TFInventoryManager()->AddModItem( m_CachedServerLoadoutItems[iClass][iSlot] );
-		}
 	}
 
 	return TFInventoryManager()->GetBaseItemForClass( iClass, iSlot );
