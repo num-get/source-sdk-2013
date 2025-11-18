@@ -228,7 +228,9 @@ public:
 	// Specific queries about this player.
 	bool						InFirstPersonView();
 	bool						ShouldDrawThisPlayer();
+#ifdef TF_CLIENT_DLL
 	bool						ShouldDrawFirstPersonLegs();
+#endif
 
 	// Called by the view model if its rendering is being overridden.
 	virtual bool				ViewModel_IsTransparent( void );

@@ -198,10 +198,8 @@ void CTFWearableDemoShield::ShieldBash( CTFPlayer *pPlayer, float flCurrentCharg
 		trace.m_pEnt->DispatchTraceAttack( info, dir, &trace );
 		ApplyMultiDamage();
 
-		pOwner->m_Shared.SetShieldImpact( true );
-
 		// Calculate charge crit if we did any bash damage
-		pOwner->m_Shared.CalcChargeCrit();
+		pOwner->m_Shared.CalcChargeCrit( !ff_new_shield_charge.GetBool() );
 	}
 
 	UTIL_ScreenShake( pOwner->WorldSpaceCenter(), 25.0, 150.0, 1.0, 750, SHAKE_START );

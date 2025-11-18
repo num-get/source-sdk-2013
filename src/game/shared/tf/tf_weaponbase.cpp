@@ -48,6 +48,7 @@
 // Client specific.
 #else
 #include "c_tf_player.h"
+#include "c_baseviewmodel.h"
 #include "tf_viewmodel.h"
 #include "hud_crosshair.h"
 #include "c_tf_playerresource.h"
@@ -91,7 +92,6 @@ extern ConVar tf_weapon_criticals_bucket_bottom;
 
 #ifdef CLIENT_DLL
 extern ConVar cl_crosshair_file;
-extern ConVar cl_flipviewmodels;
 #endif
 
 extern ConVar ff_new_weapon_switch_speed;
@@ -2098,9 +2098,9 @@ void CTFWeaponBase::IncrementAmmo( void )
 		}
 		else if ( !CheckReloadMisfire() ) 
 		{
-			if ( pPlayer && pPlayer->GetAmmoCount( m_iPrimaryAmmoType ) > 0 )
+			if ( pPlayer && pPlayer->GetAmmoCount( m_iPrimaryAmmoType ) > 0 && ( m_iClip1 < GetMaxClip1() ) )
 			{
-				m_iClip1 = MIN( ( m_iClip1 + 1 ), GetMaxClip1() );
+				m_iClip1++;
 				pPlayer->RemoveAmmo( 1, m_iPrimaryAmmoType );
 			}
 		}
@@ -4992,6 +4992,7 @@ void CTFWeaponBase::ApplyOnHitAttributes( CBaseEntity *pVictimBaseEntity, CTFPla
 		if ( pVictim && 
 			 pVictim->IsPlayerClass( TF_CLASS_SPY ) && 
 			 pVictim->m_Shared.InCond( TF_COND_DISGUISED ) && 
+			 ( pVictim->m_Shared.GetDisguiseTeam() != pVictim->GetTeamNumber() ) &&
 			 !( pVictim->m_Shared.IsStealthed() || pVictim->m_Shared.InCond( TF_COND_STEALTHED_BLINK ) ) )
 		{
 			flPercentage = 0.0f;
@@ -5053,7 +5054,7 @@ void CTFWeaponBase::ApplyOnHitAttributes( CBaseEntity *pVictimBaseEntity, CTFPla
 		}
 
 		// On hit attributes don't work when you shoot disguised spies
-		if ( pVictim->m_Shared.InCond( TF_COND_DISGUISED ) )
+		if ( pVictim->m_Shared.InCond( TF_COND_DISGUISED ) && ( pVictim->m_Shared.GetDisguiseTeam() != pVictim->GetTeamNumber() ) )
 			return;
 	}
 
@@ -5633,7 +5634,7 @@ bool CTFWeaponBase::IsViewModelFlipped( void )
 		return true;
 	}
 #else
-	if ( m_bFlipViewModel != cl_flipviewmodels.GetBool() )
+	if ( m_bFlipViewModel != TeamFortress_ShouldFlipClientViewModel() )
 	{
 		return true;
 	}
@@ -6814,7 +6815,7 @@ void CTFWeaponBase::AddStatTrakModel( CEconItemView *pItem, int nStatTrakType, A
 				pStatTrakEnt->m_nSkin = nSkin;
 				m_viewmodelStatTrakAddon = pStatTrakEnt;
 				
-				if ( cl_flipviewmodels.GetBool() )
+				if ( TeamFortress_ShouldFlipClientViewModel() )
 				{
 					pStatTrakEnt->SetBodygroup( 1, 1 ); // use a special mirror-image stattrak module that appears correct for lefties
 					flScale *= -1.0f;					// flip scale

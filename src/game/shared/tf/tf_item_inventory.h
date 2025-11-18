@@ -74,9 +74,11 @@ public:
 	virtual ITexture	*GetWeaponSkinBaseLowRes( itemid_t nItemId, int iTeam ) const;
 
 	void				LoadLocalLoadout();
+	void				LoadLocalLoadoutNoNotification();
 	void				SaveLocalLoadout( bool bReset=false, bool bDefaultToGC=false );
 	bool				EquipLocalPreset(equipped_class_t unClass, equipped_preset_t unPreset);
 	int					GetActiveLocalPreset(equipped_class_t unClass) { return m_ActivePreset[unClass]; }
+	void				ReloadTaunt() { m_bTauntLoaded = false; };
 
 #endif
 	void				EquipLocal(uint64 ulItemID, equipped_class_t unClass, equipped_slot_t unSlot);
@@ -141,6 +143,7 @@ protected:
 
 	int				m_ActivePreset[TF_CLASS_COUNT];
 	itemid_t		m_PresetItems[CEconItemSchema::kMaxItemPresetCount][TF_CLASS_COUNT][CLASS_LOADOUT_POSITION_COUNT];
+	bool			m_bTauntLoaded;
 #ifdef CLIENT_DLL
 	itemid_t		m_RealTFLoadoutItems[ TF_CLASS_COUNT ][ CLASS_LOADOUT_POSITION_COUNT ];
 #endif

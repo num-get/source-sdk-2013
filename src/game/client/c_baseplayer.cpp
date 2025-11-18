@@ -41,7 +41,6 @@
 #include "fx.h"
 #include "dt_utlvector_recv.h"
 #include "cam_thirdperson.h"
-#include "viewrender.h"
 #if defined( REPLAY_ENABLED )
 #include "replay/replaycamera.h"
 #include "replay/ireplaysystem.h"
@@ -53,6 +52,7 @@
 
 #ifdef TF_CLIENT_DLL
 #include "tf_gamerules.h"
+#include "viewrender.h"
 #endif
 
 #if defined USES_ECON_ITEMS
@@ -117,7 +117,10 @@ ConVar	spec_freeze_distance_max( "spec_freeze_distance_max", "200", FCVAR_CHEAT,
 #endif
 
 static ConVar	cl_first_person_uses_world_model ( "cl_first_person_uses_world_model", "0", FCVAR_NONE, "Causes the third person model to be drawn instead of the view model" );
+
+#ifdef TF_CLIENT_DLL
 static ConVar	ff_use_fp_legs("ff_use_fp_legs", "0", FCVAR_ARCHIVE, "Displays the player's legs when in firstperson mode.");
+#endif
 
 ConVar demo_fov_override( "demo_fov_override", "0", FCVAR_CLIENTDLL | FCVAR_DONTRECORD, "If nonzero, this value will be used to override FOV during demo playback." );
 
@@ -420,6 +423,9 @@ LINK_ENTITY_TO_CLASS( player, C_BasePlayer );
 C_BasePlayer::C_BasePlayer() : m_iv_vecViewOffset( "C_BasePlayer::m_iv_vecViewOffset" )
 {
 	AddVar( &m_vecViewOffset, &m_iv_vecViewOffset, LATCH_SIMULATION_VAR );
+
+	AddVar( &m_Local.m_vecPunchAngle, &m_Local.m_iv_vecPunchAngle, LATCH_SIMULATION_VAR );
+	AddVar( &m_Local.m_vecPunchAngleVel, &m_Local.m_iv_vecPunchAngleVel, LATCH_SIMULATION_VAR );
 	
 #ifdef _DEBUG																
 	m_vecLadderNormal.Init();
@@ -2002,12 +2008,16 @@ bool C_BasePlayer::ShouldDrawThisPlayer()
 		return true;
 	}
 
+#ifdef TF_CLIENT_DLL
 	if ( CurrentViewID() == VIEW_REFRACTION || CurrentViewID() == VIEW_NONE )
 	{
 		return false;
 	}
 
 	if ( !UseVR() && ( cl_first_person_uses_world_model.GetBool() || ff_use_fp_legs.GetBool() ) )
+#else
+	if ( !UseVR() && cl_first_person_uses_world_model.GetBool() )
+#endif
 	{
 		return true;
 	}
@@ -2022,6 +2032,7 @@ bool C_BasePlayer::ShouldDrawThisPlayer()
 	return false;
 }
 
+#ifdef TF_CLIENT_DLL
 //-----------------------------------------------------------------------------
 // Purpose: Accessor used for determing showing our FP legs.
 //          This should display when the player is in firstperson and not showing another model already.
@@ -2033,6 +2044,7 @@ bool C_BasePlayer::ShouldDrawFirstPersonLegs()
 	
 	return false;
 }
+#endif
 
 
 //-----------------------------------------------------------------------------
@@ -3008,12 +3020,22 @@ void C_BasePlayer::BuildFirstPersonMeathookTransformations( CStudioHdr *hdr, Vec
 		Vector vForward, vRight, vUp;
 		AngleVectors( MainViewAngles(), &vForward, &vRight, &vUp );
 
-		float fUp = cl_meathook_neck_pivot_ingame_up.GetFloat();
 #ifdef TF_CLIENT_DLL
+		float fUp = cl_meathook_neck_pivot_ingame_up.GetFloat();
+		float fFwd = cl_meathook_neck_pivot_ingame_fwd.GetFloat();
 		if ( ff_use_fp_legs.GetInt() == 1 && ShouldDrawFirstPersonLegs() )
 		{
 			C_TFPlayer *pLocalTFPlayer = C_TFPlayer::GetLocalTFPlayer();
 			CTFWeaponBase *pWeapon = pLocalTFPlayer->GetActiveTFWeapon();
+			if ( pLocalTFPlayer->GetFlags() & ( FL_ONGROUND ) && pLocalTFPlayer->GetFlags() & ( FL_DUCKING ) )
+			{
+				if ( !( pLocalTFPlayer->IsPlayerClass( TF_CLASS_ENGINEER ) && pWeapon && pWeapon->GetWeaponID() != TF_WEAPON_BUILDER ) )
+					fFwd += 10.f;
+
+				if ( pLocalTFPlayer->IsPlayerClass( TF_CLASS_SPY ) || ( pLocalTFPlayer->IsPlayerClass( TF_CLASS_ENGINEER ) &&
+					pWeapon && pWeapon->GetWeaponID() != TF_WEAPON_BUILDER ) )
+					fFwd += 4.f;
+			}
 			if ( pLocalTFPlayer->IsPlayerClass( TF_CLASS_HEAVYWEAPONS ) && pWeapon && pWeapon->GetWeaponID() == TF_WEAPON_MINIGUN )
 			{
 				fUp += 18.f;
@@ -3028,8 +3050,11 @@ void C_BasePlayer::BuildFirstPersonMeathookTransformations( CStudioHdr *hdr, Vec
 				fUp += 7.f;
 			}
 		}
+
+		vRealPivotPoint = MainViewOrigin() - ( vUp * fUp ) - ( vForward * fFwd );
+#else
+		vRealPivotPoint = MainViewOrigin() - ( vUp * cl_meathook_neck_pivot_ingame_up.GetFloat() ) - ( vForward * cl_meathook_neck_pivot_ingame_fwd.GetFloat() );
 #endif
-		vRealPivotPoint = MainViewOrigin() - ( vUp * fUp ) - ( vForward * cl_meathook_neck_pivot_ingame_fwd.GetFloat() );		
 	}
 
 	Vector vDeltaToAdd = vRealPivotPoint - vHeadTransformTranslation;

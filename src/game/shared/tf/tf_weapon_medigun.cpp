@@ -462,6 +462,7 @@ bool CWeaponMedigun::Holster( CBaseCombatWeapon *pSwitchingTo )
 //-----------------------------------------------------------------------------
 void CWeaponMedigun::UpdateOnRemove( void )
 {
+	m_bHealing = false;
 	RemoveHealingTarget( true );
 	m_bAttacking = false;
 	m_bChargeRelease = false;
@@ -1361,7 +1362,7 @@ bool CWeaponMedigun::FindAndHealTargets( void )
 				}
 
 #ifdef CLIENT_DLL
-					if ( GetMedigunType() == MEDIGUN_RESIST )
+					if ( GetMedigunType() == MEDIGUN_RESIST && prediction->IsFirstTimePredicted() )
 					{
 						// Play a sound when we tick over to a new charge level
 						int nChargeLevel = int(floor(flNewLevel/flMinChargeAmount));

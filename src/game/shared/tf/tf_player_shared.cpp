@@ -36,6 +36,7 @@
 
 // Client specific.
 #ifdef CLIENT_DLL
+#include "c_baseviewmodel.h"
 #include "c_tf_player.h"
 #include "c_te_effect_dispatch.h"
 #include "c_tf_fx.h"
@@ -379,7 +380,6 @@ BEGIN_RECV_TABLE_NOBASE( CTFPlayerShared, DT_TFPlayerShared )
 	RecvPropInt( RECVINFO( m_iItemFindBonus ) ),
 	RecvPropBool( RECVINFO( m_bShieldEquipped ) ),
 	RecvPropBool( RECVINFO( m_bParachuteEquipped ) ),
-	RecvPropBool( RECVINFO( m_bImpactDamage ) ),
 	RecvPropInt( RECVINFO( m_iNextMeleeCrit ) ),
 	RecvPropInt( RECVINFO( m_iDecapitations ) ),
 	RecvPropInt( RECVINFO( m_iRevengeCrits ) ),
@@ -555,7 +555,6 @@ BEGIN_SEND_TABLE_NOBASE( CTFPlayerShared, DT_TFPlayerShared )
 	SendPropInt( SENDINFO( m_iItemFindBonus ) ),
 	SendPropBool( SENDINFO( m_bShieldEquipped ) ),
 	SendPropBool( SENDINFO( m_bParachuteEquipped ) ),
-	SendPropBool( SENDINFO( m_bImpactDamage ) ),
 	SendPropInt( SENDINFO( m_iNextMeleeCrit ) ),
 	SendPropInt( SENDINFO( m_iDecapitations ), 8, SPROP_UNSIGNED ),
 	SendPropInt( SENDINFO( m_iRevengeCrits ), 7, SPROP_UNSIGNED ),
@@ -836,7 +835,6 @@ CTFPlayerShared::CTFPlayerShared()
 	m_iNextMeleeCrit = 0;
 
 	m_bParachuteEquipped = false;
-	m_bImpactDamage = false;
 
 	m_iDecapitations = m_iOldDecapitations = 0;
 	m_iOldKillStreak = 0;
@@ -946,7 +944,6 @@ void CTFPlayerShared::Init( CTFPlayer *pPlayer )
 	m_iNextMeleeCrit = 0;
 
 	m_bParachuteEquipped = false;
-	m_bImpactDamage = false;
 
 	m_iDecapitations = m_iOldDecapitations = 0;
 	m_iOldKillStreak = 0;
@@ -4778,14 +4775,8 @@ static void RemoveResistParticle( CTFPlayer* pPlayer, medigun_resist_types_t nRe
 	if ( bKeep )
 		return;
 	
-	if ( pPlayer->m_Shared.GetDisplayedTeam() == TF_TEAM_RED )
-	{
-		pPlayer->RemoveOverheadEffect( s_pszRedResistOverheadEffectName[ nResistType ], true );
-	}
-	else
-	{
-		pPlayer->RemoveOverheadEffect( s_pszBlueResistOverheadEffectName[ nResistType ], true );
-	}
+	pPlayer->RemoveOverheadEffect( s_pszRedResistOverheadEffectName[ nResistType ], true );
+	pPlayer->RemoveOverheadEffect( s_pszBlueResistOverheadEffectName[ nResistType ], true );
 }
 
 //-----------------------------------------------------------------------------
@@ -6087,7 +6078,8 @@ void CTFPlayerShared::EndCharge()
 			pWearableShield->ShieldBash( m_pOuter, flMeterAtImpact );
 		}
 
-		CalcChargeCrit();
+		if ( GetNextMeleeCrit() == MELEE_NOCRIT || ff_new_shield_charge.GetBool() )
+			CalcChargeCrit();
 
 		// Removing the condition here would cause issues with prediction, so we set the
 		// duration to zero so that it will be removed during the next condition think.
@@ -6134,20 +6126,12 @@ void CTFPlayerShared::CalcChargeCrit( bool bForceCrit )
 	int iNewTideTurner = 1;
 	CTFWearableDemoShield *pWearableShield = GetEquippedDemoShield( m_pOuter );
 	CALL_ATTRIB_HOOK_INT_ON_OTHER( pWearableShield, iNewTideTurner, obsolete );
-	if ( IsShieldImpact() && !ff_new_shield_charge.GetBool() )
+	if ( iDemoChargeDamagePenalty && iNewTideTurner )
 	{
-		if ( iDemoChargeDamagePenalty && iNewTideTurner )
+		if ( bForceCrit || GetDemomanChargeMeter() <= 75 )
 		{
 			SetNextMeleeCrit( MELEE_MINICRIT );
 		}
-		else
-		{
-			SetNextMeleeCrit( MELEE_CRIT );
-		}
-	}
-	else if ( iDemoChargeDamagePenalty && GetDemomanChargeMeter() <= 75 && iNewTideTurner )
-	{
-		SetNextMeleeCrit( MELEE_MINICRIT );
 	}
 	else if ( GetDemomanChargeMeter() <= 40 || bForceCrit)
 	{
@@ -6242,7 +6226,6 @@ void CTFPlayer::RemoveMeleeCrit( void )
 {
 	m_Shared.SetNextMeleeCrit( MELEE_NOCRIT );
 	m_Shared.m_bPostShieldCharge = false;
-	m_Shared.SetShieldImpact( false );
 	// Remove crit boost right away.  DemoShieldChargeThink depends on m_bPostShieldCharge being true
 	// to attempt to remove crits (which we just cleared) so clear crits here as well.
 	if ( m_Shared.InCond( TF_COND_CRITBOOSTED_DEMO_CHARGE ) )
@@ -10124,6 +10107,14 @@ void CTFPlayer::GetHorriblyHackedRailgunPosition( const Vector& vStart, Vector *
 	Vector vForward, vRight, vUp;
 	AngleVectors( EyeAngles(), &vForward, &vRight, &vUp );
 
+#ifdef CLIENT_DLL
+	// Flips the horizontal position.
+	if ( TeamFortress_ShouldFlipClientViewModel() )
+	{
+		vRight *= -1;
+	}
+#endif // CLIENT_DLL
+
 	*out_pvStartPos = vStart
 					+ (vForward * 60.9f)
 					+ (vRight * 13.1f)
@@ -12439,6 +12430,9 @@ bool CTFPlayer::CanPickupBuilding( CBaseObject *pPickupObject )
 
 	// If we were recently carried & placed we may still be upgrading up to our old level.
 	if ( pPickupObject->GetUpgradeLevel() != pPickupObject->GetHighestUpgradeLevel() )
+		return false;
+
+	if ( !IsAlive() )
 		return false;
 
 	if ( m_Shared.IsCarryingObject() )

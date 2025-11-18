@@ -87,7 +87,11 @@ void TracerCallback( const CEffectData &data )
 	{
 		C_BasePlayer *pPlayer = dynamic_cast<C_BasePlayer*>( data.GetEntity() );
 
+#ifdef TF_CLIENT_DLL
+		if ( pPlayer && ( !pPlayer->ShouldDrawThisPlayer() || pPlayer->ShouldDrawFirstPersonLegs() ) )
+#else
 		if ( pPlayer && !pPlayer->ShouldDrawThisPlayer() )
+#endif
 			return;
 	}
 
@@ -141,7 +145,11 @@ void ParticleTracerCallback( const CEffectData &data )
 	{
 		C_BasePlayer *pPlayer = dynamic_cast<C_BasePlayer*>( data.GetEntity() );
 
+#ifdef TF_CLIENT_DLL
+		if ( pPlayer && ( !pPlayer->ShouldDrawThisPlayer() || pPlayer->ShouldDrawFirstPersonLegs() ) )
+#else
 		if ( pPlayer && !pPlayer->ShouldDrawThisPlayer() )
+#endif
 			return;
 	}
 

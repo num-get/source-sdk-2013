@@ -641,9 +641,6 @@ public:
 	void SetParachuteEquipped( bool bVal ) { m_bParachuteEquipped = bVal; }
 	bool IsParachuteEquipped() const	{ return m_bParachuteEquipped; }
 
-	void SetShieldImpact( bool bVal ) { m_bImpactDamage = bVal; }
-	bool IsShieldImpact() const	{ return m_bImpactDamage; }
-
 	void SetNextMeleeCrit( int iVal )	{ m_iNextMeleeCrit = iVal; }
 	int	GetNextMeleeCrit( void ) const	{ return m_iNextMeleeCrit; }
 
@@ -1157,8 +1154,6 @@ private:
 	CNetworkVar( bool, m_bShieldEquipped );
 
 	CNetworkVar( bool, m_bParachuteEquipped );
-
-	CNetworkVar( bool, m_bImpactDamage );
 
 	CNetworkVar( int, m_iDecapitations );
 	int m_iOldDecapitations;

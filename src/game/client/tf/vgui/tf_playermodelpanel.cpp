@@ -34,6 +34,8 @@
 
 DECLARE_BUILD_FACTORY( CTFPlayerModelPanel );
 
+#define SCENE_LERP_TIME 0.1f
+
 char g_szSceneTmpName[256];
 
 static bool IsTauntItem( GameItemDefinition_t *pItemDef, const int iTeam, const int iClass, const char **ppSequence = NULL, const char **ppRequiredItem = NULL, const char **ppScene = NULL )
@@ -466,7 +468,7 @@ CChoreoScene *LoadSceneForModel( const char *filename, IChoreoEventCallback *pCa
 
 		if ( bSetEndTime )
 		{
-			*flSceneEndTime += 0.1f; // give time for lerp to idle pose
+			*flSceneEndTime += SCENE_LERP_TIME; // give time for lerp to idle pose
 		}
 	}
 
@@ -2327,7 +2329,7 @@ void CTFPlayerModelPanel::SetupFlexWeights( void )
 			// if we have an end time, we can give some time to lerp to idle.
 			if ( m_flSceneEndTime > FLT_EPSILON )
 			{
-				m_flLastTickTime -= 0.1f;
+				m_flLastTickTime -= SCENE_LERP_TIME;
 			}
 		}
 
