@@ -446,13 +446,11 @@ GameItemDefinition_t *CEconItemView::GetStaticData( void ) const
 int32 CEconItemView::GetQuality() const
 {
 	return GetSOCData()
-		 ? GetSOCData()->GetQuality()
+		 ? GetItemQuality()
 #ifdef TF_CLIENT_DLL
 		 : GetFlags() & kEconItemFlagClient_StoreItem
 		 ? AE_UNIQUE
 #endif
-		 : GetOrigin() != kEconItemOrigin_Invalid
-		 ? GetItemQuality()
 		 : AE_NORMAL;
 }
 

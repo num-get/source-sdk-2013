@@ -1,6 +1,0 @@
-"item_whitelist"
-{
-	"unlisted_items_default_to"		"1"
-
-	"Valve Rocket Launcher"							"0"
-}
