@@ -391,7 +391,7 @@ const char *C_TFWeaponBuilder::GetViewModel( int iViewModel ) const
 
 	if ( m_iObjectType != BUILDER_INVALID_OBJECT )
 	{
-		if ( GetObjectInfo( m_iObjectType )->m_bUseItemInfo )
+		if ( GetObjectInfo( m_iObjectType )->m_bUseItemInfo && !UsesForcedViewModel() )
 			return BaseClass::GetViewModel();
 
 		return GetObjectInfo( m_iObjectType )->m_pViewModel;

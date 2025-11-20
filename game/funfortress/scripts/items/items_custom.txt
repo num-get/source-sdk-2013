@@ -161,6 +161,7 @@
 		{
 			"model_player"	"models/weapons/w_models/w_sapper.mdl"
 			"attach_to_hands"	"0"
+			"use_viewmodels"	"1"
 		}
 		
 		"9001"
