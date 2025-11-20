@@ -167,12 +167,15 @@
 		{
 			"name"	"Valve Rocket Launcher"
 			"first_sale_date"	"2010/09/29"
-			"prefab"	"weapon_rocketlauncher no_craft"
+			"prefab"	"weapon_rocketlauncher paintkit_base no_craft"
 			"moditem"	"1"
 			"item_quality"	"developer"
 			"min_ilevel"	"100"
 			"max_ilevel"	"100"
-			"propername"		"1"
+			"tags"
+			{
+				"can_be_festivized"		"1"
+			}
 			"attributes"
 			{
 				"damage bonus"
@@ -214,6 +217,34 @@
 				{
 					"attribute_class"	"set_attached_particle"
 					"value"	"2"
+				}
+			}
+			"visuals"
+			{
+				"styles"
+				{
+					"0"
+					{
+						"skin_red"	"0"
+						"skin_blu"	"1"
+						"selectable"	"0"
+					}
+					"1"
+					{
+						"skin_red"	"8"
+						"skin_blu"	"9"
+						"v_skin_red"	"8"
+						"v_skin_blu"	"9"
+						"selectable"	"0"
+						"image_inventory"	"backpack/weapons/w_models/w_rocketlauncher_gold"
+					}
+				}
+				"attached_models_festive"
+				{
+					"0"
+					{
+						"model"	"models/weapons/c_models/c_rocketlauncher/c_rocketlauncher_festivizer.mdl"
+					}
 				}
 			}
 			"xifier_class_remap"	"rocket_launcher"
