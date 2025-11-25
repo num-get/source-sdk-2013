@@ -105,6 +105,13 @@
 			"model_player"	"models/weapons/w_models/w_grenadelauncher.mdl"
 			"attach_to_hands"	"0"
 			"use_viewmodels"	"1"
+			"visuals"
+			{
+				"animation_replacement"
+				{
+					"ACT_MP_ATTACK_STAND_SECONDARY"	"ACT_MP_ATTACK_STAND_SECONDARY2"
+				}
+			}
 		}
 		"20"
 		{
@@ -162,6 +169,24 @@
 			"model_player"	"models/weapons/w_models/w_sapper.mdl"
 			"attach_to_hands"	"0"
 			"use_viewmodels"	"1"
+			"visuals"
+			{
+				"animation_replacement"
+				{
+					"ACT_MP_STAND_BUILDING"	"ACT_MP_STAND_ITEM3"
+					"ACT_MP_CROUCH_BUILDING"	"ACT_MP_CROUCH_ITEM3"
+					"ACT_MP_RUN_BUILDING"	"ACT_MP_RUN_ITEM3"
+					"ACT_MP_WALK_BUILDING"	"ACT_MP_WALK_ITEM3"
+					"ACT_MP_AIRWALK_BUILDING"	"ACT_MP_AIRWALK_ITEM3"
+					"ACT_MP_CROUCHWALK_BUILDING"	"ACT_MP_CROUCHWALK_ITEM3"
+					"ACT_MP_JUMP_BUILDING"	"ACT_MP_JUMP_ITEM3"
+					"ACT_MP_JUMP_START_BUILDING"	"ACT_MP_JUMP_START_ITEM3"
+					"ACT_MP_JUMP_FLOAT_BUILDING"	"ACT_MP_JUMP_FLOAT_ITEM3"
+					"ACT_MP_JUMP_LAND_BUILDING"	"ACT_MP_JUMP_LAND_ITEM3"
+					"ACT_MP_SWIM_BUILDING"	"ACT_MP_SWIM_ITEM3"
+					"ACT_MP_ATTACK_STAND_GRENADE"	"ACT_MP_ATTACK_STAND_ITEM3"
+				}
+			}
 		}
 		
 		"9001"
