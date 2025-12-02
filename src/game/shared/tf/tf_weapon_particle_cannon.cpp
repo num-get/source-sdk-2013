@@ -327,13 +327,30 @@ float CTFParticleCannon::GetProgress( void )
 //-----------------------------------------------------------------------------
 const char *CTFParticleCannon::GetMuzzleFlashParticleEffect( void )
 {
+	CTFPlayer *pPlayer = ToTFPlayer( GetPlayerOwner() );
+	int iNewParticleCannon = 0;
+	CALL_ATTRIB_HOOK_INT_ON_OTHER( pPlayer, iNewParticleCannon, energy_weapon_charged_shot );
 	if ( m_bChargedShot )
 	{
-		return ( GetTeamNumber() == TF_TEAM_RED ) ? "drg_cow_muzzleflash_charged" : "drg_cow_muzzleflash_charged_blue";
+		if ( pPlayer && iNewParticleCannon == 2 )
+		{
+			return "drg_cowmangler_muzzleflash_charged";
+		}
+		else
+		{
+			return ( GetTeamNumber() == TF_TEAM_RED ) ? "drg_cow_muzzleflash_charged" : "drg_cow_muzzleflash_charged_blue";
+		}
 	}
 	else
 	{
-		return ( GetTeamNumber() == TF_TEAM_RED ) ? "drg_cow_muzzleflash_normal" : "drg_cow_muzzleflash_normal_blue";
+		if ( pPlayer && iNewParticleCannon == 2 )
+		{
+			return "drg_cowmangler_muzzleflash_normal";
+		}
+		else
+		{
+			return ( GetTeamNumber() == TF_TEAM_RED ) ? "drg_cow_muzzleflash_normal" : "drg_cow_muzzleflash_normal_blue";
+		}
 	}
 }
 
@@ -355,7 +372,14 @@ void CTFParticleCannon::Precache()
 	PrecacheParticleSystem( "drg_cow_muzzleflash_normal_blue" );
 	PrecacheParticleSystem( "drg_cow_idle" );
 
+	PrecacheParticleSystem( "drg_cowmangler_impact_charged" );
+	PrecacheParticleSystem( "drg_cowmangler_impact_normal" );
+	PrecacheParticleSystem( "drg_cowmangler_muzzleflash_charged" );
+	PrecacheParticleSystem( "drg_cowmangler_muzzleflash_normal" );
+	PrecacheParticleSystem( "drg_cowmangler_idle" );
+
 	PrecacheScriptSound( "Weapon_CowMangler.ReloadFinal" );
+	PrecacheScriptSound( "Weapon_CowMangler.ReloadFinal.Old" );
 }
 #endif
 
@@ -412,6 +436,14 @@ void CTFParticleCannon::ClientEffectsThink( void )
 
 	ParticleProp()->Init( this );
 	const char *pszIdleParticle = ( GetTeamNumber() == TF_TEAM_RED ) ? "drg_cow_idle" : "drg_cow_idle_blue";
+
+	int iNewParticleCannon = 0;
+	CALL_ATTRIB_HOOK_INT_ON_OTHER( pPlayer, iNewParticleCannon, energy_weapon_charged_shot );
+	if ( iNewParticleCannon == 2 )
+	{
+		pszIdleParticle = "drg_cowmangler_idle";
+	}
+
 	CNewParticleEffect* pEffect = ParticleProp()->Create( pszIdleParticle, PATTACH_POINT_FOLLOW, mounts[iPoint] );
 	if ( pEffect )
 	{
@@ -481,12 +513,14 @@ void CTFParticleCannon::PlayWeaponShootSound( void )
 //-----------------------------------------------------------------------------
 char const *CTFParticleCannon::GetShootSound( int iIndex ) const
 {
+	int iNewParticleCannon = 0;
+	CALL_ATTRIB_HOOK_INT( iNewParticleCannon, energy_weapon_charged_shot );
 	if ( iIndex == RELOAD )
 	{
 		bool bLastReload = (Energy_GetEnergy()+Energy_GetRechargeCost()) == Energy_GetMaxEnergy();
 		if ( bLastReload )
 		{
-			return "Weapon_CowMangler.ReloadFinal";
+			return ( iNewParticleCannon == 2 ) ? "Weapon_CowMangler.ReloadFinal.Old" : "Weapon_CowMangler.ReloadFinal";
 		}
 	}
 

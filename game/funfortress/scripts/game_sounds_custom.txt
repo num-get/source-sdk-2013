@@ -57,3 +57,41 @@
 	"soundlevel"	"SNDLVL_NORM"
 	"wave"		"player/pl_fallpain_old.wav"
 }
+
+"Weapon_CowMangler.Single.Old"
+{
+	"channel"	"CHAN_WEAPON"
+	"volume"	"1.0"
+	"soundlevel"	"SNDLVL_94dB"
+	"wave"		")weapons/cow_mangler_main_shot_old.wav"
+}
+
+"Weapon_CowMangler.Charging.Old"
+{
+	"channel"	"CHAN_STATIC"
+	"volume"	"1.0"
+	"soundlevel"	"SNDLVL_94dB"
+	"wave"		")weapons/cow_mangler_over_charge_old.wav"
+}
+
+"Weapon_CowMangler.Explode.Old"
+{
+	"channel"	"CHAN_WEAPON"
+	"volume"	"0.95,1.0"
+	"soundlevel"	"SNDLVL_115dB"
+	"pitch"		"95, 100"
+	"rndwave"
+	{
+		"wave"	")weapons\cow_mangler_explosion_normal_04.wav"
+		"wave"	")weapons\cow_mangler_explosion_normal_05.wav"
+		"wave"	")weapons\cow_mangler_explosion_normal_06.wav"
+	}
+}
+
+"Weapon_CowMangler.ReloadFinal.Old"
+{
+	"channel"	"CHAN_WEAPON"
+	"soundlevel"	"SNDLVL_NORM"
+	"volume"	".25"
+	"wave"	"weapons\cow_mangler_reload_final_old.wav"
+}
