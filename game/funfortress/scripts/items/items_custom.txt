@@ -107,6 +107,7 @@
 			{
 				"can_deal_damage"			"1"
 				"can_deal_critical_damage"	"1"
+				"can_be_festivized"		"1"
 			}
 			"item_logname"	"axtinguisher"
 			"item_iconname"	"axtinguisher"
@@ -169,6 +170,13 @@
 						"skin_blu"	"3"
 						"selectable"	"0"
 						"image_inventory"	"backpack/weapons/c_models/c_axtinguisher/c_axtinguisher_pyro_gold"
+					}
+				}
+				"attached_models_festive"
+				{
+					"0"
+					{
+						"model"	"models/weapons/c_models/c_axtinguisher/c_axtinguisher_pyro_festivizer.mdl"
 					}
 				}
 			}
@@ -502,6 +510,7 @@
 				"can_deal_critical_damage"	"1"
 				"can_deal_mvm_penetration_damage"	"1"
 				"can_deal_long_distance_damage"	"1"
+				"can_be_festivized"		"1"
 			}
 			"show_in_armory"	"1"
 			"moditem"	"1"
@@ -576,6 +585,13 @@
 						"image_inventory"	"backpack/weapons/c_models/c_ambassador/c_ambassador_gold"
 					}
 				}
+				"attached_models_festive"
+				{
+					"0"
+					{
+						"model"	"models/weapons/c_models/c_ambassador/c_ambassador_festivizer.mdl"
+					}
+				}
 			}
 			"xifier_class_remap"	"ambassador"
 			"mouse_pressed_sound"	"ui/item_light_gun_pickup.wav"
@@ -600,6 +616,7 @@
 				"can_be_equipped_by_soldier_or_demo"	"1"
 				"can_deal_critical_damage"	"1"
 				"can_deal_taunt_damage"		"1"
+				"can_be_festivized"		"1"
 			}
 			"show_in_armory"	"1"
 			"moditem"	"1"
@@ -653,6 +670,13 @@
 				"sound_melee_miss"	"Weapon_PickAxe.Swing"
 				"sound_melee_hit"	"Weapon_PickAxe.HitFlesh"
 				"sound_burst"		"Weapon_PickAxe.SwingCrit"
+				"attached_models_festive"
+				{
+					"0"
+					{
+						"model"	"models/weapons/c_models/c_pickaxe/c_pickaxe_festivizer.mdl"
+					}
+				}
 			}
 			"mouse_pressed_sound"	"ui/item_metal_weapon_pickup.wav"
 			"drop_sound"		"ui/item_metal_weapon_drop.wav"
@@ -891,6 +915,7 @@
 			{
 				"can_deal_damage"			"1"
 				"can_deal_critical_damage"	"1"
+				"can_be_festivized"		"1"
 			}
 			"item_logname"	"battleneedle"
 			"item_iconname"	"battleneedle"
@@ -939,6 +964,13 @@
 			{
 				"sound_taunt"	"Taunt.MedicViolinUber"
 				"sound_melee_hit"	"Weapon_UberSaw.HitFlesh"
+				"attached_models_festive"
+				{
+					"0"
+					{
+						"model"	"models/workshop/weapons/c_models/c_uberneedle/c_uberneedle_festivizer.mdl"
+					}
+				}
 			}
 			"mouse_pressed_sound"	"ui/item_metal_weapon_pickup.wav"
 			"drop_sound"		"ui/item_metal_weapon_drop.wav"
@@ -1229,6 +1261,7 @@
 			{
 				"can_deal_damage"			"1"
 				"can_deal_taunt_damage"		"1"
+				"can_be_festivized"		"1"
 			}
 			"moditem"	"1"
 			"item_name"	"#TF_EternalReward"
@@ -1269,6 +1302,16 @@
 				{
 					"attribute_class"	"special_taunt"
 					"value" "1"
+				}
+			}
+			"visuals"
+			{
+				"attached_models_festive"
+				{
+					"0"
+					{
+						"model"	"models/workshop/weapons/c_models/c_eternal_reward/c_eternal_reward_festivizer.mdl"
+					}
 				}
 			}
 		}
@@ -1406,6 +1449,7 @@
 				"can_deal_mvm_penetration_damage"	"1"
 				"can_deal_long_distance_damage"	"1"
 				"can_extinguish"			"1"
+				"can_be_festivized"		"1"
 			}
 			"item_logname"	"sydney_sleeper"
 			"item_iconname"	"sydney_sleeper"
@@ -1431,6 +1475,13 @@
 				}
 				"sound_single_shot"	"Weapon_SydneySleeper.Single"
 				"sound_burst"	"Weapon_SydneySleeper.SingleCrit"
+				"attached_models_festive"
+				{
+					"0"
+					{
+						"model"	"models/workshop/weapons/c_models/c_sydney_sleeper/c_sydney_sleeper_festivizer.mdl"
+					}
+				}
 			}
 			"used_by_classes"
 			{
@@ -1546,6 +1597,7 @@
 			{
 				"can_deal_damage"			"1"
 				"can_deal_critical_damage"	"1"
+				"can_be_festivized"		"1"
 			}
 			"item_logname"	"bushwacka"
 			"item_iconname"	"bushwacka"
@@ -1587,6 +1639,16 @@
 					"value"			"1.2"
 				}
 			}
+			"visuals"
+			{
+				"attached_models_festive"
+				{
+					"0"
+					{
+						"model"	"models/workshop/weapons/c_models/c_croc_knife/c_croc_knife_festivizer.mdl"
+					}
+				}
+			}
 		}
 
 		"32021"
@@ -1605,6 +1667,7 @@
 			{
 				"can_deal_damage"			"1"
 				"can_deal_critical_damage"	"1"
+				"can_be_festivized"		"1"
 			}
 			"show_in_armory"	"1"
 			"moditem"	"1"
@@ -1699,6 +1762,13 @@
 				"sound_melee_hit"	"Weapon_BoxingGloves.HitFlesh"
 				"sound_melee_hit_world"	"Weapon_BoxingGloves.HitWorld"
 				"sound_burst"	"Weapon_BoxingGloves.MissCrit"
+				"attached_models_festive"
+				{
+					"0"
+					{
+						"model"	"models/weapons/c_models/c_boxing_gloves/c_boxing_gloves_festivizer.mdl"
+					}
+				}
 			}
 			"mouse_pressed_sound" "ui/item_boxing_gloves_pickup.wav"
 			"drop_sound" "ui/item_boxing_gloves_drop.wav"
@@ -1716,6 +1786,10 @@
 			"capabilities"
 			{
 				"nameable"		"1"
+			}
+			"tags"
+			{
+				"can_be_festivized"		"1"
 			}
 			"show_in_armory"	"1"
 			"moditem"	"1"
@@ -1782,6 +1856,13 @@
 			{
 				"sound_single_shot"	"Weapon_Sticky_Jumper.Single"
 				"sound_special1"		"Weapon_Sticky_Jumper.Explode"
+				"attached_models_festive"
+				{
+					"0"
+					{
+						"model"	"models/weapons/c_models/c_sticky_jumper/c_sticky_jumper_festivizer.mdl"
+					}
+				}
 			}
 		}
 
@@ -1874,6 +1955,7 @@
 				"can_deal_damage"		"1"
 				"can_deal_gib_damage"	"1"
 				"can_be_equipped_by_soldier_or_demo"	"1"
+				"can_be_festivized"		"1"
 			}
 			"show_in_armory"	"1"
 			"moditem"	"1"
@@ -1914,6 +1996,16 @@
 				{
 					"attribute_class"	"obsolete"
 					"value"	"0"
+				}
+			}
+			"visuals"
+			{
+				"attached_models_festive"
+				{
+					"0"
+					{
+						"model"	"models/workshop/weapons/c_models/c_caber/c_caber_festivizer.mdl"
+					}
 				}
 			}
 		}
@@ -2113,6 +2205,7 @@
 			{
 				"can_deal_damage"			"1"
 				"can_deal_critical_damage"	"1"
+				"can_be_festivized"		"1"
 			}
 			"show_in_armory"	"1"
 			"moditem"	"1"
@@ -2156,6 +2249,13 @@
 					"ACT_MELEE_VM_INSPECT_START"	"ACT_MELEE_ALT1_VM_INSPECT_START"
 					"ACT_MELEE_VM_INSPECT_IDLE"		"ACT_MELEE_ALT1_VM_INSPECT_IDLE"
 					"ACT_MELEE_VM_INSPECT_END"		"ACT_MELEE_ALT1_VM_INSPECT_END"
+				}
+				"attached_models_festive"
+				{
+					"0"
+					{
+						"model"	"models/workshop/weapons/c_models/c_fists_of_steel/c_fists_of_steel_festivizer.mdl"
+					}
 				}
 			}
 			"mouse_pressed_sound"	"ui/item_heavy_gun_pickup.wav"
@@ -2585,6 +2685,7 @@
 			{
 				"can_deal_damage"			"1"
 				"can_deal_critical_damage"	"1"
+				"can_be_festivized"		"1"
 			}
 			"anim_slot" "MELEE_ALLCLASS"
 			"item_logname"	"solemn_vow"
@@ -2624,6 +2725,13 @@
 			"visuals"
 			{
 				"sound_melee_hit"	"Weapon_Machete.HitFlesh"
+				"attached_models_festive"
+				{
+					"0"
+					{
+						"model"	"models/weapons/c_models/c_hippocrates_bust/c_hippocrates_bust_festivizer.mdl"
+					}
+				}
 			}
 			"mouse_pressed_sound"	"ui/item_metal_weapon_pickup.wav"
 			"drop_sound"		"ui/item_metal_weapon_drop.wav"
@@ -2649,6 +2757,7 @@
 				"can_deal_posthumous_damage"	"1"
 				"can_deal_critical_damage"	"1"
 				"can_deal_long_distance_damage"	"1"
+				"can_be_festivized"		"1"
 			}
 			"show_in_armory"	"1"
 			"moditem"	"1"
@@ -2692,6 +2801,13 @@
 			{
 				"sound_single_shot"	"Weapon_Liberty_Launcher.Single"
 				"sound_burst"	"Weapon_Liberty_Launcher.SingleCrit"
+				"attached_models_festive"
+				{
+					"0"
+					{
+						"model"	"models/workshop/weapons/c_models/c_liberty_launcher/c_liberty_launcher_festivizer.mdl"
+					}
+				}
 			}
 			"mouse_pressed_sound"	"ui/item_heavy_gun_pickup.wav"
 			"drop_sound"		"ui/item_heavy_gun_drop.wav"
@@ -2804,6 +2920,7 @@
 				"can_deal_damage"			"1"
 				"can_be_equipped_by_soldier_or_demo"	"1"
 				"can_deal_critical_damage"	"1"
+				"can_be_festivized"		"1"
 			}
 			"show_in_armory"	"1"
 			"moditem"	"1"
@@ -2841,6 +2958,16 @@
 				{
 					"attribute_class"	"mult_crit_chance"
 					"value"	"0"
+				}
+			}
+			"visuals"
+			{
+				"attached_models_festive"
+				{
+					"0"
+					{
+						"model"	"models/workshop/weapons/c_models/c_market_gardener/c_market_gardener_festivizer.mdl"
+					}
 				}
 			}
 			"mouse_pressed_sound"	"ui/item_shovel_pickup.wav"
@@ -2962,6 +3089,7 @@
 				"can_be_equipped_by_soldier_or_demo"	"1"
 				"can_deal_posthumous_damage"	"1"
 				"can_deal_long_distance_damage"	"1"
+				"can_be_festivized"		"1"
 			}
 			"item_logname"	"cow_mangler"
 			"item_iconname"	"cow_mangler"
@@ -3034,6 +3162,13 @@
 				"sound_reload"		"Weapon_CowMangler.Reload"
 				"sound_special1"	"Weapon_CowMangler.Charging.Old"
 				"sound_special2"	"Weapon_CowMangler.Idle"
+				"attached_models_festive"
+				{
+					"0"
+					{
+						"model"	"models/workshop/weapons/c_models/c_drg_cowmangler/c_drg_cowmangler_festivizer.mdl"
+					}
+				}
 			}
 			"mouse_pressed_sound"	"ui/item_heavy_gun_pickup.wav"
 			"drop_sound"		"ui/item_heavy_gun_drop.wav"
@@ -3057,6 +3192,7 @@
 				"can_deal_posthumous_damage"	"1"
 				"can_deal_critical_damage"	"1"
 				"can_deal_long_distance_damage"	"1"
+				"can_be_festivized"		"1"
 			}
 			"show_in_armory"	"1"
 			"moditem"	"1"
@@ -3118,6 +3254,13 @@
 					"ACT_SECONDARY_VM_INSPECT_START"	"ACT_SECONDARY_ALT1_VM_INSPECT_START"
 					"ACT_SECONDARY_VM_INSPECT_IDLE"		"ACT_SECONDARY_ALT1_VM_INSPECT_IDLE"
 					"ACT_SECONDARY_VM_INSPECT_END"		"ACT_SECONDARY_ALT1_VM_INSPECT_END"
+				}
+				"attached_models_festive"
+				{
+					"0"
+					{
+						"model"	"models/workshop/weapons/c_models/c_drg_righteousbison/c_drg_righteousbison_festivizer.mdl"
+					}
 				}
 			}
 			"mouse_pressed_sound"	"ui/item_light_gun_pickup.wav"
@@ -3198,6 +3341,11 @@
 				"scattergun no reload single"
 				{
 					"attribute_class"	"set_scattergun_no_reload_single"
+					"value"	"1"
+				}
+				"disable fancy class select anim"
+				{
+					"attribute_class"	"disable_fancy_class_select_anim"
 					"value"	"1"
 				}
 				"obsolete ammo penalty"
@@ -3345,6 +3493,7 @@
 			{
 				"can_deal_damage"			"1"
 				"can_deal_critical_damage"	"1"
+				"can_be_festivized"		"1"
 			}
 			"item_logname"	"mailbox"
 			"item_iconname"	"mailbox"
@@ -3391,6 +3540,16 @@
 			}
 			"mouse_pressed_sound"	"ui/item_wood_pole_pickup.wav"
 			"drop_sound"		"ui/item_wood_pole_drop.wav"
+			"visuals"
+			{
+				"attached_models_festive"
+				{
+					"0"
+					{
+						"model"	"models/workshop/weapons/c_models/c_mailbox/c_mailbox_festivizer.mdl"
+					}
+				}
+			}
 		}
 
 		"32042"
@@ -3411,6 +3570,7 @@
 				"can_deal_critical_damage"	"1"
 				"can_deal_mvm_penetration_damage"	"1"
 				"can_deal_long_distance_damage"	"1"
+				"can_be_festivized"		"1"
 			}
 			"show_in_armory"	"1"
 			"moditem"	"1"
@@ -3461,6 +3621,13 @@
 			{
 				"sound_single_shot"	"Weapon_Enforcer.Single"
 				"sound_burst"	"Weapon_Enforcer.SingleCrit"
+				"attached_models_festive"
+				{
+					"0"
+					{
+						"model"	"models/workshop/weapons/c_models/c_snub_nose/c_snub_nose_festivizer.mdl"
+					}
+				}
 			}
 		}
 
@@ -3478,6 +3645,7 @@
 			{
 				"can_deal_damage"			"1"
 				"can_deal_taunt_damage"		"1"
+				"can_be_festivized"		"1"
 			}
 			"moditem"	"1"
 			"item_name"	"#TF_VoodooPin"
@@ -3520,6 +3688,16 @@
 				{
 					"attribute_class"	"special_taunt"
 					"value" "1"
+				}
+			}
+			"visuals"
+			{
+				"attached_models_festive"
+				{
+					"0"
+					{
+						"model"	"models/workshop/weapons/c_models/c_voodoo_pin/c_voodoo_pin_festivizer.mdl"
+					}
 				}
 			}
 		}
@@ -3652,6 +3830,7 @@
 				"can_deal_posthumous_damage"	"1"
 				"can_deal_critical_damage"	"1"
 				"is_flamethrower" "1"
+				"can_be_festivized"		"1"
 			}
 			"item_logname"	"phlogistinator"
 			"item_iconname"	"phlogistinator"
@@ -3690,6 +3869,13 @@
 					"ACT_PRIMARY_VM_INSPECT_START"		"ACT_PRIMARY_ALT1_VM_INSPECT_START"
 					"ACT_PRIMARY_VM_INSPECT_IDLE"		"ACT_PRIMARY_ALT1_VM_INSPECT_IDLE"
 					"ACT_PRIMARY_VM_INSPECT_END"		"ACT_PRIMARY_ALT1_VM_INSPECT_END"
+				}
+				"attached_models_festive"
+				{
+					"0"
+					{
+						"model"	"models/workshop/weapons/c_models/c_drg_phlogistinator/c_drg_phlogistinator_festivizer.mdl"
+					}
 				}
 			}
 			"attributes"
@@ -3841,6 +4027,7 @@
 				"can_deal_posthumous_damage"	"1"
 				"can_deal_critical_damage"	"1"
 				"can_deal_long_distance_damage"	"1"
+				"can_be_festivized"		"1"
 			}
 			"show_in_armory"	"1"
 			"moditem"	"1"
@@ -3908,6 +4095,13 @@
 				"sound_single_shot"	"Weapon_Does_Dumpster.Single"
 				"sound_burst"		"Weapon_Does_Dumpster.SingleCrit"
 				"sound_reload"		"Weapon_DumpsterRocket.Reload"
+				"attached_models_festive"
+				{
+					"0"
+					{
+						"model"	"models/workshop/weapons/c_models/c_dumpster_device/c_dumpster_device_festivizer.mdl"
+					}
+				}
 			}
 			"mouse_pressed_sound"	"ui/item_heavy_gun_pickup.wav"
 			"drop_sound"			"ui/item_heavy_gun_drop.wav"
@@ -3929,6 +4123,7 @@
 				"can_deal_critical_damage"	"1"
 				"can_deal_mvm_penetration_damage"	"1"
 				"can_deal_long_distance_damage"	"1"
+				"can_be_festivized"		"1"
 			}
 			"show_in_armory"	"1"
 			"moditem"	"1"
@@ -3974,6 +4169,13 @@
 			}
 			"visuals"
 			{
+				"attached_models_festive"
+				{
+					"0"
+					{
+						"model"	"models/workshop/weapons/c_models/c_pep_scattergun/c_pep_scattergun_festivizer.mdl"
+					}
+				}
 				"sound_single_shot"	"Weapon_Brawler_Blaster.Single"
 				"sound_burst"		"Weapon_Brawler_Blaster.SingleCrit"
 			}
@@ -4238,7 +4440,7 @@
 				"cannonball push back"
 				{
 					"attribute_class"	"cannonball_push_back"
-					"value"	"0"
+					"value"	"2"
 				}
 				"kill eater score type 2"
 				{
