@@ -673,10 +673,10 @@ public:
 	bool			m_bOldSaveMeParity;
 	bool			m_bIsCoaching;
 
-private:
 	void			UpdateTauntItem();
 	void			ParseSharedTauntDataFromEconItemView( const CEconItemView *pEconItemView );
 
+private:
 	QAngle			m_angEyeAngles;
 
 	bool			m_bAllowMoveDuringTaunt;
