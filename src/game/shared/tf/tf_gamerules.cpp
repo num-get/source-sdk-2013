@@ -868,6 +868,7 @@ ConVar ff_new_weapon_switch_speed ( "ff_new_weapon_switch_speed", "1", FCVAR_NOT
 ConVar ff_old_healonkill ( "ff_old_healonkill", "0", FCVAR_NOTIFY | FCVAR_REPLICATED, "Restore the ability to overheal when gaining health on a kill." );
 ConVar ff_allow_taunt_sticky ( "ff_allow_taunt_sticky", "0", FCVAR_NOTIFY | FCVAR_REPLICATED, "Allow Demoman to detonate stickies while taunting." );
 ConVar ff_disable_dropped_weapon ( "ff_disable_dropped_weapon", "0", FCVAR_NOTIFY | FCVAR_REPLICATED, "Fallen ammo packs are replaced with weapons." );
+ConVar ff_use_new_flame( "ff_use_new_flame", "1", FCVAR_NOTIFY | FCVAR_REPLICATED, "0 - Old Flamethrower particle and old afterburn mechanic, 1 - Modern Flamethrower particle, 2 - Modern Flamethrower particle without density ramp up nerf" );
 
 #ifndef GAME_DLL
 extern ConVar cl_burninggibs;
