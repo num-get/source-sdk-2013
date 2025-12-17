@@ -91,8 +91,28 @@ void C_TFProjectile_EnergyBall::CreateTrails( void )
 //-----------------------------------------------------------------------------
 const char *C_TFProjectile_EnergyBall::GetTrailParticleName( void )
 {
+	int iNewParticleCannon = 0;
+	CALL_ATTRIB_HOOK_INT_ON_OTHER( GetLauncher(), iNewParticleCannon, energy_weapon_charged_shot );
 	if ( m_bChargedShot )
-		return ( GetTeamNumber() == TF_TEAM_RED ) ? "drg_cow_rockettrail_charged" : "drg_cow_rockettrail_charged_blue";
+	{
+		if ( GetLauncher() && iNewParticleCannon == 2 )
+		{
+			return "drg_cowmangler_trail_charged";
+		}
+		else
+		{
+			return ( GetTeamNumber() == TF_TEAM_RED ) ? "drg_cow_rockettrail_charged" : "drg_cow_rockettrail_charged_blue";
+		}
+	}
 	else
-		return ( GetTeamNumber() == TF_TEAM_RED ) ? "drg_cow_rockettrail_normal" : "drg_cow_rockettrail_normal_blue";
+	{
+		if ( GetLauncher() && iNewParticleCannon == 2 )
+		{
+			return "drg_cowmangler_trail_normal";
+		}
+		else
+		{
+			return ( GetTeamNumber() == TF_TEAM_RED ) ? "drg_cow_rockettrail_normal" : "drg_cow_rockettrail_normal_blue";
+		}
+	}
 }

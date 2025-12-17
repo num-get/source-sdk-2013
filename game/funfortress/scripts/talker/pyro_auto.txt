@@ -11,6 +11,7 @@ criterion "WeaponIsOldMetalFists" "item_name" "Vintage Fists of Steel" "required
 criterion "WeaponIsOldHippocrates" "item_name" "Vintage Solemn Vow" "required" weight 10
 criterion "WeaponIsOldSodaPopper" "item_name" "Vintage Soda Popper" "required" weight 10
 criterion "WeaponIsOldAtomizer" "item_name" "Vintage Atomizer" "required" weight 10
+criterion "WeaponIsOldCowMangler" "item_name" "Vintage Cow Mangler 5000" "required" weight 10
 criterion "WeaponIsOldRayGun" "item_name" "Vintage Righteous Bison" "required" weight 10
 criterion "WeaponIsOldSpycicle" "item_name" "Vintage Spy-cicle" "required" weight 10
 criterion "WeaponIsOldPomson" "item_name" "Vintage Pomson 6000" "required" weight 10
@@ -60,6 +61,12 @@ criterion "WeaponIsOldRescueRanger" "item_name" "Vintage Rescue Ranger" "require
 	{
 		criteria ConceptPlayerTaunt IsScout WeaponIsOldAtomizer
 		response ScoutTauntGrandSlam
+	}
+
+	rule SoldierTauntOldCowMangler
+	{
+		criteria ConceptPlayerTaunt IsSoldier WeaponIsOldCowMangler
+		response SoldierTauntCowMangler
 	}
 
 	rule SoldierTauntOldRayGun

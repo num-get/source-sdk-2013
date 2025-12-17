@@ -65,6 +65,7 @@ PRECACHE_WEAPON_REGISTER( tf_weapon_flaregun_revenge );
 const float tf_flaregun_afterburn_rate = 7.5f;
 #endif // GAME_DLL
 
+extern ConVar ff_use_new_flame;
 
 //=============================================================================
 //
@@ -205,7 +206,7 @@ void CTFFlareGun::DeathNotice( CBaseEntity *pVictim )
 //-----------------------------------------------------------------------------
 float CTFFlareGun::GetAfterburnRateOnHit() const
 {
-	return tf_flaregun_afterburn_rate;
+	return ( !ff_use_new_flame.GetBool() ) ? 10.f : tf_flaregun_afterburn_rate;
 }
 #endif // GAME_DLL
 

@@ -136,9 +136,13 @@ void CTFProjectile_EnergyBall::Precache()
 	PrecacheParticleSystem( "drg_cow_rockettrail_normal" );
 	PrecacheParticleSystem( "drg_cow_rockettrail_normal_blue" );
 
+	PrecacheParticleSystem( "drg_cowmangler_trail_charged" );
+	PrecacheParticleSystem( "drg_cowmangler_trail_normal" );
+
 	PrecacheModel( ENERGY_BALL_MODEL );
 
 	PrecacheScriptSound( "Weapon_CowMangler.Explode" );
+	PrecacheScriptSound( "Weapon_CowMangler.Explode.Old" );
 
 	BaseClass::Precache();
 }
@@ -291,8 +295,10 @@ void CTFProjectile_EnergyBall::Explode( trace_t *pTrace, CBaseEntity *pOther )
 		UTIL_ScreenShake( WorldSpaceCenter(), 25.0, 150.0, 1.0, 750, SHAKE_START );
 	}
 
+	int iNewParticleCannon = 0;
+	CALL_ATTRIB_HOOK_INT_ON_OTHER( GetLauncher(), iNewParticleCannon, energy_weapon_charged_shot );
 	// Sound
-	ImpactSound( "Weapon_CowMangler.Explode" );
+	ImpactSound( ( GetLauncher() && iNewParticleCannon == 2 ) ? "Weapon_CowMangler.Explode.Old" : "Weapon_CowMangler.Explode" );
 	CSoundEnt::InsertSound ( SOUND_COMBAT, vecOrigin, 1024, 3.0 );
 
 	// Damage.
@@ -341,13 +347,29 @@ void CTFProjectile_EnergyBall::Explode( trace_t *pTrace, CBaseEntity *pOther )
 //-----------------------------------------------------------------------------
 const char *CTFProjectile_EnergyBall::GetExplosionParticleName( void )
 {
+	int iNewParticleCannon = 0;
+	CALL_ATTRIB_HOOK_INT_ON_OTHER( GetLauncher(), iNewParticleCannon, energy_weapon_charged_shot );
 	if ( m_bChargedShot )
 	{
-		return ( GetTeamNumber() == TF_TEAM_RED ) ? "drg_cow_explosioncore_charged" : "drg_cow_explosioncore_charged_blue";
+		if ( GetLauncher() && iNewParticleCannon == 2 )
+		{
+			return "drg_cowmangler_impact_charged";
+		}
+		else
+		{
+			return ( GetTeamNumber() == TF_TEAM_RED ) ? "drg_cow_explosioncore_charged" : "drg_cow_explosioncore_charged_blue";
+		}
 	}
 	else
 	{
-		return ( GetTeamNumber() == TF_TEAM_RED ) ? "drg_cow_explosioncore_normal" : "drg_cow_explosioncore_normal_blue";
+		if ( GetLauncher() && iNewParticleCannon == 2 )
+		{
+			return "drg_cowmangler_impact_normal";
+		}
+		else
+		{
+			return ( GetTeamNumber() == TF_TEAM_RED ) ? "drg_cow_explosioncore_normal" : "drg_cow_explosioncore_normal_blue";
+		}
 	}
 }
 
@@ -372,7 +394,9 @@ int	CTFProjectile_EnergyBall::GetDamageType()
 	else
 	{
 		iDamageType = DMG_BLAST | DMG_HALF_FALLOFF | DMG_USEDISTANCEMOD;
-		if ( m_bCritical )
+		int iNewParticleCannon = 0;
+		CALL_ATTRIB_HOOK_INT_ON_OTHER( GetLauncher(), iNewParticleCannon, energy_weapon_charged_shot );
+		if ( m_bCritical && !( iNewParticleCannon == 2 && GetLauncher() ) )
 		{
 			iDamageType |= DMG_CRITICAL;
 		}

@@ -41,6 +41,7 @@ ConVar tf_flame_waterfall_spread( "tf_flame_waterfall_spread", "40", FCVAR_REPLI
 
 extern ConVar tf_debug_flamethrower;
 extern ConVar tf_flamethrower_boxsize;
+extern ConVar ff_use_new_flame;
 
 #ifdef CLIENT_DLL
 float tf_flame_particle_min_density = 0.01f;
@@ -533,7 +534,7 @@ float CTFFlameManager::GetFlameDamageScale( const tf_point_t* pPoint, CTFPlayer 
 	{
 		float flIndexMod = 1.f;
 		auto iEntIndex = m_mapEntitiesBurnt.Find( pTFTarget );
-		if ( iEntIndex != m_mapEntitiesBurnt.InvalidIndex() )
+		if ( iEntIndex != m_mapEntitiesBurnt.InvalidIndex() && ff_use_new_flame.GetInt() != 2 )
 		{
 			flIndexMod = RemapValClamped( m_mapEntitiesBurnt[iEntIndex].m_flHeatIndex, 
 										  tf_flame_burn_index_per_collide_remap_x, tf_flame_burn_index_per_collide_remap_y, 

@@ -6300,7 +6300,11 @@ float CTFWeaponBase::Energy_GetMaxEnergy( void ) const
 	// Basically -- figure out the desired number of shots,
 	// and return the amount of energy required for that.
 
-	int iNumShots = ENERGY_WEAPON_MAX_CHARGE / Energy_GetShotCost();
+	int iNewParticleCannon = 0;
+	CALL_ATTRIB_HOOK_INT( iNewParticleCannon, energy_weapon_charged_shot );
+	int iMaxShots = iNewParticleCannon == 2 ? ENERGY_WEAPON_MAX_CHARGE * 1.25 : ENERGY_WEAPON_MAX_CHARGE;
+
+	int iNumShots = iMaxShots / Energy_GetShotCost();
 	CALL_ATTRIB_HOOK_FLOAT( iNumShots, mult_clipsize_upgrade );
 
 	return ( iNumShots * Energy_GetShotCost() );

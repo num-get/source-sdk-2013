@@ -186,6 +186,7 @@ ConVar tf_allow_all_team_partner_taunt( "tf_allow_all_team_partner_taunt", "1", 
 
 extern ConVar ff_new_shield_charge;
 extern ConVar ff_allow_taunt_sticky;
+extern ConVar ff_use_new_flame;
 
 // AFTERBURN
 const float tf_afterburn_max_duration = 10.f;
@@ -2871,6 +2872,11 @@ void CTFPlayerShared::ConditionGameRulesThink( void )
 			{
 				float flBurnDamage = TF_BURNING_DMG;
 				int nKillType = TF_DMG_CUSTOM_BURNING;
+
+				if ( !ff_use_new_flame.GetBool() )
+				{
+					flBurnDamage = 3;
+				}
 
 				if ( m_hBurnWeapon )
 				{

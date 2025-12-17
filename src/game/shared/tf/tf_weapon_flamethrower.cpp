@@ -70,6 +70,7 @@ const float	tf_flamethrower_damage_per_tick = 13.f;
 ConVar  tf_flamethrower_burstammo("tf_flamethrower_burstammo", "20", FCVAR_CHEAT | FCVAR_DEVELOPMENTONLY | FCVAR_REPLICATED, "How much ammo does the air burst use per shot." );
 ConVar  tf_flamethrower_flametime("tf_flamethrower_flametime", "0.5", FCVAR_CHEAT | FCVAR_DEVELOPMENTONLY | FCVAR_REPLICATED, "Time to live of flame damage entities." );
 
+extern ConVar ff_use_new_flame;
 
 // If we're shipping this it needs to be better hooked with flame manager -- right now we just spawn 5 managers for
 // prototyping
@@ -754,7 +755,7 @@ void CTFFlameThrower::PrimaryAttack()
 			
 			// Force a min window of emission to prevent a case where
 			// tap-spamming +attack can create invisible flame points.
-			if ( m_flMinPrimaryAttackBurstTime == 0.f )
+			if ( m_flMinPrimaryAttackBurstTime == 0.f && ff_use_new_flame.GetInt() > 0 )
 			{
 				m_flMinPrimaryAttackBurstTime = gpGlobals->curtime + 0.2f;
 			}
@@ -820,6 +821,7 @@ void CTFFlameThrower::PrimaryAttack()
 #endif
 
 	float flFiringInterval = m_pWeaponInfo->GetWeaponData( m_iWeaponMode ).m_flTimeFireDelay;
+	if ( ff_use_new_flame.GetInt() > 0 )
 	{
 		flFiringInterval = tf_flamethrower_new_flame_fire_delay;
 	}
@@ -859,6 +861,7 @@ void CTFFlameThrower::PrimaryAttack()
 		// create the flame entity
 		int iDamagePerSec = m_pWeaponInfo->GetWeaponData( m_iWeaponMode ).m_nDamage;
 		float flDamage = (float)iDamagePerSec * flFiringInterval;
+		if ( ff_use_new_flame.GetInt() > 0 )
 		{
 			flDamage = tf_flamethrower_damage_per_tick;
 		}
@@ -875,6 +878,7 @@ void CTFFlameThrower::PrimaryAttack()
 		int iCritFromBehind = 0;
 		CALL_ATTRIB_HOOK_INT( iCritFromBehind, set_flamethrower_back_crit );
 
+		if ( ff_use_new_flame.GetInt() > 0 )
 		{
 			if ( !m_hFlameManager )
 			{
@@ -895,6 +899,10 @@ void CTFFlameThrower::PrimaryAttack()
 				m_hFlameManager->UpdateDamage( iDmgType, flDamage, tf_flamethrower_burn_frequency, iCritFromBehind == 1 );
 				m_hFlameManager->AddPoint( TIME_TO_TICKS( gpGlobals->curtime ) );
 			}
+		}
+		else
+		{
+			CTFFlameEntity::Create( GetFlameOriginPos(), pOwner->EyeAngles(), this, tf_flamethrower_velocity.GetFloat(), iDmgType, flDamage, iCritFromBehind == 1 );
 		}
 
 		// Pyros can become invis in some game modes.  Hitting fire normally handles this,
@@ -1878,6 +1886,9 @@ float CTFFlameThrower::GetInitialAfterburnDuration() const
 //-----------------------------------------------------------------------------
 float CTFFlameThrower::GetAfterburnRateOnHit() const
 {
+	if ( !ff_use_new_flame.GetBool() )
+		return 10.f;
+
 	float flAfterburnDurationScale = 1.f;
 	CALL_ATTRIB_HOOK_FLOAT( flAfterburnDurationScale, afterburn_duration_mult );
 
@@ -2556,17 +2567,37 @@ const char* CTFFlameThrower::FlameEffectName( bool bIsFirstPersonView )
 	// Halloween Spell
 	if ( m_bHasHalloweenSpell )
 	{
+		if ( ff_use_new_flame.GetInt() < 1 )
+		{
+			return "flamethrower_halloween";
+		}
 		return "flamethrower_halloween_new_flame";
 	}
 
-	switch ( GetFlameThrowerMode() )
+	if ( ff_use_new_flame.GetInt() < 1 )
 	{
-	case TF_FLAMETHROWER_MODE_PHLOG:	return "drg_phlo_stream_new_flame";
-	case TF_FLAMETHROWER_MODE_GIANT:	return "flamethrower_giant_mvm_new_flame";
-	case TF_FLAMETHROWER_MODE_RAINBOW:	return "flamethrower_rainbow_new_flame";
-	default:							
+		switch ( GetFlameThrowerMode() )
 		{
-			return GetNewFlameEffectInternal( pOwner->GetTeamNumber(), false );
+			case TF_FLAMETHROWER_MODE_PHLOG:	return "drg_phlo_stream";
+			case TF_FLAMETHROWER_MODE_GIANT:	return "flamethrower_giant_mvm";
+			case TF_FLAMETHROWER_MODE_RAINBOW:	return ( bIsFirstPersonView ? "flamethrower_rainbow_FP" : "flamethrower_rainbow" );
+			default:							
+				{
+					return ( pOwner->GetTeamNumber() == TF_TEAM_BLUE ? "flamethrower_blue" : "flamethrower" );
+				}
+		}
+	}
+	else
+	{
+		switch ( GetFlameThrowerMode() )
+		{
+			case TF_FLAMETHROWER_MODE_PHLOG:	return "drg_phlo_stream_new_flame";
+			case TF_FLAMETHROWER_MODE_GIANT:	return "flamethrower_giant_mvm_new_flame";
+			case TF_FLAMETHROWER_MODE_RAINBOW:	return "flamethrower_rainbow_new_flame";
+			default:							
+				{
+					return GetNewFlameEffectInternal( pOwner->GetTeamNumber(), false );
+				}
 		}
 	}
 }
@@ -2583,17 +2614,38 @@ const char* CTFFlameThrower::FlameCritEffectName( bool bIsFirstPersonView )
 	// Halloween Spell
 	if ( m_bHasHalloweenSpell )
 	{
+		if ( ff_use_new_flame.GetInt() < 1 )
+		{
+			return ( pOwner->GetTeamNumber() == TF_TEAM_BLUE ? "flamethrower_halloween_crit_blue" :
+			"flamethrower_halloween_crit_red" );
+		}
 		return ( pOwner->GetTeamNumber() == TF_TEAM_BLUE ? "flamethrower_halloween_crit_blue_new_flame" : "flamethrower_halloween_crit_red_new_flame" );
 	}
 
-	switch ( GetFlameThrowerMode() )
+	if ( ff_use_new_flame.GetInt() < 1 )
 	{
-	case TF_FLAMETHROWER_MODE_PHLOG:	return "drg_phlo_stream_crit_new_flame";
-	case TF_FLAMETHROWER_MODE_GIANT:	return "flamethrower_crit_giant_mvm_new_flame";
-	case TF_FLAMETHROWER_MODE_RAINBOW:	return "flamethrower_rainbow_new_flame";
-	default:
+		switch ( GetFlameThrowerMode() )
 		{
-			return GetNewFlameEffectInternal( pOwner->GetTeamNumber(), true );
+			case TF_FLAMETHROWER_MODE_PHLOG:	return "drg_phlo_stream_crit";
+			case TF_FLAMETHROWER_MODE_GIANT:	return "flamethrower_crit_giant_mvm";
+			case TF_FLAMETHROWER_MODE_RAINBOW:	return ( bIsFirstPersonView ? "flamethrower_rainbow_FP" : "flamethrower_rainbow" );
+			default:							
+				{
+					return ( pOwner->GetTeamNumber() == TF_TEAM_BLUE ? "flamethrower_crit_blue" : "flamethrower_crit_red" );
+				}
+		}
+	}
+	else
+	{
+		switch ( GetFlameThrowerMode() )
+		{
+		case TF_FLAMETHROWER_MODE_PHLOG:	return "drg_phlo_stream_crit_new_flame";
+		case TF_FLAMETHROWER_MODE_GIANT:	return "flamethrower_crit_giant_mvm_new_flame";
+		case TF_FLAMETHROWER_MODE_RAINBOW:	return "flamethrower_rainbow_new_flame";
+		default:
+			{
+				return GetNewFlameEffectInternal( pOwner->GetTeamNumber(), true );
+			}
 		}
 	}
 }

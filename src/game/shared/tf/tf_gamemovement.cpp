@@ -1066,13 +1066,17 @@ void CTFGameMovement::AirDash( void )
 #ifdef GAME_DLL
 		int iDashCount = 0;
 		CALL_ATTRIB_HOOK_INT_ON_OTHER( m_pTFPlayer, iDashCount, air_dash_count2 );
-		// Exertion damage from multi-dashing ( atomizer )
-		if ( !m_pTFPlayer->m_Shared.InCond( TF_COND_HALLOWEEN_SPEED_BOOST )
-			&& ( !m_pTFPlayer->m_Shared.InCond( TF_COND_SODAPOPPER_HYPE )
-			|| ( m_pTFPlayer->m_Shared.InCond( TF_COND_SODAPOPPER_HYPE ) && !m_pTFPlayer->m_Shared.IsNewSodaPopper() ) )
-			&& iDashCount )
+		if ( iDashCount )	// Old Atomizer logic: Take damage on jumping.
 		{
-			m_pTFPlayer->TakeDamage( CTakeDamageInfo( m_pTFPlayer, m_pTFPlayer, vec3_origin, m_pTFPlayer->WorldSpaceCenter( ), 10.f, DMG_BULLET ) );			
+			// Make sure we're not in any form of airjump buff.
+			if ( ( !m_pTFPlayer->m_Shared.InCond( TF_COND_SODAPOPPER_HYPE )			// Not in any soda popper hype...
+				|| ( m_pTFPlayer->m_Shared.InCond( TF_COND_SODAPOPPER_HYPE )
+				&& !m_pTFPlayer->m_Shared.IsNewSodaPopper() ) )						// Or in old variant soda popper hype...
+				&& !m_pTFPlayer->m_Shared.InCond( TF_COND_HALLOWEEN_SPEED_BOOST ) )	// And not in Halloween Speed Boost.
+			{
+				CTakeDamageInfo info( m_pTFPlayer, m_pTFPlayer, vec3_origin, m_pTFPlayer->WorldSpaceCenter(), 10.0f, DMG_BULLET );
+				m_pTFPlayer->TakeDamage( info );
+			}
 		}
 #endif
 	}
