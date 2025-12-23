@@ -10525,7 +10525,7 @@ void CTFPlayer::FireBullet( CTFWeaponBase *pWpn, const FireBulletsInfo_t &info, 
 				bool bInToolRecordingMode = clienttools->IsInRecordingMode();
 
 				// If we're using a viewmodel, override vecStart with the muzzle of that - just for the visual effect, not gameplay.
-				if ( ( pLocalPlayer != NULL ) && !pLocalPlayer->ShouldDrawThisPlayer() && !bInToolRecordingMode && pWpn )
+				if ( ( pLocalPlayer != NULL ) && ( !pLocalPlayer->ShouldDrawThisPlayer() || pLocalPlayer->ShouldDrawFirstPersonLegs() ) && !bInToolRecordingMode && pWpn )
 				{
 					C_BaseAnimating *pAttachEnt = pWpn->GetAppropriateWorldOrViewModel();
 					if ( pAttachEnt != NULL )
