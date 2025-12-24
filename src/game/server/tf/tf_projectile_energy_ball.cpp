@@ -287,16 +287,25 @@ void CTFProjectile_EnergyBall::Explode( trace_t *pTrace, CBaseEntity *pOther )
 	CPVSFilter filter( vecOrigin );
 	QAngle angExplosion( 0.f, 0.f, 0.f );
 	VectorAngles( pTrace->plane.normal, angExplosion );
-	TE_TFParticleEffect( filter, 0.f, GetExplosionParticleName(), vecOrigin, pTrace->plane.normal, angExplosion, NULL );
-	
+
+	CTFWeaponBaseGun* pTFGun = dynamic_cast< CTFWeaponBaseGun* >( GetLauncher() );
+	int iNewParticleCannon = 0;
+	CALL_ATTRIB_HOOK_INT_ON_OTHER( GetLauncher(), iNewParticleCannon, energy_weapon_charged_shot );
+	if ( pTFGun && iNewParticleCannon == 2 )
+	{
+		DispatchParticleEffect( GetExplosionParticleName(), vecOrigin, GetAbsAngles(), pTFGun->GetParticleColor( 1 ), pTFGun->GetParticleColor( 2 ), true, NULL, 0 );
+	}
+	else
+	{
+		TE_TFParticleEffect( filter, 0.f, GetExplosionParticleName(), vecOrigin, pTrace->plane.normal, angExplosion, NULL );
+	}
+
 	// Screenshake
 	if ( m_bChargedShot )
 	{
 		UTIL_ScreenShake( WorldSpaceCenter(), 25.0, 150.0, 1.0, 750, SHAKE_START );
 	}
 
-	int iNewParticleCannon = 0;
-	CALL_ATTRIB_HOOK_INT_ON_OTHER( GetLauncher(), iNewParticleCannon, energy_weapon_charged_shot );
 	// Sound
 	ImpactSound( ( GetLauncher() && iNewParticleCannon == 2 ) ? "Weapon_CowMangler.Explode.Old" : "Weapon_CowMangler.Explode" );
 	CSoundEnt::InsertSound ( SOUND_COMBAT, vecOrigin, 1024, 3.0 );
