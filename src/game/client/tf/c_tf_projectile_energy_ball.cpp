@@ -91,11 +91,12 @@ void C_TFProjectile_EnergyBall::CreateTrails( void )
 //-----------------------------------------------------------------------------
 const char *C_TFProjectile_EnergyBall::GetTrailParticleName( void )
 {
+	CTFWeaponBase *pWeapon = dynamic_cast< CTFWeaponBase * >( GetOriginalLauncher() );
 	int iNewParticleCannon = 0;
-	CALL_ATTRIB_HOOK_INT_ON_OTHER( GetLauncher(), iNewParticleCannon, energy_weapon_charged_shot );
+	CALL_ATTRIB_HOOK_INT_ON_OTHER( pWeapon, iNewParticleCannon, energy_weapon_charged_shot );
 	if ( m_bChargedShot )
 	{
-		if ( GetLauncher() && iNewParticleCannon == 2 )
+		if ( pWeapon && iNewParticleCannon == 2 )
 		{
 			return "drg_cowmangler_trail_charged";
 		}
@@ -106,7 +107,7 @@ const char *C_TFProjectile_EnergyBall::GetTrailParticleName( void )
 	}
 	else
 	{
-		if ( GetLauncher() && iNewParticleCannon == 2 )
+		if ( pWeapon && iNewParticleCannon == 2 )
 		{
 			return "drg_cowmangler_trail_normal";
 		}
