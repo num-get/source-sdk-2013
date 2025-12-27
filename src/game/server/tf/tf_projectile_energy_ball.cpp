@@ -288,10 +288,11 @@ void CTFProjectile_EnergyBall::Explode( trace_t *pTrace, CBaseEntity *pOther )
 	QAngle angExplosion( 0.f, 0.f, 0.f );
 	VectorAngles( pTrace->plane.normal, angExplosion );
 
+	CTFWeaponBase *pWeapon = dynamic_cast< CTFWeaponBase * >( GetOriginalLauncher() );
 	CTFWeaponBaseGun* pTFGun = dynamic_cast< CTFWeaponBaseGun* >( GetLauncher() );
 	int iNewParticleCannon = 0;
-	CALL_ATTRIB_HOOK_INT_ON_OTHER( GetLauncher(), iNewParticleCannon, energy_weapon_charged_shot );
-	if ( pTFGun && iNewParticleCannon == 2 )
+	CALL_ATTRIB_HOOK_INT_ON_OTHER( pWeapon, iNewParticleCannon, energy_weapon_charged_shot );
+	if ( pWeapon && pTFGun && iNewParticleCannon == 2 )
 	{
 		DispatchParticleEffect( GetExplosionParticleName(), vecOrigin, GetAbsAngles(), pTFGun->GetParticleColor( 1 ), pTFGun->GetParticleColor( 2 ), true, NULL, 0 );
 	}
@@ -307,7 +308,7 @@ void CTFProjectile_EnergyBall::Explode( trace_t *pTrace, CBaseEntity *pOther )
 	}
 
 	// Sound
-	ImpactSound( ( GetLauncher() && iNewParticleCannon == 2 ) ? "Weapon_CowMangler.Explode.Old" : "Weapon_CowMangler.Explode" );
+	ImpactSound( ( pWeapon && iNewParticleCannon == 2 ) ? "Weapon_CowMangler.Explode.Old" : "Weapon_CowMangler.Explode" );
 	CSoundEnt::InsertSound ( SOUND_COMBAT, vecOrigin, 1024, 3.0 );
 
 	// Damage.
@@ -356,11 +357,12 @@ void CTFProjectile_EnergyBall::Explode( trace_t *pTrace, CBaseEntity *pOther )
 //-----------------------------------------------------------------------------
 const char *CTFProjectile_EnergyBall::GetExplosionParticleName( void )
 {
+	CTFWeaponBase *pWeapon = dynamic_cast< CTFWeaponBase * >( GetOriginalLauncher() );
 	int iNewParticleCannon = 0;
-	CALL_ATTRIB_HOOK_INT_ON_OTHER( GetLauncher(), iNewParticleCannon, energy_weapon_charged_shot );
+	CALL_ATTRIB_HOOK_INT_ON_OTHER( pWeapon, iNewParticleCannon, energy_weapon_charged_shot );
 	if ( m_bChargedShot )
 	{
-		if ( GetLauncher() && iNewParticleCannon == 2 )
+		if ( pWeapon && iNewParticleCannon == 2 )
 		{
 			return "drg_cowmangler_impact_charged";
 		}
@@ -371,7 +373,7 @@ const char *CTFProjectile_EnergyBall::GetExplosionParticleName( void )
 	}
 	else
 	{
-		if ( GetLauncher() && iNewParticleCannon == 2 )
+		if ( pWeapon && iNewParticleCannon == 2 )
 		{
 			return "drg_cowmangler_impact_normal";
 		}
@@ -403,9 +405,10 @@ int	CTFProjectile_EnergyBall::GetDamageType()
 	else
 	{
 		iDamageType = DMG_BLAST | DMG_HALF_FALLOFF | DMG_USEDISTANCEMOD;
+		CTFWeaponBase *pWeapon = dynamic_cast< CTFWeaponBase * >( GetOriginalLauncher() );
 		int iNewParticleCannon = 0;
-		CALL_ATTRIB_HOOK_INT_ON_OTHER( GetLauncher(), iNewParticleCannon, energy_weapon_charged_shot );
-		if ( m_bCritical && !( iNewParticleCannon == 2 && GetLauncher() ) )
+		CALL_ATTRIB_HOOK_INT_ON_OTHER( pWeapon, iNewParticleCannon, energy_weapon_charged_shot );
+		if ( m_bCritical && !( iNewParticleCannon == 2 && pWeapon ) )
 		{
 			iDamageType |= DMG_CRITICAL;
 		}
