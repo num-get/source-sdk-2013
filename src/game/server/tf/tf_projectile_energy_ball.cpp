@@ -292,7 +292,7 @@ void CTFProjectile_EnergyBall::Explode( trace_t *pTrace, CBaseEntity *pOther )
 	CTFWeaponBaseGun* pTFGun = dynamic_cast< CTFWeaponBaseGun* >( GetLauncher() );
 	int iNewParticleCannon = 0;
 	CALL_ATTRIB_HOOK_INT_ON_OTHER( pWeapon, iNewParticleCannon, energy_weapon_charged_shot );
-	if ( pWeapon && pTFGun && iNewParticleCannon == 2 )
+	if ( pTFGun && iNewParticleCannon == 2 )
 	{
 		DispatchParticleEffect( GetExplosionParticleName(), vecOrigin, GetAbsAngles(), pTFGun->GetParticleColor( 1 ), pTFGun->GetParticleColor( 2 ), true, NULL, 0 );
 	}
@@ -308,7 +308,7 @@ void CTFProjectile_EnergyBall::Explode( trace_t *pTrace, CBaseEntity *pOther )
 	}
 
 	// Sound
-	ImpactSound( ( pWeapon && iNewParticleCannon == 2 ) ? "Weapon_CowMangler.Explode.Old" : "Weapon_CowMangler.Explode" );
+	ImpactSound( ( iNewParticleCannon == 2 ) ? "Weapon_CowMangler.Explode.Old" : "Weapon_CowMangler.Explode" );
 	CSoundEnt::InsertSound ( SOUND_COMBAT, vecOrigin, 1024, 3.0 );
 
 	// Damage.
@@ -362,7 +362,7 @@ const char *CTFProjectile_EnergyBall::GetExplosionParticleName( void )
 	CALL_ATTRIB_HOOK_INT_ON_OTHER( pWeapon, iNewParticleCannon, energy_weapon_charged_shot );
 	if ( m_bChargedShot )
 	{
-		if ( pWeapon && iNewParticleCannon == 2 )
+		if ( iNewParticleCannon == 2 )
 		{
 			return "drg_cowmangler_impact_charged";
 		}
@@ -373,7 +373,7 @@ const char *CTFProjectile_EnergyBall::GetExplosionParticleName( void )
 	}
 	else
 	{
-		if ( pWeapon && iNewParticleCannon == 2 )
+		if ( iNewParticleCannon == 2 )
 		{
 			return "drg_cowmangler_impact_normal";
 		}
@@ -408,7 +408,7 @@ int	CTFProjectile_EnergyBall::GetDamageType()
 		CTFWeaponBase *pWeapon = dynamic_cast< CTFWeaponBase * >( GetOriginalLauncher() );
 		int iNewParticleCannon = 0;
 		CALL_ATTRIB_HOOK_INT_ON_OTHER( pWeapon, iNewParticleCannon, energy_weapon_charged_shot );
-		if ( m_bCritical && !( iNewParticleCannon == 2 && pWeapon ) )
+		if ( m_bCritical && iNewParticleCannon != 2 )
 		{
 			iDamageType |= DMG_CRITICAL;
 		}
