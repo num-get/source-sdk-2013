@@ -95,3 +95,37 @@
 	"volume"	".25"
 	"wave"	"weapons\cow_mangler_reload_final_old.wav"
 }
+
+"Cleaver.ImpactFlesh.Old"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1.0"
+	"soundlevel"	"SNDLVL_75dB"
+	
+	"rndwave"
+	{
+		"wave"		")weapons\cleaver_hit_01.wav"
+		"wave"		")weapons\cleaver_hit_02.wav"
+		"wave"		")weapons\cleaver_hit_03.wav"
+		"wave"		")weapons\cleaver_hit_04.wav"
+		"wave"		")weapons\cleaver_hit_05.wav"
+		"wave"		")weapons\cleaver_hit_06.wav"
+		"wave"		")weapons\cleaver_hit_07.wav"
+	}
+}
+
+"Cleaver.ImpactWorld.Old"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1.0"
+	"soundlevel"	"SNDLVL_75dB"
+	
+	"rndwave"
+	{
+		"wave"		")weapons\cleaver_hit_world_01.wav"
+		"wave"		")weapons\cleaver_hit_world_02.wav"
+		"wave"		")weapons\cleaver_hit_world_03.wav"
+		"wave"		")weapons\cleaver_hit_world_04.wav"
+		"wave"		")weapons\cleaver_hit_world_05.wav"
+	}
+}

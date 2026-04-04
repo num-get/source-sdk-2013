@@ -2564,40 +2564,42 @@ const char* CTFFlameThrower::FlameEffectName( bool bIsFirstPersonView )
 	if ( !pOwner )
 		return NULL;
 
-	// Halloween Spell
-	if ( m_bHasHalloweenSpell )
+	if ( ff_use_new_flame.GetInt() < 1 )
 	{
-		if ( ff_use_new_flame.GetInt() < 1 )
+		// Halloween Spell
+		if ( m_bHasHalloweenSpell )
 		{
 			return "flamethrower_halloween";
 		}
-		return "flamethrower_halloween_new_flame";
-	}
 
-	if ( ff_use_new_flame.GetInt() < 1 )
-	{
 		switch ( GetFlameThrowerMode() )
 		{
-			case TF_FLAMETHROWER_MODE_PHLOG:	return "drg_phlo_stream";
-			case TF_FLAMETHROWER_MODE_GIANT:	return "flamethrower_giant_mvm";
-			case TF_FLAMETHROWER_MODE_RAINBOW:	return ( bIsFirstPersonView ? "flamethrower_rainbow_FP" : "flamethrower_rainbow" );
-			default:							
-				{
-					return ( pOwner->GetTeamNumber() == TF_TEAM_BLUE ? "flamethrower_blue" : "flamethrower" );
-				}
+		case TF_FLAMETHROWER_MODE_PHLOG:	return "drg_phlo_stream";
+		case TF_FLAMETHROWER_MODE_GIANT:	return "flamethrower_giant_mvm";
+		case TF_FLAMETHROWER_MODE_RAINBOW:	return ( bIsFirstPersonView ? "flamethrower_rainbow_FP" : "flamethrower_rainbow" );
+		default:							
+			{
+				return ( pOwner->GetTeamNumber() == TF_TEAM_BLUE ? "flamethrower_blue" : "flamethrower" );
+			}
 		}
 	}
 	else
 	{
+		// Halloween Spell
+		if ( m_bHasHalloweenSpell )
+		{
+			return "flamethrower_halloween_new_flame";
+		}
+
 		switch ( GetFlameThrowerMode() )
 		{
-			case TF_FLAMETHROWER_MODE_PHLOG:	return "drg_phlo_stream_new_flame";
-			case TF_FLAMETHROWER_MODE_GIANT:	return "flamethrower_giant_mvm_new_flame";
-			case TF_FLAMETHROWER_MODE_RAINBOW:	return "flamethrower_rainbow_new_flame";
-			default:							
-				{
-					return GetNewFlameEffectInternal( pOwner->GetTeamNumber(), false );
-				}
+		case TF_FLAMETHROWER_MODE_PHLOG:	return "drg_phlo_stream_new_flame";
+		case TF_FLAMETHROWER_MODE_GIANT:	return "flamethrower_giant_mvm_new_flame";
+		case TF_FLAMETHROWER_MODE_RAINBOW:	return "flamethrower_rainbow_new_flame";
+		default:							
+			{
+				return GetNewFlameEffectInternal( pOwner->GetTeamNumber(), false );
+			}
 		}
 	}
 }
@@ -2611,32 +2613,34 @@ const char* CTFFlameThrower::FlameCritEffectName( bool bIsFirstPersonView )
 	if ( !pOwner )
 		return NULL;
 
-	// Halloween Spell
-	if ( m_bHasHalloweenSpell )
+	if ( ff_use_new_flame.GetInt() < 1 )
 	{
-		if ( ff_use_new_flame.GetInt() < 1 )
+		// Halloween Spell
+		if ( m_bHasHalloweenSpell )
 		{
 			return ( pOwner->GetTeamNumber() == TF_TEAM_BLUE ? "flamethrower_halloween_crit_blue" :
 			"flamethrower_halloween_crit_red" );
 		}
-		return ( pOwner->GetTeamNumber() == TF_TEAM_BLUE ? "flamethrower_halloween_crit_blue_new_flame" : "flamethrower_halloween_crit_red_new_flame" );
-	}
 
-	if ( ff_use_new_flame.GetInt() < 1 )
-	{
 		switch ( GetFlameThrowerMode() )
 		{
-			case TF_FLAMETHROWER_MODE_PHLOG:	return "drg_phlo_stream_crit";
-			case TF_FLAMETHROWER_MODE_GIANT:	return "flamethrower_crit_giant_mvm";
-			case TF_FLAMETHROWER_MODE_RAINBOW:	return ( bIsFirstPersonView ? "flamethrower_rainbow_FP" : "flamethrower_rainbow" );
-			default:							
-				{
-					return ( pOwner->GetTeamNumber() == TF_TEAM_BLUE ? "flamethrower_crit_blue" : "flamethrower_crit_red" );
-				}
+		case TF_FLAMETHROWER_MODE_PHLOG:	return "drg_phlo_stream_crit";
+		case TF_FLAMETHROWER_MODE_GIANT:	return "flamethrower_crit_giant_mvm";
+		case TF_FLAMETHROWER_MODE_RAINBOW:	return ( bIsFirstPersonView ? "flamethrower_rainbow_FP" : "flamethrower_rainbow" );
+		default:							
+			{
+				return ( pOwner->GetTeamNumber() == TF_TEAM_BLUE ? "flamethrower_crit_blue" : "flamethrower_crit_red" );
+			}
 		}
 	}
 	else
 	{
+		// Halloween Spell
+		if ( m_bHasHalloweenSpell )
+		{
+			return ( pOwner->GetTeamNumber() == TF_TEAM_BLUE ? "flamethrower_halloween_crit_blue_new_flame" : "flamethrower_halloween_crit_red_new_flame" );
+		}
+
 		switch ( GetFlameThrowerMode() )
 		{
 		case TF_FLAMETHROWER_MODE_PHLOG:	return "drg_phlo_stream_crit_new_flame";

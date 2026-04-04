@@ -2095,8 +2095,6 @@
 			}
 			"visuals"
 			{
-				"sound_single_shot"	"Weapon_LochnLoad.Single"
-				"sound_burst"			"Weapon_LochnLoad.SingleCrit"
 				"animation_replacement"
 				{
 					"ACT_RELOAD_START"		"ACT_PRIMARY_RELOAD_START_2"
@@ -4297,7 +4295,8 @@
 			"image_inventory"	"backpack/workshop_partner/weapons/c_models/c_sd_cleaver/c_sd_cleaver"
 			"image_inventory_size_w"		"128"
 			"image_inventory_size_h"		"82"
-			"model_player"	"models/workshop_partner/weapons/c_models/c_sd_cleaver/c_sd_cleaver.mdl"
+			"model_player"	"models/workshop_partner/weapons/c_models/c_sd_cleaver/v_sd_cleaver.mdl"
+			"model_world"	"models/workshop_partner/weapons/c_models/c_sd_cleaver/c_sd_cleaver.mdl"
 			"xifier_class_remap"	"guillotine"
 			"used_by_classes"
 			{
@@ -4329,12 +4328,14 @@
 					"attribute_class"	"allowed_in_medieval_mode"
 					"value"	"1"
 				}
+				"weapon_allow_inspect"
+				{
+					"attribute_class"	"weapon_allow_inspect"
+					"value"	"-1"
+				}
 			}
 			"visuals"
 			{
-				"sound_deploy"		"Cleaver.Draw"
-				"sound_single_shot"	"Cleaver.Single"
-
 				"styles"
 				{
 					"0"
@@ -4350,12 +4351,9 @@
 				}
 				"animation_replacement"
 				{
-					"ACT_VM_IDLE"						"ACT_ITEM3_VM_IDLE"
-					"ACT_VM_DRAW"						"ACT_ITEM3_VM_DRAW"
-					"ACT_VM_PRIMARYATTACK"				"ACT_ITEM3_VM_THROW"
-					"ACT_SECONDARY_VM_INSPECT_START"	"ACT_SECONDARY_ALT1_VM_INSPECT_START"
-					"ACT_SECONDARY_VM_INSPECT_IDLE"		"ACT_SECONDARY_ALT1_VM_INSPECT_IDLE"
-					"ACT_SECONDARY_VM_INSPECT_END"		"ACT_SECONDARY_ALT1_VM_INSPECT_END"
+					"ACT_SECONDARY_VM_INSPECT_START"	"ACT_ITEM1_VM_INSPECT_START"
+					"ACT_SECONDARY_VM_INSPECT_IDLE"		"ACT_ITEM1_VM_INSPECT_IDLE"
+					"ACT_SECONDARY_VM_INSPECT_END"		"ACT_ITEM1_VM_INSPECT_END"
 
 				}
 			}
