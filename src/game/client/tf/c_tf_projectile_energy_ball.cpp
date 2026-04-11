@@ -96,7 +96,7 @@ const char *C_TFProjectile_EnergyBall::GetTrailParticleName( void )
 	CALL_ATTRIB_HOOK_INT_ON_OTHER( pWeapon, iNewParticleCannon, energy_weapon_charged_shot );
 	if ( m_bChargedShot )
 	{
-		if ( pWeapon && iNewParticleCannon == 2 )
+		if ( iNewParticleCannon == 2 )
 		{
 			return "drg_cowmangler_trail_charged";
 		}
@@ -107,7 +107,7 @@ const char *C_TFProjectile_EnergyBall::GetTrailParticleName( void )
 	}
 	else
 	{
-		if ( pWeapon && iNewParticleCannon == 2 )
+		if ( iNewParticleCannon == 2 )
 		{
 			return "drg_cowmangler_trail_normal";
 		}

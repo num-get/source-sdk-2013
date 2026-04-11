@@ -2558,6 +2558,15 @@ Activity CTFWeaponBase::GetInspectActivity( TFWeaponInspectStage inspectStage )
 	return act;
 }
 
+//-----------------------------------------------------------------------------
+// Purpose:
+//-----------------------------------------------------------------------------
+bool CTFWeaponBase::CanInspect() const
+{
+	int iInspect = 0;
+	CALL_ATTRIB_HOOK_INT( iInspect, weapon_allow_inspect );
+	return iInspect > -1;
+}
 
 //-----------------------------------------------------------------------------
 // Purpose:

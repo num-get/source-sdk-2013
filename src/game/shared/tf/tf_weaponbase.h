@@ -761,7 +761,7 @@ public:
 
 	CNetworkVar( float, m_flObservedCritChance );
 
-	virtual bool CanInspect() const { return !UsesForcedViewModel(); }
+	virtual bool CanInspect() const;
 	void HandleInspect();
 	
 	virtual void HookAttributes( void ) {};

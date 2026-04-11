@@ -3036,7 +3036,7 @@ void C_BasePlayer::BuildFirstPersonMeathookTransformations( CStudioHdr *hdr, Vec
 					pWeapon && pWeapon->GetWeaponID() != TF_WEAPON_BUILDER ) )
 					fFwd += 4.f;
 			}
-			if ( pLocalTFPlayer->IsPlayerClass( TF_CLASS_HEAVYWEAPONS ) && pWeapon && pWeapon->GetWeaponID() == TF_WEAPON_MINIGUN )
+			if ( pLocalTFPlayer->IsPlayerClass( TF_CLASS_HEAVYWEAPONS ) && pWeapon && ( pWeapon->GetWeaponID() == TF_WEAPON_MINIGUN || pWeapon->GetWeaponID() == TF_WEAPON_LUNCHBOX ) )
 			{
 				fUp += 18.f;
 			}

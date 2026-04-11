@@ -7449,7 +7449,7 @@ float CTFGameRules::ApplyOnDamageAliveModifyRules( const CTakeDamageInfo &info, 
 
 				if ( !pVictim->m_Shared.IsFeignDeathReady() && !iNewFeignDeath )
 				{
-					pVictim->m_Shared.ReduceFeignDeathDuration( RemapValClamped ( flRealDamage, 0, 100.f, 0, 6.f ) );
+					pVictim->m_Shared.ReduceFeignDeathDuration( RemapValClamped ( flRealDamage, 0.1f, 25.f, 0.1f, 2.5f ) );
 				}
 
 				PotentiallyDamageMitigatedEvent( pVictim, pVictim, pWatch, flBeforeflRealDamage, flRealDamage );

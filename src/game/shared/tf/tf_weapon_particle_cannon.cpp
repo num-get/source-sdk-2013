@@ -113,7 +113,16 @@ bool CTFParticleCannon::Holster( CBaseCombatWeapon *pSwitchingTo )
 	m_bEffectsThinking = false;
 #endif
 
-	StopSound( "Weapon_CowMangler.Charging" );
+	int iNewParticleCannon = 0;
+	CALL_ATTRIB_HOOK_INT_ON_OTHER( pPlayer, iNewParticleCannon, energy_weapon_charged_shot );
+	if ( iNewParticleCannon == 2 )
+	{
+		StopSound( "Weapon_CowMangler.Charging.Old" );
+	}
+	else
+	{
+		StopSound( "Weapon_CowMangler.Charging" );
+	}
 
 	return BaseClass::Holster( pSwitchingTo );
 }
@@ -332,7 +341,7 @@ const char *CTFParticleCannon::GetMuzzleFlashParticleEffect( void )
 	CALL_ATTRIB_HOOK_INT_ON_OTHER( pPlayer, iNewParticleCannon, energy_weapon_charged_shot );
 	if ( m_bChargedShot )
 	{
-		if ( pPlayer && iNewParticleCannon == 2 )
+		if ( iNewParticleCannon == 2 )
 		{
 			return "drg_cowmangler_muzzleflash_charged";
 		}
@@ -343,7 +352,7 @@ const char *CTFParticleCannon::GetMuzzleFlashParticleEffect( void )
 	}
 	else
 	{
-		if ( pPlayer && iNewParticleCannon == 2 )
+		if ( iNewParticleCannon == 2 )
 		{
 			return "drg_cowmangler_muzzleflash_normal";
 		}
