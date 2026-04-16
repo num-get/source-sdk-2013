@@ -148,27 +148,29 @@ void CTFBreakableMelee::SwitchBodyGroups( void )
 		iState = 1;
 	}
 
+	CTFPlayer *pTFPlayer = ToTFPlayer( GetOwner() );
+	if (UsesForcedViewModel())
+	{
+		if ( pTFPlayer && pTFPlayer->GetActiveWeapon() == this )
+		{
+			if ( pTFPlayer->GetViewModel() )
+			{
+				pTFPlayer->GetViewModel()->SetBodygroup( TF_BREAKABLE_MELEE_BREAK_BODYGROUP+1, iState );
+			}
+		}
+	}
 #ifdef CLIENT_DLL
 	// We'll successfully predict m_nBody along with m_bBroken, but this can be called outside prediction, in which case
 	// we want to use the networked m_nBody value -- but still fixup our viewmodel which is clientside only.
 	if ( prediction->InPrediction() )
 		{ SetBodygroup( TF_BREAKABLE_MELEE_BREAK_BODYGROUP, iState ); }
 
-	CTFPlayer *pTFPlayer = ToTFPlayer( GetOwner() );
 	if ( pTFPlayer && pTFPlayer->GetActiveWeapon() == this )
 	{
 		C_BaseAnimating *pViewWpn = GetAppropriateWorldOrViewModel();
 		if ( pViewWpn != this )
 		{
-			if (UsesForcedViewModel())
-			{
-				//EXTREMELY hacky here, but it's only used for this one instance.....
-				pViewWpn->SetBodygroup( TF_BREAKABLE_MELEE_BREAK_BODYGROUP+1, iState );
-			}
-			else
-			{
-				pViewWpn->SetBodygroup( TF_BREAKABLE_MELEE_BREAK_BODYGROUP, iState );
-			}
+			pViewWpn->SetBodygroup( TF_BREAKABLE_MELEE_BREAK_BODYGROUP, iState );
 		}
 	}
 #else // CLIENT_DLL
