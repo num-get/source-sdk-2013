@@ -84,6 +84,7 @@ extern ConVar cl_forwardspeed;
 extern ConVar cl_backspeed;
 extern ConVar cl_sidespeed;
 extern ConVar mp_tournament_readymode_countdown;
+extern ConVar ff_use_new_parachute;
 
 #define TF_MAX_SPEED   (400 * 1.3)	// 400 is Scout max speed, and we allow up to 3% movement bonus.
 
@@ -1166,7 +1167,7 @@ void CTFGameMovement::ToggleParachute()
 			bool bOnGround = ( m_pTFPlayer->GetFlags() & FL_ONGROUND );
 			int iParachuteDisabled = 0;
 			CALL_ATTRIB_HOOK_INT_ON_OTHER( m_pTFPlayer, iParachuteDisabled, parachute_disabled );
-			if ( !bOnGround && !iParachuteDisabled && ( iParachute != 1 || tf_parachute_deploy_toggle_allowed.GetBool() || !m_pTFPlayer->m_Shared.InCond( TF_COND_PARACHUTE_DEPLOYED ) ) )
+			if ( !bOnGround && !iParachuteDisabled && ( !ff_use_new_parachute.GetBool() || tf_parachute_deploy_toggle_allowed.GetBool() || !m_pTFPlayer->m_Shared.InCond( TF_COND_PARACHUTE_DEPLOYED ) ) )
 			{
 				m_pTFPlayer->m_Shared.AddCond( TF_COND_PARACHUTE_ACTIVE );
 				m_pTFPlayer->m_Shared.AddCond( TF_COND_PARACHUTE_DEPLOYED );
@@ -2658,12 +2659,10 @@ void CTFGameMovement::FullWalkMove()
 	{
 		if ( m_pTFPlayer->m_Shared.InCond( TF_COND_PARACHUTE_ACTIVE ) && mv->m_vecVelocity[2] < 0 )
 		{
-			int iParachute = 0;
-			CALL_ATTRIB_HOOK_INT_ON_OTHER( m_pTFPlayer, iParachute, parachute_attribute );
-			float flMaxSpeedOnFireZ = ( iParachute == 1 ) ? tf_parachute_maxspeed_onfire_z.GetFloat() : 10.0f;
+			float flMaxSpeedOnFireZ = ( ff_use_new_parachute.GetBool() ) ? tf_parachute_maxspeed_onfire_z.GetFloat() : 10.0f;
 			mv->m_vecVelocity[2] = Max( mv->m_vecVelocity[2], m_pTFPlayer->m_Shared.InCond( TF_COND_BURNING ) ? flMaxSpeedOnFireZ : tf_parachute_maxspeed_z.GetFloat() );
 
-			float flDrag = ( iParachute == 1 ) ? tf_parachute_maxspeed_xy.GetFloat() : tf_parachute_maxspeed_xy.GetFloat() * 4/3;
+			float flDrag = ( ff_use_new_parachute.GetBool() ) ? tf_parachute_maxspeed_xy.GetFloat() : tf_parachute_maxspeed_xy.GetFloat() * 4/3;
 			// Instead of clamping, we'll dampen
 			float flSpeedX = abs( mv->m_vecVelocity[0] );
 			float flSpeedY = abs( mv->m_vecVelocity[1] );
