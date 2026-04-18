@@ -2903,6 +2903,12 @@ void CTFPlayerShared::ConditionGameRulesThink( void )
 
 				if ( m_hBurnWeapon )
 				{
+					if ( ( m_hBurnWeapon.Get()->GetWeaponID() == TF_WEAPON_FLAME_BALL
+						|| m_hBurnWeapon.Get()->GetWeaponID() == TF_WEAPON_JAR_GAS ) && !ff_use_new_flame.GetBool() )
+					{
+						flBurnDamage = TF_BURNING_DMG;
+					}
+
 					CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( m_hBurnWeapon, flBurnDamage, mult_wpn_burndmg );
 
 					if ( m_hBurnWeapon.Get()->GetWeaponID() == TF_WEAPON_FLAREGUN )
