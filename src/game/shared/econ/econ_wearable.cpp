@@ -389,10 +389,13 @@ bool CEconWearable::ShouldDraw( void )
 	}
 	else
 	{
-		// Non-viewmodel mode.
-		if ( IsViewModelWearable() )
+		if ( pPlayerOwner->ShouldDrawLocalPlayer() || !pPlayerOwner->ShouldDrawFirstPersonLegs() )
 		{
-			return false;
+			// Non-viewmodel mode.
+			if ( IsViewModelWearable() )
+			{
+				return false;
+			}
 		}
 	}
 

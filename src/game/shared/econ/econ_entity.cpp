@@ -1624,7 +1624,7 @@ void CEconEntity::UpdateSingleParticleSystem( bool bVisible, const attachedparti
 	bool bIsVM = false;
 	C_BasePlayer *pOwner = ToBasePlayer(GetOwnerEntity());
 	bool bDrawThisEffect = true;
-	if ( !pOwner->ShouldDrawThisPlayer() )
+	if ( !pOwner->ShouldDrawThisPlayer() || ( !pOwner->ShouldDrawLocalPlayer() && pOwner->ShouldDrawFirstPersonLegs() ) )
 	{
 		// only draw effects designated for this
 		if ( !pSystem->bDrawInViewModel )
