@@ -19490,7 +19490,7 @@ void CTFPlayer::ModifyOrAppendCriteria( AI_CriteriaSet& criteriaSet )
 		{
 			if ( m_EquippedLoadoutItemIndices[i] != LOADOUT_SLOT_USE_BASE_ITEM )
 			{
-				pItem = m_Inventory.GetInventoryItemByItemID( m_EquippedLoadoutItemIndices[i] );
+				pItem = GetEquippedItemForLoadoutSlot( i );
 				if ( pItem )
 				{
 					criteriaSet.AppendCriteria( kSlotCriteriaName[i], pItem->GetStaticData()->GetDefinitionName() );
