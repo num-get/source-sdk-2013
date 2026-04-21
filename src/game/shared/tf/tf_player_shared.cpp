@@ -6759,6 +6759,9 @@ void CTFPlayerShared::Burn( CTFPlayer *pAttacker, CTFWeaponBase *pWeapon, float 
 	}
 
 	// check afterburn duration
+	bool bIsParticleCannon = ( pWeapon && pWeapon->GetWeaponID() == TF_WEAPON_PARTICLE_CANNON );
+	bool bIsFlameBall = ( pWeapon && pWeapon->GetWeaponID() == TF_WEAPON_FLAME_BALL );
+	bool bIsJarGas = ( pWeapon && pWeapon->GetWeaponID() == TF_WEAPON_JAR_GAS );
 	float flFlameLife = pWeapon ? pWeapon->GetAfterburnRateOnHit() : 0.f;
 	if ( bAfterburnImmunity )
 	{
@@ -6776,13 +6779,30 @@ void CTFPlayerShared::Burn( CTFPlayer *pAttacker, CTFWeaponBase *pWeapon, float 
 	{
 		m_flAfterburnDuration = flFlameLife;
 	}
+	else if ( !ff_use_new_flame.GetBool() && !bIsFlameBall && !bIsJarGas )
+	{
+		if ( bIsParticleCannon )
+		{
+			flFlameLife = 6.f;
+		}
+		else
+		{
+			flFlameLife = 10.f;
+		}
+		CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pWeapon, flFlameLife, mult_wpn_burntime );
+
+		m_flAfterburnDuration = flFlameLife;
+	}
 	// otherwise stack the duration
 	else
 	{
 		m_flAfterburnDuration += flFlameLife;
 	}
 
-	m_flAfterburnDuration = Clamp( m_flAfterburnDuration, 0.f, tf_afterburn_max_duration );
+	if ( ff_use_new_flame.GetBool() || bIsFlameBall || bIsJarGas )
+	{
+		m_flAfterburnDuration = Clamp( m_flAfterburnDuration, 0.f, tf_afterburn_max_duration );
+	}
 
 #ifdef DEBUG
 	if ( tf_afterburn_debug.GetBool() )
