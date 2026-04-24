@@ -46,6 +46,8 @@
 ConVar tf_weapon_select_demo_start_delay( "tf_weapon_select_demo_start_delay", "1.0", FCVAR_CLIENTDLL | FCVAR_ARCHIVE, "Delay after spawning to start the weapon bucket demo." );
 ConVar tf_weapon_select_demo_time( "tf_weapon_select_demo_time", "0.5", FCVAR_CLIENTDLL | FCVAR_ARCHIVE, "Time to pulse each weapon bucket upon spawning as a new class. 0 to turn off." );
 
+ConVar ff_hud_bucket_icon( "ff_hud_bucket_icon", "0", FCVAR_CLIENTDLL | FCVAR_ARCHIVE, "Use old style bucket icon for the weapon selection HUD." );
+
 //-----------------------------------------------------------------------------
 // Purpose: tf weapon selection hud element
 //-----------------------------------------------------------------------------
@@ -557,7 +559,15 @@ void CHudWeaponSelection::PerformLayout( void )
 				if ( !pWeapon->VisibleInWeaponSelection() )
 					continue;
 
-				m_pModelPanels[i]->SetItem( pWeapon->GetAttributeContainer()->GetItem() );
+				if ( ff_hud_bucket_icon.GetBool() && pWeapon->GetAttributeContainer()->GetItem()->GetStaticData()->IsBaseItem()
+					&& !V_stristr ( pWeapon->GetAttributeContainer()->GetItem()->GetStaticData()->GetItemClass(), "tf_weapon_grapplinghook" ) )
+				{
+					m_pModelPanels[i]->SetItem( NULL );
+				}
+				else
+				{
+					m_pModelPanels[i]->SetItem( pWeapon->GetAttributeContainer()->GetItem() );
+				}
 
 				m_pModelPanels[i]->SetSize( rSlot[i].wide, rSlot[ i ].tall );
 
@@ -584,7 +594,15 @@ void CHudWeaponSelection::PerformLayout( void )
 				if ( !pWeapon )
 					continue;
 
-				m_pModelPanels[i]->SetItem( pWeapon->GetAttributeContainer()->GetItem() );
+				if ( ff_hud_bucket_icon.GetBool() && pWeapon->GetAttributeContainer()->GetItem()->GetStaticData()->IsBaseItem()
+					&& !V_stristr ( pWeapon->GetAttributeContainer()->GetItem()->GetStaticData()->GetItemClass(), "tf_weapon_grapplinghook" ) )
+				{
+					m_pModelPanels[i]->SetItem( NULL );
+				}
+				else
+				{
+					m_pModelPanels[i]->SetItem( pWeapon->GetAttributeContainer()->GetItem() );
+				}
 				
 				m_pModelPanels[i]->SetSize( rSlot[i].wide, rSlot[ i ].tall );
 				vgui::IScheme *pScheme = vgui::scheme()->GetIScheme( GetScheme() );
@@ -692,7 +710,7 @@ void CHudWeaponSelection::PostChildPaint()
 void CHudWeaponSelection::DrawSelection( C_BaseCombatWeapon *pSelectedWeapon )
 {
 	// if we're not supposed to draw the selection, the don't draw the selection
-	if( !m_bSelectionVisible )
+	if( !m_bSelectionVisible && !ff_hud_bucket_icon.GetBool() )
 		return;
 
 	C_TFPlayer *pPlayer = C_TFPlayer::GetLocalTFPlayer();
@@ -742,6 +760,12 @@ void CHudWeaponSelection::DrawSelection( C_BaseCombatWeapon *pSelectedWeapon )
 				if ( !pWeapon->VisibleInWeaponSelection() )
 					continue;
 
+				if ( ff_hud_bucket_icon.GetBool() && pWeapon->GetAttributeContainer()->GetItem()->GetStaticData()->IsBaseItem()
+					&& !V_stristr ( pWeapon->GetAttributeContainer()->GetItem()->GetStaticData()->GetItemClass(), "tf_weapon_grapplinghook" ) )
+				{
+					DrawWeaponTexture( pPlayer, pWeapon, xpos, ypos, wide, tall );
+				}
+
 				if ( !pWeapon->CanBeSelected() )
 				{
 					int msgX = xpos + ( m_flLargeBoxWide * 0.5 );
@@ -777,6 +801,12 @@ void CHudWeaponSelection::DrawSelection( C_BaseCombatWeapon *pSelectedWeapon )
 				C_BaseCombatWeapon *pWeapon = GetFirstPos( i );
 				if ( !pWeapon )
 					continue;
+
+				if ( ff_hud_bucket_icon.GetBool() && pWeapon->GetAttributeContainer()->GetItem()->GetStaticData()->IsBaseItem()
+					&& !V_stristr ( pWeapon->GetAttributeContainer()->GetItem()->GetStaticData()->GetItemClass(), "tf_weapon_grapplinghook" ) )
+				{
+					DrawWeaponTexture( pPlayer, pWeapon, xpos, ypos, wide, tall );
+				}
 
 				// draw the number
 				if ( IsPC() && nFastswitchMode != HUDTYPE_PLUS )

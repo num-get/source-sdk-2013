@@ -321,9 +321,9 @@ bool CTFWearable::ShouldDraw()
 
 	if ( pOwner )
 	{
+		const CEconItemView *pItem = GetAttributeContainer()->GetItem();
 		if ( pOwner->m_Shared.InCond( TF_COND_HALLOWEEN_GHOST_MODE ) )
 		{
-			const CEconItemView *pItem = GetAttributeContainer()->GetItem();
 			if ( pItem )
 			{
 				econ_tag_handle_t tagHandle = GetItemSchema()->GetHandleForTag( "ghost_wearable" );
@@ -337,6 +337,19 @@ bool CTFWearable::ShouldDraw()
 		// don't draw cosmetic while sniper is zoom
 		if ( pOwner == C_TFPlayer::GetLocalTFPlayer() && pOwner->m_Shared.InCond( TF_COND_ZOOMED ) )
 			return false;
+
+		if ( pItem )
+		{
+			if ( !pItem->IsValid() )
+			{
+				if ( pOwner == C_TFPlayer::GetLocalTFPlayer() && pOwner->GetActiveTFWeapon() )
+				{
+					if ( pOwner->GetActiveTFWeapon()->GetWeaponID() == TF_WEAPON_ROCKETPACK
+						&& !pOwner->ShouldDrawLocalPlayer() && pOwner->ShouldDrawFirstPersonLegs() )
+						return false;
+				}
+			}
+		}
 	}
 
 	// Don't draw 3rd person wearables if our owner is disguised.

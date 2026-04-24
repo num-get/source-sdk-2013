@@ -3036,12 +3036,14 @@ void C_BasePlayer::BuildFirstPersonMeathookTransformations( CStudioHdr *hdr, Vec
 					pWeapon && pWeapon->GetWeaponID() != TF_WEAPON_BUILDER ) )
 					fFwd += 4.f;
 			}
-			if ( pLocalTFPlayer->IsPlayerClass( TF_CLASS_HEAVYWEAPONS ) && pWeapon && ( pWeapon->GetWeaponID() == TF_WEAPON_MINIGUN || pWeapon->GetWeaponID() == TF_WEAPON_LUNCHBOX ) )
+			if ( pLocalTFPlayer->IsPlayerClass( TF_CLASS_HEAVYWEAPONS ) && pWeapon && ( pWeapon->GetWeaponID() == TF_WEAPON_MINIGUN || pWeapon->GetWeaponID() == TF_WEAPON_SHOTGUN_HWG
+				|| pWeapon->GetWeaponID() == TF_WEAPON_LUNCHBOX ) )
 			{
 				fUp += 18.f;
 			}
-			else if ( pLocalTFPlayer->IsPlayerClass( TF_CLASS_SCOUT ) || pLocalTFPlayer->IsPlayerClass( TF_CLASS_SOLDIER ) || pLocalTFPlayer->IsPlayerClass( TF_CLASS_DEMOMAN ) || pLocalTFPlayer->IsPlayerClass( TF_CLASS_HEAVYWEAPONS ) ||
-				( pLocalTFPlayer->IsPlayerClass( TF_CLASS_PYRO ) && pWeapon && ( pWeapon->GetWeaponID() == TF_WEAPON_FIREAXE || pWeapon->GetWeaponID() == TF_WEAPON_BREAKABLE_SIGN ) ) )
+			else if ( pLocalTFPlayer->IsPlayerClass( TF_CLASS_SCOUT ) || pLocalTFPlayer->IsPlayerClass( TF_CLASS_SOLDIER ) || pLocalTFPlayer->IsPlayerClass( TF_CLASS_DEMOMAN ) ||
+				pLocalTFPlayer->IsPlayerClass( TF_CLASS_HEAVYWEAPONS ) || ( pLocalTFPlayer->IsPlayerClass( TF_CLASS_PYRO ) && pWeapon && ( pWeapon->GetWeaponID() == TF_WEAPON_FIREAXE ||
+				pWeapon->GetWeaponID() == TF_WEAPON_BREAKABLE_SIGN ) ) )
 			{
 				fUp += 12.f;
 			}

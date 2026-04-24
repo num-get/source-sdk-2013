@@ -1886,9 +1886,6 @@ float CTFFlameThrower::GetInitialAfterburnDuration() const
 //-----------------------------------------------------------------------------
 float CTFFlameThrower::GetAfterburnRateOnHit() const
 {
-	if ( !ff_use_new_flame.GetBool() )
-		return 10.f;
-
 	float flAfterburnDurationScale = 1.f;
 	CALL_ATTRIB_HOOK_FLOAT( flAfterburnDurationScale, afterburn_duration_mult );
 

@@ -22,8 +22,6 @@ END_PREDICTION_DATA()
 LINK_ENTITY_TO_CLASS( tf_weapon_fireaxe, CTFFireAxe );
 PRECACHE_WEAPON_REGISTER( tf_weapon_fireaxe );
 
-extern ConVar ff_use_new_flame;
-
 #ifdef GAME_DLL
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -34,10 +32,6 @@ float CTFFireAxe::GetInitialAfterburnDuration() const
 	CALL_ATTRIB_HOOK_INT( iAddBurningDamageType, set_dmgtype_ignite );
 	if ( iAddBurningDamageType )
 	{
-		if ( !ff_use_new_flame.GetBool() )
-		{
-			return 10.f;
-		}
 		return 7.5f;
 	}
 

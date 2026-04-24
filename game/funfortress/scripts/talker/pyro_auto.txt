@@ -106,8 +106,8 @@ criterion "WeaponIsOldRescueRanger" "item_name" "Vintage Rescue Ranger" "require
 	}
 
 // Not working. :(
-//criterion "LoadoutIsOldDrink" "loadout_slot_secondary" "!=Vintage Crit-a-Cola" "required" weight 10
-//criterion "LoadoutIsOldCritDrink" "loadout_slot_secondary" "Vintage Crit-a-Cola" "required" weight 10
+criterion "LoadoutIsOldDrink" "loadout_slot_secondary" "!=Vintage Crit-a-Cola" "required" weight 10
+criterion "LoadoutIsOldCritDrink" "loadout_slot_secondary" "Vintage Crit-a-Cola" "required" weight 10
 //	Rule PlayerBeingShotInvincibleScout
 //	{
 //		criteria ConceptDodgeShot IsScout LoadoutIsDrink LoadoutIsOldDrink // Exclude Crit-a-Cola
@@ -125,13 +125,13 @@ criterion "WeaponIsOldRescueRanger" "item_name" "Vintage Rescue Ranger" "require
 //		ApplyContext "ScoutDrinkReadySpeech:1:5"
 //		Response DrinkNotReady
 //	}
-//	Rule PlayerCritColaVocalScout2
-//	{
-//		criteria ConceptFireWeapon IsScout LoadoutIsOldCritDrink ScoutIsNotCrit // The crit context is read in here via this criterion, which is set at the top of the file
-//		Response PlayerCritColaVocalScout
-//	}
-//	Rule PostCritScout2
-//	{
-//		criteria ConceptTired IsScout 50PercentChance LoadoutIsOldCritDrink
-//		Response PostCritScout
-//	}
+	Rule PlayerCritColaVocalScout2
+	{
+		criteria ConceptFireWeapon IsScout LoadoutIsOldCritDrink ScoutIsNotCrit // The crit context is read in here via this criterion, which is set at the top of the file
+		Response PlayerCritColaVocalScout
+	}
+	Rule PostCritScout2
+	{
+		criteria ConceptTired IsScout 50PercentChance LoadoutIsOldCritDrink
+		Response PostCritScout
+	}
