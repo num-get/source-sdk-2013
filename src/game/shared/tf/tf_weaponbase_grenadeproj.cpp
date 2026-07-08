@@ -140,7 +140,7 @@ float CTFWeaponBaseGrenadeProj::GetDamageRadius()
 { 
 	float flRadius = m_DmgRadius;
 	int iNewGrenade = 1;
-	CALL_ATTRIB_HOOK_INT_ON_OTHER( m_hLauncher, iNewGrenade, obsolete );
+	CALL_ATTRIB_HOOK_INT_ON_OTHER( GetOriginalLauncher(), iNewGrenade, obsolete );
 	if ( !ff_use_new_grenade.GetBool() || iNewGrenade != 1 )
 		flRadius *= ( 159 / 146 );
 	CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( m_hLauncher, flRadius, mult_explosion_radius );
@@ -396,7 +396,7 @@ void CTFWeaponBaseGrenadeProj::Explode( trace_t *pTrace, int bitsDamageType )
 	float flRadius = GetDamageRadius();
 
 	int iNewGrenade = 1;
-	CALL_ATTRIB_HOOK_INT_ON_OTHER( m_hLauncher, iNewGrenade, obsolete );
+	CALL_ATTRIB_HOOK_INT_ON_OTHER( GetOriginalLauncher(), iNewGrenade, obsolete );
 	CTFRadiusDamageInfo radiusinfo( &info, vecOrigin, flRadius, NULL, ( ff_use_new_grenade.GetBool() && iNewGrenade == 1 ) ? TF_GRENADE_JUMP_RADIUS : 159 );
 	TFGameRules()->RadiusDamage( radiusinfo );
 

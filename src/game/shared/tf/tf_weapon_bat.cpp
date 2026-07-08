@@ -736,9 +736,8 @@ void CTFStunBall::ApplyBallImpactEffectOnVictim( CBaseEntity *pOther )
 		return;
 
 	// We have a more intense stun based on our travel time.
-	CBaseEntity *pInflictor = GetLauncher();
 	int iSlowBall = 1;
-	CALL_ATTRIB_HOOK_INT_ON_OTHER ( pInflictor, iSlowBall, obsolete )
+	CALL_ATTRIB_HOOK_INT_ON_OTHER ( GetOriginalLauncher(), iSlowBall, obsolete )
 	float flLifeTimeToMaxStun = iSlowBall ? FLIGHT_TIME_TO_MAX_STUN : 1.f;
 	float flLifeTime = Min( gpGlobals->curtime - m_flCreationTime, flLifeTimeToMaxStun );
 	float flLifeTimeRatio = flLifeTime / flLifeTimeToMaxStun;
@@ -792,6 +791,7 @@ void CTFStunBall::ApplyBallImpactEffectOnVictim( CBaseEntity *pOther )
 	const trace_t *pTrace = &CBaseEntity::GetTouchTrace();
 	trace_t *pNewTrace = const_cast<trace_t*>( pTrace );
 
+	CBaseEntity *pInflictor = GetLauncher();
 	CTakeDamageInfo info;
 	info.SetAttacker( GetOwnerEntity() );
 	info.SetInflictor( pInflictor ); 

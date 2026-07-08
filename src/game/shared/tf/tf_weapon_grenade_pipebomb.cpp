@@ -784,14 +784,14 @@ void CTFGrenadePipebombProjectile::PipebombTouch( CBaseEntity *pOther )
 					// Impact damage scales with distance
 					float flDistanceSq = (pOther->GetAbsOrigin() - pAttacker->GetAbsOrigin()).LengthSqr();
 					int iNewCannon = 0;
-					CALL_ATTRIB_HOOK_INT_ON_OTHER ( m_hLauncher, iNewCannon, cannonball_push_back )
+					CALL_ATTRIB_HOOK_INT_ON_OTHER ( GetOriginalLauncher(), iNewCannon, cannonball_push_back );
 					float flImpactDamage = iNewCannon != 2 ? RemapValClamped( flDistanceSq, 512 * 512, 1024 * 1024, 50, 25 ) : m_flDamage;
 
 					CTakeDamageInfo info( this, pAttacker, m_hLauncher, vec3_origin, vOrigin, flImpactDamage, GetDamageType(), TF_DMG_CUSTOM_CANNONBALL_PUSH );
 					pOther->TakeDamage( info );
 
 					CTFPlayer *pVictim = ToTFPlayer( pOther );
-					if ( pVictim )
+					if ( pVictim && iNewCannon != 2 )
 					{
 						// apply airblast - Apply stun if they are effectively grounded so we can knock them up
 						if ( !pVictim->m_Shared.InCond( TF_COND_KNOCKED_INTO_AIR ) )
@@ -824,7 +824,7 @@ void CTFGrenadePipebombProjectile::PipebombTouch( CBaseEntity *pOther )
 
 		// Save this entity as enemy, they will take 100% damage.
 		int iNewGrenade = 1;
-		CALL_ATTRIB_HOOK_INT_ON_OTHER( m_hLauncher, iNewGrenade, obsolete );
+		CALL_ATTRIB_HOOK_INT_ON_OTHER( GetOriginalLauncher(), iNewGrenade, obsolete );
 		if ( ff_use_new_grenade.GetBool() && iNewGrenade == 1 )
 			m_hEnemy = pOther;
 

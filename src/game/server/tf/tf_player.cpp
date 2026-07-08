@@ -10414,6 +10414,13 @@ void CTFPlayer::ApplyPushFromDamage( const CTakeDamageInfo &info, Vector vecDir 
 		}
 		else
 		{
+			CTFWeaponBaseGrenadeProj *pGrenade = dynamic_cast<CTFWeaponBaseGrenadeProj*>( info.GetInflictor() );
+			int iNewCannon = 0;
+			if ( pGrenade )
+			{
+				CALL_ATTRIB_HOOK_INT_ON_OTHER ( pGrenade->GetOriginalLauncher(), iNewCannon, cannonball_push_back );
+			}
+
 			CTFWeaponBase *pWeapon = dynamic_cast<CTFWeaponBase*>(info.GetWeapon());
 			if ( pWeapon && (pWeapon->GetWeaponID() == TF_WEAPON_COMPOUND_BOW) )
 			{
@@ -10434,6 +10441,11 @@ void CTFPlayer::ApplyPushFromDamage( const CTakeDamageInfo &info, Vector vecDir 
 				}
 				vecForce = vecDir * -DamageForce( WorldAlignSize(), info.GetDamage(), TF_FLARE_PELLET_FORCE * RemapValClamped( flTimeAlive, 0.1f, 1.0f, 1.0f, TF_FLARE_PELLET_FORCE_DISTANCE_SCALE ) );
 				vecForce.z = ( ( GetPlayerClass()->GetClassIndex() == TF_CLASS_HEAVYWEAPONS ) ? ( TF_FLARE_PELLET_FORCE_UPWARD_HEAVY ) : ( TF_FLARE_PELLET_FORCE_UPWARD ) );
+			}
+			else if ( info.GetDamageCustom() == TF_DMG_CUSTOM_CANNONBALL_PUSH && iNewCannon == 2 )
+			{
+				vecForce = vecDir * -DamageForce( WorldAlignSize(), info.GetDamage(), TF_CANNONBALL_FORCE_SCALE );
+				vecForce.z = ( ( GetPlayerClass()->GetClassIndex() == TF_CLASS_HEAVYWEAPONS ) ? ( TF_CANNONBALL_FORCE_UPWARD * 2 ) : TF_CANNONBALL_FORCE_UPWARD );
 			}
 			else if ( info.GetDamageCustom() == TF_DMG_CUSTOM_KART )
 			{
