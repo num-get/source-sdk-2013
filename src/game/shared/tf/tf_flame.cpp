@@ -903,11 +903,12 @@ void CTFFlameManager::UpdateWeaponParticleControlPoint( const flame_point_t *pNe
 	const float flStartRadius = 3.f;
 	Vector vMuzzlePos;
 	QAngle qMuzzleAng;
+	C_BaseAnimating *pAttachEnt = m_hWeapon->GetAppropriateWorldOrViewModel();
 	if ( m_nMuzzleAttachment == INVALID_PARTICLE_ATTACHMENT )
 	{
-		m_nMuzzleAttachment = m_hWeapon->LookupAttachment( "muzzle" );
+		m_nMuzzleAttachment = pAttachEnt->LookupAttachment( "muzzle" );
 	}
-	m_hWeapon->GetAttachment( m_nMuzzleAttachment, vMuzzlePos, qMuzzleAng );
+	pAttachEnt->GetAttachment( m_nMuzzleAttachment, vMuzzlePos, qMuzzleAng );
 	if ( m_hParticleEffect )
 	{
 		Vector vMuzzleForward, vMuzzleRight, vMuzzleUp;
