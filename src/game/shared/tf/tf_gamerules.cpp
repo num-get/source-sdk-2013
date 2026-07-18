@@ -870,6 +870,7 @@ ConVar ff_old_healonkill ( "ff_old_healonkill", "0", FCVAR_NOTIFY | FCVAR_REPLIC
 ConVar ff_allow_taunt_sticky ( "ff_allow_taunt_sticky", "0", FCVAR_NOTIFY | FCVAR_REPLICATED, "Allow Demoman to detonate stickies while taunting." );
 ConVar ff_disable_dropped_weapon ( "ff_disable_dropped_weapon", "0", FCVAR_NOTIFY | FCVAR_REPLICATED, "Fallen ammo packs are replaced with weapons." );
 ConVar ff_use_new_flame( "ff_use_new_flame", "1", FCVAR_NOTIFY | FCVAR_REPLICATED, "0 - Old Flamethrower particle and old afterburn mechanic, 1 - Modern Flamethrower particle, 2 - Modern Flamethrower particle without density ramp up nerf" );
+ConVar ff_use_new_airblast( "ff_use_new_airblast", "1", FCVAR_NOTIFY | FCVAR_REPLICATED, "If set to 0, restore pre-JI airblast" );
 
 #ifndef GAME_DLL
 extern ConVar cl_burninggibs;
@@ -7514,7 +7515,7 @@ float CTFGameRules::ApplyOnDamageAliveModifyRules( const CTakeDamageInfo &info, 
 			if ( info.GetWeapon() )
 			{
 				int iNoSelfBlastDamage = 0;
-				if ( ff_old_kamikaze.GetBool() )
+				if ( ff_old_kamikaze.GetBool() && info.GetDamageCustom() == TF_DMG_CUSTOM_TAUNTATK_GRENADE )
 				{
 					CALL_ATTRIB_HOOK_INT_ON_OTHER( info.GetAttacker(), iNoSelfBlastDamage, no_self_blast_dmg );
 				}

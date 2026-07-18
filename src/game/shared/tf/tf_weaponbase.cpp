@@ -96,6 +96,7 @@ extern ConVar cl_crosshair_file;
 
 extern ConVar ff_new_weapon_switch_speed;
 extern ConVar ff_new_shield_charge;
+extern ConVar ff_use_new_airblast;
 
 //=============================================================================
 //
@@ -5955,6 +5956,12 @@ bool CTFWeaponBase::DeflectProjectiles()
 	const int maxCollectedEntities = 64;
 	CBaseEntity	*pObjects[ maxCollectedEntities ];
 	int count = UTIL_EntitiesInSphere( pObjects, maxCollectedEntities, vecCenter, GetDeflectionRadius(), FL_CLIENT | FL_GRENADE );
+
+	const Vector vecBlastSize = Vector( 128, 128, 64 );
+	if ( !ff_use_new_airblast.GetBool() )
+	{
+		count = UTIL_EntitiesInBox( pObjects, maxCollectedEntities, vecCenter - vecBlastSize, vecCenter + vecBlastSize, FL_CLIENT | FL_GRENADE );
+	}
 
 	//NDebugOverlay::Sphere( vecCenter, GetDeflectionRadius(), 0, 255, 0, 40, 3 );
 

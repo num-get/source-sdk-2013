@@ -71,6 +71,7 @@ ConVar  tf_flamethrower_burstammo("tf_flamethrower_burstammo", "20", FCVAR_CHEAT
 ConVar  tf_flamethrower_flametime("tf_flamethrower_flametime", "0.5", FCVAR_CHEAT | FCVAR_DEVELOPMENTONLY | FCVAR_REPLICATED, "Time to live of flame damage entities." );
 
 extern ConVar ff_use_new_flame;
+extern ConVar ff_use_new_airblast;
 
 // If we're shipping this it needs to be better hooked with flame manager -- right now we just spawn 5 managers for
 // prototyping
@@ -1700,8 +1701,18 @@ bool CTFFlameThrower::DeflectPlayer( CTFPlayer *pTarget, CTFPlayer *pOwner, Vect
 		Vector vTargetAbsMins = pTarget->GetAbsOrigin() + pTarget->WorldAlignMins();
 		Vector vTargetAbsMaxs = pTarget->GetAbsOrigin() + pTarget->WorldAlignMaxs();
 
+		int nOldAirblast = !ff_use_new_airblast.GetBool();
+		if ( nOldAirblast )
+		{
+			float flDot = DotProduct( vecForward, vecToTarget );
+			float flAirblastConeThreshold = Clamp(1.0f - ( flAirblastConeScale * 0.2f ), 0.0f, 1.0f);
+			if (flDot < flAirblastConeThreshold)
+			{
+				return false;
+			}
+		}
 		// Require our target be in a cone in front of us
-		if ( !physcollision->IsBoxIntersectingCone( vTargetAbsMins, vTargetAbsMaxs, testCone ) )
+		else if ( !physcollision->IsBoxIntersectingCone( vTargetAbsMins, vTargetAbsMaxs, testCone ) )
 		{
 			return false;
 		}
@@ -1723,7 +1734,6 @@ bool CTFFlameThrower::DeflectPlayer( CTFPlayer *pTarget, CTFPlayer *pOwner, Vect
 		// Apply force - Old & new modes
 		//
 
-		int nOldAirblast = 0;
 		if ( !nOldAirblast && tf_airblast_cray.GetBool() )
 		{
 			// TODO This is not honoring some of the attributes of old airblast
