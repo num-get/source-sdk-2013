@@ -1301,7 +1301,10 @@ bool CWeaponMedigun::FindAndHealTargets( void )
 				}
 
 				// The resist medigun has a uber charge rate
-				flChargeAmount *= flChargeModifier;
+				bool bIsNewVaccinator = true;
+				CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pOwner, bIsNewVaccinator, obsolete );
+				if ( !( GetMedigunType() == MEDIGUN_RESIST && !bIsNewVaccinator ) )
+					flChargeAmount *= flChargeModifier;
 
 				if ( TFGameRules() && TFGameRules()->IsPowerupMode() )
 				{
@@ -1825,6 +1828,8 @@ void CWeaponMedigun::SecondaryAttack( void )
 
 	// STAGING_MEDIC
 	// Resist gun early outs if the patient and medic both have the condition (or medic with no patient has condition)
+	bool bIsNewVaccinator = true;
+	CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pOwner, bIsNewVaccinator, obsolete );
 	if ( GetMedigunType() == MEDIGUN_RESIST )
 	{
 		ETFCond uberCond = g_MedigunResistConditions[GetResistType()].uberCond;
@@ -1904,7 +1909,7 @@ void CWeaponMedigun::SecondaryAttack( void )
 	}
 	
 	// STAGING_MEDIC
-	if ( GetMedigunType() != MEDIGUN_RESIST )
+	if ( !( GetMedigunType() == MEDIGUN_RESIST && bIsNewVaccinator ) )
 	{
 		RecalcEffectOnTarget( pOwner );
 	}
@@ -1913,7 +1918,7 @@ void CWeaponMedigun::SecondaryAttack( void )
 	if ( pTFPlayerPatient )
 	{
 		// STAGING_MEDIC
-		if ( GetMedigunType() != MEDIGUN_RESIST )
+		if ( !( GetMedigunType() == MEDIGUN_RESIST && bIsNewVaccinator ) )
 		{
 			RecalcEffectOnTarget( pTFPlayerPatient );
 		}
@@ -1983,15 +1988,28 @@ void CWeaponMedigun::SecondaryAttack( void )
 	if ( GetMedigunType() == MEDIGUN_RESIST )
 	{
 		// Remove charge immediately and just give target and yourself the conditions
-		m_bChargeRelease = false;
+		if ( bIsNewVaccinator )
+			m_bChargeRelease = false;
 #ifdef GAME_DLL
 		float flResistDuration = weapon_vaccinator_resist_duration.GetFloat();
 		CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pOwner, flResistDuration, add_uber_time );
-		pOwner->m_Shared.AddCond( g_MedigunResistConditions[GetResistType()].uberCond, flResistDuration, pOwner );
-		m_flChargeLevel -= flChunkSize;
-		if ( pTFPlayerPatient )
+		if ( !bIsNewVaccinator )
+		{
+			int iChunkAmount = (int) ( m_flChargeLevel / flChunkSize );
+			m_flChargeLevel = flChunkSize * iChunkAmount;
+			m_flEndResistCharge = m_flChargeLevel - flChunkSize;
+		}
+		else
+		{
+			pOwner->m_Shared.AddCond( g_MedigunResistConditions[GetResistType()].uberCond, flResistDuration, pOwner );
+			m_flChargeLevel -= flChunkSize;
+			pOwner->m_Shared.AddResistDuration( flResistDuration );
+		}
+
+		if ( pTFPlayerPatient && bIsNewVaccinator )
 		{
 			pTFPlayerPatient->m_Shared.AddCond( g_MedigunResistConditions[GetResistType()].uberCond, flResistDuration, pOwner );
+			pTFPlayerPatient->m_Shared.AddResistDuration( flResistDuration );
 		}
 		if ( TFGameRules() && TFGameRules()->IsMannVsMachineMode() )
 		{

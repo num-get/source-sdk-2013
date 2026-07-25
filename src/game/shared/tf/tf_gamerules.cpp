@@ -7003,9 +7003,11 @@ static bool CheckMedicResist( ETFCond ePassiveCond, ETFCond eDeployedCond, CTFPl
 	Assert( pTFProvider );
 	
 	float flDamageScale = 0.f;
-	//float flCritBarDeplete = 0.f;
+	float flCritBarDeplete = 0.f;
 	bool bUberResist = false;
 
+	bool bIsNewVaccinator = true;
+	CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pTFProvider, bIsNewVaccinator, obsolete );
 	if( pTFProvider )
 	{
 		switch( eActiveCond )
@@ -7013,40 +7015,43 @@ static bool CheckMedicResist( ETFCond ePassiveCond, ETFCond eDeployedCond, CTFPl
 		case TF_COND_MEDIGUN_UBER_BULLET_RESIST:
 			CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pTFProvider, flDamageScale, medigun_bullet_resist_deployed );
 			bUberResist = true;
-//			if ( bCrit )
-//			{
-//				CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pTFProvider, flCritBarDeplete, medigun_crit_bullet_percent_bar_deplete );
-//			}
+			if ( bCrit )
+			{
+				CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pTFProvider, flCritBarDeplete, medigun_crit_bullet_percent_bar_deplete );
+			}
 			break;
 
 		case TF_COND_MEDIGUN_SMALL_BULLET_RESIST:
 			CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pTFProvider, flDamageScale, medigun_bullet_resist_passive );
+			bUberResist = !bIsNewVaccinator;
 			break;
 
 		case TF_COND_MEDIGUN_UBER_BLAST_RESIST:
 			CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pTFProvider, flDamageScale, medigun_blast_resist_deployed );
 			bUberResist = true;
-			//if( bCrit )
-			//{
-			//	CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pTFProvider, flCritBarDeplete, medigun_crit_blast_percent_bar_deplete );
-			//}
+			if( bCrit )
+			{
+				CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pTFProvider, flCritBarDeplete, medigun_crit_blast_percent_bar_deplete );
+			}
 			break;
 
 		case TF_COND_MEDIGUN_SMALL_BLAST_RESIST:
 			CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pTFProvider, flDamageScale, medigun_blast_resist_passive );
+			bUberResist = !bIsNewVaccinator;
 			break;
 
 		case TF_COND_MEDIGUN_UBER_FIRE_RESIST:
 			CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pTFProvider, flDamageScale, medigun_fire_resist_deployed );
 			bUberResist = true;
-//			if( bCrit )
-//			{
-//				CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pTFProvider, flCritBarDeplete, medigun_crit_fire_percent_bar_deplete );
-//			}
+			if( bCrit )
+			{
+				CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pTFProvider, flCritBarDeplete, medigun_crit_fire_percent_bar_deplete );
+			}
 			break;
 
 		case TF_COND_MEDIGUN_SMALL_FIRE_RESIST:
 			CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pTFProvider, flDamageScale, medigun_fire_resist_passive );
+			bUberResist = !bIsNewVaccinator;
 			break;
 		}
 	}
@@ -7060,28 +7065,28 @@ static bool CheckMedicResist( ETFCond ePassiveCond, ETFCond eDeployedCond, CTFPl
 	if( flDamageScale < 0.f ) 
 		flDamageScale = 0.f;
 
-	//// Dont let the medic heal themselves when they take damage
-	//if( pTFProvider && pTFProvider != pVictim )
-	//{
-	//	// Heal the medic for 10% of the incoming damage
-	//	int nHeal = flRawDamage * 0.10f;
-	//	// Heal!
-	//	int iHealed = pTFProvider->TakeHealth( nHeal, DMG_GENERIC );
+	// Dont let the medic heal themselves when they take damage
+	if( pTFProvider && pTFProvider != pVictim && !bIsNewVaccinator )
+	{
+		// Heal the medic for 25% of the incoming damage
+		int nHeal = flRawDamage * 0.25f;
+		// Heal!
+		int iHealed = pTFProvider->TakeHealth( nHeal, DMG_GENERIC );
 
-	//	// Tell them about it!
-	//	if ( iHealed )
-	//	{
-	//		CTF_GameStats.Event_PlayerHealedOther( pTFProvider, iHealed );
-	//	}
+		// Tell them about it!
+		if ( iHealed )
+		{
+			CTF_GameStats.Event_PlayerHealedOther( pTFProvider, iHealed );
+		}
 
-	//	IGameEvent *event = gameeventmanager->CreateEvent( "player_healonhit" );
-	//	if ( event )
-	//	{
-	//		event->SetInt( "amount", nHeal );
-	//		event->SetInt( "entindex", pTFProvider->entindex() );
-	//		gameeventmanager->FireEvent( event ); 
-	//	}
-	//}
+		IGameEvent *event = gameeventmanager->CreateEvent( "player_healonhit" );
+		if ( event )
+		{
+			event->SetInt( "amount", nHeal );
+			event->SetInt( "entindex", pTFProvider->entindex() );
+			gameeventmanager->FireEvent( event ); 
+		}
+	}
 
 	IGameEvent* event = gameeventmanager->CreateEvent( "damage_resisted" );
 	if ( event )
@@ -7094,15 +7099,15 @@ static bool CheckMedicResist( ETFCond ePassiveCond, ETFCond eDeployedCond, CTFPl
 	{
 		flCritBonusDamage = ( pVictim->m_Shared.InCond( TF_COND_HEALING_DEBUFF ) ) ? flCritBonusDamage * PYRO_AFTERBURN_HEALING_REDUCTION : 0.f;
 
-		//CWeaponMedigun* pMedigun = dynamic_cast<CWeaponMedigun*>( pTFProvider->Weapon_OwnsThisID( TF_WEAPON_MEDIGUN ) );
-		//if( pMedigun )
-		//{
-		//	if( pMedigun->GetChargeLevel() > 0.f && pMedigun->IsReleasingCharge() )
+		CWeaponMedigun* pMedigun = dynamic_cast<CWeaponMedigun*>( pTFProvider->Weapon_OwnsThisID( TF_WEAPON_MEDIGUN ) );
+		if( pMedigun )
+		{
+			if( pMedigun->GetChargeLevel() > 0.f && pMedigun->IsReleasingCharge() )
 		//	{
 		//		flCritBonusDamage = 0;
 		//	}
-		//	pMedigun->SubtractCharge( flCritBarDeplete );
-		//}
+			pMedigun->SubtractCharge( flCritBarDeplete );
+		}
 	}
 
 	// Scale the damage!

@@ -1909,7 +1909,7 @@
 			"static_attrs"
 			{
 				"min_viewmodel_offset"			"10 0 -12"
-				"weapon_stattrak_module_scale"		"0.608"				
+				"weapon_stattrak_module_scale"		"0.608"
 			}
 			"attributes"
 			{
@@ -4569,6 +4569,178 @@
 
 		"32053"
 		{
+			"name"	"Vintage Vaccinator"
+			"first_sale_date"	"2012/12/19"
+			"item_class"	"tf_weapon_medigun"
+			"craft_class"	"weapon"
+			"craft_material_type"	"weapon"
+			"capabilities"
+			{
+				"nameable"		"1"
+			}
+			"tags"
+			{
+				"can_heal_allies"		"1"
+				"can_be_festivized"		"1"
+			}
+			"show_in_armory"	"1"
+			"moditem"	"1"
+			"item_type_name"	"#TF_Weapon_Medigun_Resist"
+			"item_name"		"#TF_Unique_MediGun_Resist"
+			"item_description"	"#TF_Unique_MediGun_Resist_Desc2"
+			"propername"		"1"
+			"item_slot"		"secondary"
+			"equip_region"	"medigun_backpack"
+			"image_inventory"	"backpack/workshop/weapons/c_models/c_medigun_defense/c_medigun_defense"
+			"image_inventory_size_w"		"128"
+			"image_inventory_size_h"		"82"
+			"model_player"	"models/workshop/weapons/c_models/c_medigun_defense/c_medigun_defense.mdl"
+			"extra_wearable" "models/workshop/weapons/c_models/c_medigun_defense/c_medigun_defensepack.mdl"
+			"attach_to_hands"	"1"
+			"item_quality"	"rarity2"
+			"min_ilevel"	"8"
+			"max_ilevel"	"8"
+			"used_by_classes"
+			{
+				"medic"	"1"
+			}
+			"static_attrs"
+			{
+				"min_viewmodel_offset"		"10 0 -9"
+			}
+			"attributes"
+			{
+				"lunchbox adds minicrits"
+				{
+					"attribute_class"	"set_weapon_mode"
+					"value"	"3"
+				}
+				"ubercharge rate bonus"
+				{
+					"attribute_class"	"mult_medigun_uberchargerate"
+					"value"	"1.5"
+				}
+				"overheal fill rate reduced"
+				{
+					"attribute_class"	"overheal_fill_rate"
+					"value" "0.34"
+				}
+				"kill eater score type"
+				{
+					"attribute_class"	"kill_eater_score_type"
+					"value"				"1"
+				}
+				"kill eater score type 2"
+				{
+					"attribute_class"	"kill_eater_score_type_2"
+					"value" 			"2"
+				}
+				"medigun charge is resists"
+				{
+					"attribute_class"	"set_charge_type"
+					"value"	"3"
+				}
+				"medigun bullet resist passive"
+				{
+					"attribute_class"	"medigun_bullet_resist_passive"
+					"value" "0.1"
+				}
+				"medigun bullet resist deployed"
+				{
+					"attribute_class"	"medigun_bullet_resist_deployed"
+					"value" "0.75"
+				}
+				"medigun crit bullet percent bar deplete"
+				{
+					"attribute_class"	"medigun_crit_bullet_percent_bar_deplete"
+					"value" "0.03"
+				}
+				"medigun blast resist passive"
+				{
+					"attribute_class"	"medigun_blast_resist_passive"
+					"value" "0.1"
+				}
+				"medigun blast resist deployed"
+				{
+					"attribute_class"	"medigun_blast_resist_deployed"
+					"value" "0.75"
+				}
+				"medigun crit blast percent bar deplete"
+				{
+					"attribute_class"	"medigun_crit_blast_percent_bar_deplete"
+					"value" "0.75"
+				}
+				"medigun fire resist passive"
+				{
+					"attribute_class"	"medigun_fire_resist_passive"
+					"value" "0.1"
+				}
+				"medigun fire resist deployed"
+				{
+					"attribute_class"	"medigun_fire_resist_deployed"
+					"value" "0.75"
+				}
+				"medigun crit fire percent bar deplete"
+				{
+					"attribute_class"	"medigun_crit_fire_percent_bar_deplete"
+					"value" "0.01"
+				}
+				"obsolete ammo penalty"
+				{
+					"attribute_class"	"obsolete"
+					"value"	"0"
+				}
+			}
+			"visuals"
+			{
+				"player_bodygroups"
+				{
+					"medic_backpack"			"1"
+				}
+				"attached_models_festive"
+				{
+					"0"
+					{
+						"model"	"models/workshop/weapons/c_models/c_medigun_defense/c_medigun_defense_festivizer.mdl"
+					}
+				}
+			}
+			"visuals_red"
+			{
+				"skin" "0"
+				"custom_particlesystem"
+				{
+					"system"	"medicgun_beam_attrib_overheal_red"
+				}
+				"attached_models_festive"
+				{
+					"0"
+					{
+						"model"	"models/workshop/weapons/c_models/c_medigun_defense/c_medigun_defense_festivizer.mdl"
+					}
+				}
+			}
+			"visuals_blu"
+			{
+				"skin" "1"
+				"custom_particlesystem"
+				{
+					"system"	"medicgun_beam_attrib_overheal_blue"
+				}
+				"attached_models_festive"
+				{
+					"0"
+					{
+						"model"	"models/workshop/weapons/c_models/c_medigun_defense/c_medigun_defense_festivizer.mdl"
+					}
+				}
+			}
+			"mouse_pressed_sound"	"ui/item_heavy_gun_pickup.wav"
+			"drop_sound"		"ui/item_heavy_gun_drop.wav"
+		}
+
+		"32054"
+		{
 			"name"			"Vintage Tide Turner"
 			"first_sale_date"		"2014/06/18"
 			"item_class"		"tf_wearable_demoshield"
@@ -4652,7 +4824,7 @@
 			"drop_sound"		"ui/item_wood_pole_drop.wav"
 		}
 
-		"32054"
+		"32055"
 		{
 			"name"	"Vintage Panic Attack Shotgun"
 			"first_sale_date"	"2014/12/23"
