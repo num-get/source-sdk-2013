@@ -7006,8 +7006,9 @@ static bool CheckMedicResist( ETFCond ePassiveCond, ETFCond eDeployedCond, CTFPl
 	float flCritBarDeplete = 0.f;
 	bool bUberResist = false;
 
+	CWeaponMedigun* pMedigun = dynamic_cast<CWeaponMedigun*>( pTFProvider->Weapon_OwnsThisID( TF_WEAPON_MEDIGUN ) );
 	bool bIsNewVaccinator = true;
-	CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pTFProvider, bIsNewVaccinator, obsolete );
+	CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pMedigun, bIsNewVaccinator, obsolete );
 	if( pTFProvider )
 	{
 		switch( eActiveCond )
@@ -7099,7 +7100,7 @@ static bool CheckMedicResist( ETFCond ePassiveCond, ETFCond eDeployedCond, CTFPl
 	{
 		flCritBonusDamage = ( pVictim->m_Shared.InCond( TF_COND_HEALING_DEBUFF ) ) ? flCritBonusDamage * PYRO_AFTERBURN_HEALING_REDUCTION : 0.f;
 
-		CWeaponMedigun* pMedigun = dynamic_cast<CWeaponMedigun*>( pTFProvider->Weapon_OwnsThisID( TF_WEAPON_MEDIGUN ) );
+		//CWeaponMedigun* pMedigun = dynamic_cast<CWeaponMedigun*>( pTFProvider->Weapon_OwnsThisID( TF_WEAPON_MEDIGUN ) );
 		if( pMedigun )
 		{
 			if( pMedigun->GetChargeLevel() > 0.f && pMedigun->IsReleasingCharge() )

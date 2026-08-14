@@ -91,7 +91,7 @@
 			"xifier_class_remap"	"rocket_launcher"
 		}
 
-		"32001"
+		"60001"
 		{
 			"name"	"Vintage Axtinguisher"
 			"first_sale_date"	"2010/09/29"
@@ -183,7 +183,7 @@
 			"xifier_class_remap"	"axtinguisher"
 		}
 
-		"32002"
+		"60002"
 		{
 			"name"	"Vintage Sandman"
 			"prefab"	"valve"
@@ -275,7 +275,7 @@
 			"drop_sound"		"ui/item_wood_pole_drop.wav"
 		}
 
-		"32003"
+		"60003"
 		{
 			"name"	"Vintage Bonk! Atomic Punch"
 			"prefab"	"valve weapon_bonk"
@@ -296,7 +296,7 @@
 			}
 		}
 
-		"32004"
+		"60004"
 		{
 			"name"			"Vintage Razorback"
 			"prefab"	"valve"
@@ -350,7 +350,7 @@
 			"drop_sound"		"ui/item_wood_pole_drop.wav"
 		}
 
-		"32005"
+		"60005"
 		{
 			"name"	"Vintage Dead Ringer"
 			"prefab"	"valve"
@@ -416,7 +416,7 @@
 			"drop_sound"		"ui/item_watch_drop.wav"
 		}
 
-		"32006"
+		"60006"
 		{
 			"name"	"Vintage Dead Ringer 2"
 			"prefab"	"valve"
@@ -492,7 +492,7 @@
 			"drop_sound"		"ui/item_watch_drop.wav"
 		}
 
-		"32007"
+		"60007"
 		{
 			"name"	"Vintage Ambassador"
 			"first_sale_date"	"2010/09/29"
@@ -598,7 +598,7 @@
 			"drop_sound"		"ui/item_light_gun_drop.wav"
 		}
 
-		"32008"
+		"60008"
 		{
 			"name"	"Vintage Equalizer"
 			"prefab"	"valve"
@@ -682,7 +682,7 @@
 			"drop_sound"		"ui/item_metal_weapon_drop.wav"
 		}
 
-		"32009"
+		"60009"
 		{
 			"name"			"Vintage Chargin' Targe"
 			"first_sale_date"	"2010/09/29"
@@ -753,7 +753,7 @@
 			"xifier_class_remap"	"weapon_targe"
 		}
 
-		"32010"
+		"60010"
 		{
 			"name"	"Vintage Gunslinger"
 			"prefab"	"valve"
@@ -859,7 +859,7 @@
 			"drop_sound"		"ui/item_robot_arm_drop.wav"
 		}
 
-		"32011"
+		"60011"
 		{
 			"name"	"Vintage Crit-a-Cola"
 			"prefab"	"valve weapon_scout_drink"
@@ -900,7 +900,7 @@
 			}
 		}
 
-		"32012"
+		"60012"
 		{
 			"name"	"Vintage Vita-Saw"
 			"first_sale_date"	"2010/09/29"
@@ -976,7 +976,7 @@
 			"drop_sound"		"ui/item_metal_weapon_drop.wav"
 		}
 
-		"32013"
+		"60013"
 		{
 			"name"	"Vintage Powerjack"
 			"first_sale_date"	"2010/09/29"
@@ -1052,7 +1052,7 @@
 			"particle_suffix"	"powerjack"
 		}
 
-		"32014"
+		"60014"
 		{
 			"name"	"Vintage Degreaser"
 			"first_sale_date"	"2010/09/29"
@@ -1138,7 +1138,7 @@
 			"particle_suffix"	"degreaser"
 		}
 
-		"32015"
+		"60015"
 		{
 			"name"	"Vintage Shortstop"
 			"prefab" "paintkit_base"
@@ -1248,7 +1248,7 @@
 			"particle_suffix"	"shortstop"
 		}
 
-		"32016"
+		"60016"
 		{
 			"name"	"Vintage Your Eternal Reward"
 			"first_sale_date"	"2010/09/29"
@@ -1316,7 +1316,7 @@
 			}
 		}
 
-		"32017"
+		"60017"
 		{
 			"name"	"Vintage Black Box"
 			"prefab" "paintkit_base"
@@ -1431,7 +1431,7 @@
 			"particle_suffix"	"black_box"
 		}
 
-		"32018"
+		"60018"
 		{
 			"name"	"Vintage Sydney Sleeper"
 			"first_sale_date"	"2010/09/29"
@@ -1524,7 +1524,7 @@
 			}
 		}
 
-		"32019"
+		"60019"
 		{
 			"name"			"Vintage Darwin's Danger Shield"
 			"first_sale_date"	"2010/09/29"
@@ -1582,7 +1582,7 @@
 			"drop_sound"		"ui/item_leather_pickup.wav"
 		}
 
-		"32020"
+		"60020"
 		{
 			"name"	"Vintage Bushwacka"
 			"first_sale_date"	"2010/09/29"
@@ -1651,7 +1651,7 @@
 			}
 		}
 
-		"32021"
+		"60021"
 		{
 			"name"	"Vintage Gloves of Running Urgently"
 			"first_sale_date"	"2010/09/29"
@@ -1775,7 +1775,7 @@
 			"xifier_class_remap"	"gru"
 		}
 
-		"32022"
+		"60022"
 		{
 			"name"	"Vintage Stickybomb Jumper"
 			"prefab"	"valve"
@@ -1866,7 +1866,7 @@
 			}
 		}
 
-		"32023"
+		"60023"
 		{
 			"name"			"Vintage Amputator"
 			"first_sale_date"	"2010/12/08"
@@ -1939,7 +1939,7 @@
 			"particle_suffix"	"amputator"
 		}
 
-		"32024"
+		"60024"
 		{
 			"name"	"Vintage Ullapool Caber"
 			"first_sale_date"	"2010/12/08"
@@ -2010,7 +2010,7 @@
 			}
 		}
 
-		"32025"
+		"60025"
 		{
 			"name"			"Vintage Loch-n-Load"
 			"first_sale_date"	"2010/12/08"
@@ -2115,7 +2115,7 @@
 			}
 		}
 		
-		"32026"
+		"60026"
 		{
 			"name"	"Vintage Warrior's Spirit"
 			"first_sale_date"	"2010/12/08"
@@ -2188,7 +2188,7 @@
 			"drop_sound" "ui/item_boxing_gloves_drop.wav"
 		}
 
-		"32027"
+		"60027"
 		{
 			"name"	"Vintage Fists of Steel"
 			"first_sale_date"	"2010/12/20"
@@ -2278,7 +2278,7 @@
 			}
 		}
 
-		"32028"
+		"60028"
 		{
 			"name"	"Vintage Half-Zatoichi"
 			"first_sale_date"	"2011/03/08"
@@ -2346,7 +2346,7 @@
 			"drop_sound"		"ui/item_metal_weapon_drop.wav"
 		}
 
-		"32029"
+		"60029"
 		{
 			"name"	"Vintage Persian Persuader"
 			"prefab"	"weapon_sword paintkit_base"
@@ -2440,7 +2440,7 @@
 		}
 
 
-		"32030"
+		"60030"
 		{
 			"name"			"Vintage Splendid Screen"
 			"first_sale_date"	"2011/03/21"
@@ -2541,7 +2541,7 @@
 			"drop_sound"		"ui/item_wood_pole_drop.wav"
 		}
 
-		"32031"
+		"60031"
 		{
 			"name"	"Vintage Quick-Fix"
 			"prefab"	"valve"
@@ -2667,7 +2667,7 @@
 			"drop_sound"		"ui/item_heavy_gun_drop.wav"
 		}
 
-		"32032"
+		"60032"
 		{
 			"name"	"Vintage Solemn Vow"
 			"prefab"	"valve weapon_melee_allclass"
@@ -2735,7 +2735,7 @@
 			"drop_sound"		"ui/item_metal_weapon_drop.wav"
 		}
 
-		"32033"
+		"60033"
 		{
 			"name"	"Vintage Liberty Launcher"
 			"first_sale_date"	"2011/03/23"
@@ -2811,7 +2811,7 @@
 			"drop_sound"		"ui/item_heavy_gun_drop.wav"
 		}
 
-		"32034"
+		"60034"
 		{
 			"name"	"Vintage Reserve Shooter"
 			"first_sale_date"	"2011/03/23"
@@ -2901,7 +2901,7 @@
 			"particle_suffix"	"reserve_shooter"
 		}
 
-		"32035"
+		"60035"
 		{
 			"name"	"Vintage Market Gardener"
 			"first_sale_date"	"2011/03/23"
@@ -2972,7 +2972,7 @@
 			"drop_sound"		"ui/item_shovel_drop.wav"
 		}
 
-		"32036"
+		"60036"
 		{
 			"name"	"Vintage Eviction Notice"
 			"first_sale_date"	"2011/04/14"
@@ -3069,7 +3069,7 @@
 			"drop_sound"		"ui/item_light_gun_drop.wav"
 		}
 
-		"32037"
+		"60037"
 		{
 			"name"	"Vintage Cow Mangler 5000"
 			"first_sale_date"	"2011/07/13"
@@ -3172,7 +3172,7 @@
 			"drop_sound"		"ui/item_heavy_gun_drop.wav"
 		}
 
-		"32038"
+		"60038"
 		{
 			"name"	"Vintage Righteous Bison"
 			"first_sale_date"	"2011/07/13"
@@ -3265,7 +3265,7 @@
 			"drop_sound"		"ui/item_light_gun_drop.wav"
 		}
 
-		"32039"
+		"60039"
 		{
 			"name"	"Vintage Soda Popper"
 			"first_sale_date"	"2011/05/10"
@@ -3398,7 +3398,7 @@
 			"particle_suffix"	"soda_popper"
 		}
 
-		"32040"
+		"60040"
 		{
 			"name"	"Vintage Atomizer"
 			"first_sale_date"	"2011/05/10"
@@ -3475,7 +3475,7 @@
 			"drop_sound"		"ui/item_metal_weapon_drop.wav"
 		}
 
-		"32041"
+		"60041"
 		{
 			"name"	"Vintage Postal Pummeler"
 			"prefab"	"valve"
@@ -3550,7 +3550,7 @@
 			}
 		}
 
-		"32042"
+		"60042"
 		{
 			"name"	"Vintage Enforcer"
 			"first_sale_date"	"2011/05/15"
@@ -3629,7 +3629,7 @@
 			}
 		}
 
-		"32043"
+		"60043"
 		{
 			"name"	"Vintage Wanga Prick"
 			"first_sale_date"	"2011/10/28"
@@ -3700,7 +3700,7 @@
 			}
 		}
 
-		"32044"
+		"60044"
 		{
 			"name"	"Vintage Pomson 6000"
 			"first_sale_date"	"2011/12/15"
@@ -3809,7 +3809,7 @@
 			"drop_sound"		"ui/item_heavy_gun_drop.wav"
 		}
 
-		"32045"
+		"60045"
 		{
 			"name"	"Vintage Phlogistinator"
 			"prefab"	"weapon_newflame"
@@ -3923,7 +3923,7 @@
 			"drop_sound"		"ui/item_heavy_gun_drop.wav"
 		}
 
-		"32046"
+		"60046"
 		{
 			"name"	"Vintage Spy-cicle"
 			"first_sale_date"	"2011/12/19"
@@ -4004,7 +4004,7 @@
 			}
 		}
 
-		"32047"
+		"60047"
 		{
 			"name"	"Vintage Beggar's Bazooka"
 			"first_sale_date"	"2012/06/27"
@@ -4105,7 +4105,7 @@
 			"drop_sound"			"ui/item_heavy_gun_drop.wav"
 		}
 
-		"32048"
+		"60048"
 		{
 			"name"	"Vintage Baby Face's Blaster"
 			"prefab"		"weapon_scattergun"
@@ -4179,7 +4179,7 @@
 			}
 		}
 
-		"32049"
+		"60049"
 		{
 			"name" "Vintage Pretty Boy's Pocket Pistol"
 			"capabilities"
@@ -4260,7 +4260,7 @@
 			"drop_sound"		"ui/item_light_gun_drop.wav"
 		}
 
-		"32050"
+		"60050"
 		{
 			"name"	"Vintage Flying Guillotine"
 			"first_sale_date"	"2012/08/02"
@@ -4361,7 +4361,7 @@
 			"drop_sound"		"ui/item_metal_weapon_drop.wav"
 		}
 
-		"32051"
+		"60051"
 		{
 			"name"			"Vintage Loose Cannon"
 			"prefab"		"paintkit_base"
@@ -4464,7 +4464,7 @@
 			}
 		}
 
-		"32052"
+		"60052"
 		{
 			"name"	"Vintage Rescue Ranger"
 			"prefab" "paintkit_base"
@@ -4567,7 +4567,7 @@
 			"particle_suffix"	"rescue_ranger"
 		}
 
-		"32053"
+		"60053"
 		{
 			"name"	"Vintage Vaccinator"
 			"first_sale_date"	"2012/12/19"
@@ -4739,7 +4739,7 @@
 			"drop_sound"		"ui/item_heavy_gun_drop.wav"
 		}
 
-		"32054"
+		"60054"
 		{
 			"name"			"Vintage Tide Turner"
 			"first_sale_date"		"2014/06/18"
@@ -4824,7 +4824,7 @@
 			"drop_sound"		"ui/item_wood_pole_drop.wav"
 		}
 
-		"32055"
+		"60055"
 		{
 			"name"	"Vintage Panic Attack Shotgun"
 			"first_sale_date"	"2014/12/23"

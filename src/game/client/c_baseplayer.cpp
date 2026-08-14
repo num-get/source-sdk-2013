@@ -3027,7 +3027,7 @@ void C_BasePlayer::BuildFirstPersonMeathookTransformations( CStudioHdr *hdr, Vec
 		{
 			C_TFPlayer *pLocalTFPlayer = C_TFPlayer::GetLocalTFPlayer();
 			CTFWeaponBase *pWeapon = pLocalTFPlayer->GetActiveTFWeapon();
-			if ( pLocalTFPlayer->GetFlags() & ( FL_ONGROUND ) && pLocalTFPlayer->GetFlags() & ( FL_DUCKING ) )
+			if ( pLocalTFPlayer->GetFlags() & ( FL_ONGROUND ) && pLocalTFPlayer->IsDucked() )
 			{
 				if ( !( pLocalTFPlayer->IsPlayerClass( TF_CLASS_ENGINEER ) && pWeapon && pWeapon->GetWeaponID() != TF_WEAPON_BUILDER ) )
 					fFwd += 10.f;
@@ -3036,6 +3036,12 @@ void C_BasePlayer::BuildFirstPersonMeathookTransformations( CStudioHdr *hdr, Vec
 					pWeapon && pWeapon->GetWeaponID() != TF_WEAPON_BUILDER ) )
 					fFwd += 4.f;
 			}
+			else if ( pLocalTFPlayer->IsPlayerClass( TF_CLASS_SNIPER ) || pLocalTFPlayer->IsPlayerClass( TF_CLASS_MEDIC ) ||
+				pLocalTFPlayer->IsPlayerClass( TF_CLASS_HEAVYWEAPONS ) || pLocalTFPlayer->IsPlayerClass( TF_CLASS_SPY ) )
+			{
+				fFwd += RemapValClamped( pLocalTFPlayer->GetAbsAngles().x, 65.f, 85.f, 10.f, 0.f );
+			}
+
 			if ( pLocalTFPlayer->IsPlayerClass( TF_CLASS_HEAVYWEAPONS ) && pWeapon && ( pWeapon->GetWeaponID() == TF_WEAPON_MINIGUN || pWeapon->GetWeaponID() == TF_WEAPON_SHOTGUN_HWG
 				|| pWeapon->GetWeaponID() == TF_WEAPON_LUNCHBOX ) )
 			{

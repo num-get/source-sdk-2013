@@ -634,7 +634,7 @@ public:
 	void SetFeignDeathReady( bool bVal ) { m_bFeignDeathReady = bVal; }
 	bool IsFeignDeathReady( void ) const { return m_bFeignDeathReady; }
 	void ReduceFeignDeathDuration( float flAmount ) { m_flFeignDeathEnd -= flAmount; }
-	void AddResistDuration( float flAmount ) { m_flResistDuration = gpGlobals->curtime + flAmount; }
+	void SetResistDuration( float flAmount ) { m_flResistDuration = gpGlobals->curtime + flAmount; }
 
 	void SetShieldEquipped( bool bVal ) { m_bShieldEquipped = bVal; }
 	bool IsShieldEquipped() const		{ return m_bShieldEquipped; }

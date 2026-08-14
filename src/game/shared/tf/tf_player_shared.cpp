@@ -2998,7 +2998,7 @@ void CTFPlayerShared::ConditionGameRulesThink( void )
 
 	// None of the official MVM maps use vaccinator resistance uber but better safe than sorry. Comment out for now.
 	//if ( !( m_pOuter->GetTeamNumber() != TF_TEAM_PVE_DEFENDERS && TFGameRules()->IsMannVsMachineMode() )  )
-	{
+	//{
 		// My way of making modern vaccinator coexist with the old vaccinator, may require more testing
 		if ( m_flResistDuration < gpGlobals->curtime )
 		{
@@ -3006,7 +3006,7 @@ void CTFPlayerShared::ConditionGameRulesThink( void )
 			TestAndExpireChargeEffect( MEDIGUN_CHARGE_BLAST_RESIST );
 			TestAndExpireChargeEffect( MEDIGUN_CHARGE_FIRE_RESIST );
 		}
-	}
+	//}
 
 	if ( InCond( TF_COND_STEALTHED_BLINK ) )
 	{

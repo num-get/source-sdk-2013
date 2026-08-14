@@ -2003,13 +2003,13 @@ void CWeaponMedigun::SecondaryAttack( void )
 		{
 			pOwner->m_Shared.AddCond( g_MedigunResistConditions[GetResistType()].uberCond, flResistDuration, pOwner );
 			m_flChargeLevel -= flChunkSize;
-			pOwner->m_Shared.AddResistDuration( flResistDuration );
+			pOwner->m_Shared.SetResistDuration( flResistDuration );
 		}
 
 		if ( pTFPlayerPatient && bIsNewVaccinator )
 		{
 			pTFPlayerPatient->m_Shared.AddCond( g_MedigunResistConditions[GetResistType()].uberCond, flResistDuration, pOwner );
-			pTFPlayerPatient->m_Shared.AddResistDuration( flResistDuration );
+			pTFPlayerPatient->m_Shared.SetResistDuration( flResistDuration );
 		}
 		if ( TFGameRules() && TFGameRules()->IsMannVsMachineMode() )
 		{

@@ -75,11 +75,12 @@ bool CHealthKit::MyTouch( CBasePlayer *pPlayer )
 		Assert( pTFPlayer );
 
 		const bool bIsAnyHeavyWithSandvichEquippedPickingUp = pTFPlayer->Weapon_OwnsThisID( TF_WEAPON_LUNCHBOX ) && pTFPlayer->IsPlayerClass( TF_CLASS_HEAVYWEAPONS );
+		const bool bShouldSelfHeal = ff_lunchbox_self_healing.GetBool() && GetPowerupSize() != POWERUP_SMALL;
 
 		bool bPerformPickup = false;
 
 		// In the case of sandvich's owner, only restore ammo
-		if ( GetOwnerEntity() == pPlayer && bIsAnyHeavyWithSandvichEquippedPickingUp && !ff_lunchbox_self_healing.GetBool() )
+		if ( GetOwnerEntity() == pPlayer && bIsAnyHeavyWithSandvichEquippedPickingUp && !bShouldSelfHeal )
 		{
 			if ( pPlayer->GiveAmmo( 1, TF_AMMO_GRENADES1, false ) )
 			{
