@@ -1579,7 +1579,7 @@ void CWeaponMedigun::ItemPostFrame( void )
 			m_bCanChangeTarget = true;
 		}
 
-		if ( m_bHealing && ( m_iState != WEAPON_IS_ACTIVE || pOwner->IsTaunting() ) )
+		if ( m_bHealing && ( m_iState != WEAPON_IS_ACTIVE /*|| pOwner->IsTaunting()*/ ) )
 		{
 			RemoveHealingTarget();
 		}
@@ -1897,7 +1897,10 @@ void CWeaponMedigun::SecondaryAttack( void )
 		Assert( nCurrentChunk >= 1 );
 
 		CPVSFilter filter( pOwner->WorldSpaceCenter() );
-		pOwner->EmitSound( filter, pOwner->entindex(), CFmtStr( "WeaponMedigun_Vaccinator.Charged_tier_0%d", nCurrentChunk ) );
+		if ( bIsNewVaccinator )
+		{
+			pOwner->EmitSound( filter, pOwner->entindex(), CFmtStr( "WeaponMedigun_Vaccinator.Charged_tier_0%d", nCurrentChunk ) );
+		}
 		pOwner->EmitSound( filter, pOwner->entindex(), g_MedigunEffects[MEDIGUN_CHARGE_BULLET_RESIST].pszChargeOnSound );	
 	}
 	else
@@ -1995,9 +1998,10 @@ void CWeaponMedigun::SecondaryAttack( void )
 		CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pOwner, flResistDuration, add_uber_time );
 		if ( !bIsNewVaccinator )
 		{
-			int iChunkAmount = (int) ( m_flChargeLevel / flChunkSize );
-			m_flChargeLevel = flChunkSize * iChunkAmount;
-			m_flEndResistCharge = m_flChargeLevel - flChunkSize;
+			float flChunkSize = GetMinChargeAmount();
+			int nCurrentChunk = floor(m_flChargeLevel / flChunkSize);
+			m_flEndResistCharge = flChunkSize * Max( 0, (nCurrentChunk - 1) );
+			SetChargeLevel( flChunkSize * nCurrentChunk );
 		}
 		else
 		{

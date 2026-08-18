@@ -7124,8 +7124,6 @@ void CTFPlayerShared::OnRemoveStealthed( void )
 
 	if ( bFirstPrediction )
 	{
-		CTFWeaponInvis* pWpn = (CTFWeaponInvis*)m_pOuter->Weapon_OwnsThisID( TF_WEAPON_INVIS );
-
 		int iReducedCloak = 0;
 		CALL_ATTRIB_HOOK_INT_ON_OTHER( m_pOuter, iReducedCloak, set_quiet_unstealth );
 		if ( iReducedCloak == 1 )
@@ -12317,6 +12315,12 @@ bool CTFPlayer::CanAttack( int iCanAttackFlags )
 
 	Assert( pRules );
 
+	CTFPipebombLauncher *pPipebombLauncher = static_cast<CTFPipebombLauncher*>( Weapon_OwnsThisID( TF_WEAPON_PIPEBOMBLAUNCHER ) );
+	if ( pPipebombLauncher && ff_allow_taunt_sticky.GetBool() )
+	{
+		iCanAttackFlags |= TF_CAN_ATTACK_FLAG_PIPEBOMBLAUNCHER;
+	}
+
 	if ( IsViewingCYOAPDA() )
 		return false;
 
@@ -12348,19 +12352,18 @@ bool CTFPlayer::CanAttack( int iCanAttackFlags )
 
 	if ( IsTaunting() )
 	{
+		if ( !( iCanAttackFlags & TF_CAN_ATTACK_FLAG_PIPEBOMBLAUNCHER ) )
+			return false;
+
 		if ( m_nButtons & IN_ATTACK )
 			return false;
 
 		if ( m_nButtons & IN_ATTACK2 )
 		{
-			if ( !ff_allow_taunt_sticky.GetBool() )
-				return false;
-
 			if ( !IsPlayerClass( TF_CLASS_DEMOMAN ) )
 				return false;
 
-			CTFPipebombLauncher *pWeapon = dynamic_cast < CTFPipebombLauncher*>( Weapon_OwnsThisID( TF_WEAPON_PIPEBOMBLAUNCHER ) );
-			if ( !pWeapon )
+			if ( !pPipebombLauncher )
 				return false;
 
 			CTFTauntInfo *pTaunt = m_TauntEconItemView.GetStaticData()->GetTauntData();

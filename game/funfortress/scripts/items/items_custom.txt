@@ -1367,7 +1367,7 @@
 			{
 				"heal on hit for rapidfire 2"
 				{
-					"attribute_class"	"add_onhit_addhealth2"
+					"attribute_class"	"add_onhit_addhealth"
 					"value"	"15"
 				}
 				"clip size penalty"
@@ -4935,7 +4935,7 @@
 		"9001"
 		{
 			"name"	"heal on hit for rapidfire 2"
-			"attribute_class"	"add_onhit_addhealth2"
+			"attribute_class"	"add_onhit_addhealth"
 			"description_string"	"#Attrib_HealOnHit_Positive2"
 			"description_format"	"value_is_additive"
 			"hidden"	"0"

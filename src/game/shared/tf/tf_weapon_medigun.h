@@ -51,7 +51,7 @@ extern MedigunEffects_t g_MedigunEffects[MEDIGUN_NUM_CHARGE_TYPES];
 #define CLEAR_ALL_TARGETS			-1
 
 
-
+extern ConVar ff_allow_taunt_medigun_heal;
 
 //=========================================================
 // Beam healing gun
@@ -87,6 +87,7 @@ public:
 
 	virtual int		GetWeaponID( void ) const			{ return TF_WEAPON_MEDIGUN; }
 	int				GetMedigunType( void ) const;
+	virtual int		GetCanAttackFlags() const OVERRIDE { return ff_allow_taunt_medigun_heal.GetBool() ? TF_CAN_ATTACK_FLAG_PIPEBOMBLAUNCHER : TF_CAN_ATTACK_FLAG_NONE; }
 
 
 	bool			IsReleasingCharge( void ) const;

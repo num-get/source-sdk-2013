@@ -199,7 +199,7 @@ ConVar tf_damage_multiplier_blue( "tf_damage_multiplier_blue", "1.0", FCVAR_CHEA
 ConVar tf_damage_multiplier_red( "tf_damage_multiplier_red", "1.0", FCVAR_CHEAT, "All incoming damage to a red player is multiplied by this value" );
 
 
-ConVar tf_max_voice_speak_delay( "tf_max_voice_speak_delay", "1.5", FCVAR_NOTIFY, "Max time after a voice command until player can do another one" );
+ConVar tf_max_voice_speak_delay( "tf_max_voice_speak_delay", "1.5", FCVAR_NONE, "Max time after a voice command until player can do another one" );
 
 ConVar tf_allow_player_use( "tf_allow_player_use", "0", FCVAR_NOTIFY, "Allow players to execute +use while playing." );
 
@@ -296,6 +296,8 @@ extern ConVar tf_rocketpack_impact_push_max;
 extern ConVar ff_old_healonkill;
 extern ConVar ff_disable_dropped_weapon;
 extern ConVar ff_disable_falldamage_scream;
+extern ConVar ff_disable_minigun_flinch_immunity;
+extern ConVar ff_allow_taunt_huntsman_duel;
 
 #if defined( _DEBUG ) || defined( STAGING_ONLY )
 extern ConVar mp_developer;
@@ -7208,7 +7210,7 @@ bool CTFPlayer::ShouldRunRateLimitedVoiceCommand( const CCommand &args )
 	return ShouldRunRateLimitedVoiceCommand( args[0] );
 }
 
-ConVar ff_voice_command_rate_limit( "ff_voice_command_rate_limit", "0.3", FCVAR_NOTIFY, "", true, 0.05f, true, 0.3f );
+ConVar ff_voice_command_rate_limit( "ff_voice_command_rate_limit", "0.3", FCVAR_NONE, "", true, 0.05f, true, 0.3f );
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
@@ -9660,7 +9662,7 @@ int CTFPlayer::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 				float flDistSqr = ( pTFAttacker->GetAbsOrigin() - GetAbsOrigin() ).LengthSqr();
 				if ( flDistSqr > 750 * 750 )
 				{
-					bFlinch = false;
+					bFlinch = ff_disable_minigun_flinch_immunity.GetBool();
 				}
 			}
 		}
@@ -18636,6 +18638,11 @@ void CTFPlayer::DoTauntAttack( void )
 						if ( !pVictim->IsMiniBoss() )
 						{
 							pVictim->m_Shared.StunPlayer( 3.0f, 1.0, TF_STUN_BOTH | TF_STUN_NO_EFFECTS, this );
+						}
+
+						if ( iTauntAttack == TAUNTATK_SNIPER_ARROW_STAB_IMPALE && ff_allow_taunt_huntsman_duel.GetBool() )
+						{
+							pVictim->m_flTauntNextStartTime = gpGlobals->curtime;
 						}
 
 						if ( iTauntAttack == TAUNTATK_ENGINEER_ARM_IMPALE )

@@ -354,9 +354,12 @@ void CBaseObject::SetTransmit( CCheckTransmitInfo *pInfo, bool bAlways )
 //-----------------------------------------------------------------------------
 bool CBaseObject::IsOldMiniBuilding( void ) const
 {
-	CTFRobotArm *pRobotArm = dynamic_cast<CTFRobotArm*>( GetBuilder()->Weapon_OwnsThisID( TF_WEAPON_WRENCH ) );
 	int iNewMiniSentry = 1;
-	CALL_ATTRIB_HOOK_INT_ON_OTHER ( pRobotArm, iNewMiniSentry, obsolete )
+	if ( GetBuilder() )
+	{
+		CTFRobotArm *pRobotArm = dynamic_cast<CTFRobotArm*>( GetBuilder()->Weapon_OwnsThisID( TF_WEAPON_WRENCH ) );
+		CALL_ATTRIB_HOOK_INT_ON_OTHER ( pRobotArm, iNewMiniSentry, obsolete )
+	}
 	return !iNewMiniSentry;
 }
 

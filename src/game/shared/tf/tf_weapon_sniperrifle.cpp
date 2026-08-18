@@ -49,6 +49,7 @@ void ToolFramework_RecordMaterialParams( IMaterial *pMaterial );
 ConVar tf_sniper_fullcharge_bell( "tf_sniper_fullcharge_bell", "0", FCVAR_ARCHIVE );
 #endif
 
+extern ConVar ff_allow_jump_after_scoped_shot;
 //=============================================================================
 //
 // Weapon Sniper Rifles tables.
@@ -739,7 +740,7 @@ void CTFSniperRifle::SetInternalUnzoomTime( float flUnzoomTime )
 	if ( m_flUnzoomTime == flUnzoomTime )
 		return;
 
-	if ( flUnzoomTime > gpGlobals->curtime )
+	if ( flUnzoomTime > gpGlobals->curtime && !ff_allow_jump_after_scoped_shot.GetBool() )
 	{
 		DisableJump();
 	}

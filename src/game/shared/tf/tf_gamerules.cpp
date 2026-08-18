@@ -859,18 +859,22 @@ ConVar tf_medieval_autorp( "tf_medieval_autorp", "1", FCVAR_REPLICATED | FCVAR_N
 ConVar tf_sticky_radius_ramp_time( "tf_sticky_radius_ramp_time", "2.0", FCVAR_DEVELOPMENTONLY | FCVAR_CHEAT | FCVAR_REPLICATED, "Amount of time to get full radius after arming" );
 ConVar tf_sticky_airdet_radius( "tf_sticky_airdet_radius", "0.85", FCVAR_DEVELOPMENTONLY | FCVAR_CHEAT | FCVAR_REPLICATED, "Radius Scale if detonated in the air" );
 
-ConVar ff_minigun_spinup_penalty ( "ff_minigun_spinup_penalty", "1", FCVAR_NOTIFY | FCVAR_REPLICATED, "Apply damage and accuracy penalty on the minigun during the first second of spun-up time." );
-ConVar ff_new_shield_charge ( "ff_new_shield_charge", "1", FCVAR_NOTIFY | FCVAR_REPLICATED, "0 - guaranteed melee crit on a shield bash, only deal impact damage if the charge meter is <40%, each head increases impact damage by 20%, 1 - impact damage at any range, remove debuff, each head increases impact damage by 10%, 75% slower deploy and holster speed on sword weapons." );
-ConVar ff_use_new_grenade( "ff_use_new_grenade", "1", FCVAR_NOTIFY | FCVAR_REPLICATED, "Uses the modern grenade explosion radius (146Hu) instead of the older ones (159Hu), direct hit will always deal full damage rather than depending on where the grenade struck the enemy." );
-ConVar ff_use_new_parachute ( "ff_use_new_parachute", "1", FCVAR_NOTIFY | FCVAR_REPLICATED, "Remove the parachute updraft effect while on fire, -25% max air velocity, cannot redeploy parachute." );
-ConVar ff_old_kamikaze ( "ff_old_kamikaze", "0", FCVAR_NOTIFY | FCVAR_REPLICATED, "Equipping the Rocket Jumper prevents self damage from the Kamikaze taunt kill." );
-ConVar ff_lunchbox_self_healing ( "ff_lunchbox_self_healing", "0", FCVAR_NOTIFY | FCVAR_REPLICATED, "Heal yourself instantly by throwing a lunch box item to the ground." );
-ConVar ff_new_weapon_switch_speed ( "ff_new_weapon_switch_speed", "1", FCVAR_NOTIFY | FCVAR_REPLICATED, "0.5s weapon switch time instead of 0.67s." );
-ConVar ff_old_healonkill ( "ff_old_healonkill", "0", FCVAR_NOTIFY | FCVAR_REPLICATED, "Restore the ability to overheal when gaining health on a kill." );
-ConVar ff_allow_taunt_sticky ( "ff_allow_taunt_sticky", "0", FCVAR_NOTIFY | FCVAR_REPLICATED, "Allow Demoman to detonate stickies while taunting." );
-ConVar ff_disable_dropped_weapon ( "ff_disable_dropped_weapon", "0", FCVAR_NOTIFY | FCVAR_REPLICATED, "Fallen ammo packs are replaced with weapons." );
-ConVar ff_use_new_flame( "ff_use_new_flame", "1", FCVAR_NOTIFY | FCVAR_REPLICATED, "0 - Old Flamethrower particle and old afterburn mechanic, 1 - Modern Flamethrower particle, 2 - Modern Flamethrower particle without density ramp up nerf" );
-ConVar ff_use_new_airblast( "ff_use_new_airblast", "1", FCVAR_NOTIFY | FCVAR_REPLICATED, "If set to 0, restore pre-JI airblast" );
+ConVar ff_minigun_spinup_penalty( "ff_minigun_spinup_penalty", "1", FCVAR_REPLICATED, "Apply damage and accuracy penalty on the minigun during the first second of spun-up time." );
+ConVar ff_new_shield_charge( "ff_new_shield_charge", "1", FCVAR_REPLICATED, "0 - guaranteed melee crit on a shield bash, only deal impact damage if the charge meter is <40%, each head increases impact damage by 20%, 1 - impact damage at any range, remove debuff, each head increases impact damage by 10%, 75% slower deploy and holster speed on sword weapons." );
+ConVar ff_use_new_grenade( "ff_use_new_grenade", "1", FCVAR_REPLICATED, "Uses the modern grenade explosion radius (146Hu) instead of the older ones (159Hu), direct hit will always deal full damage rather than depending on where the grenade struck the enemy." );
+ConVar ff_use_new_parachute( "ff_use_new_parachute", "1", FCVAR_REPLICATED, "Remove the parachute updraft effect while on fire, -25% max air velocity, cannot redeploy parachute." );
+ConVar ff_old_kamikaze( "ff_old_kamikaze", "0", FCVAR_REPLICATED, "Equipping the Rocket Jumper prevents self damage from the Kamikaze taunt kill." );
+ConVar ff_lunchbox_self_healing( "ff_lunchbox_self_healing", "0", FCVAR_REPLICATED, "Heal yourself instantly by throwing a lunch box item to the ground." );
+ConVar ff_new_weapon_switch_speed( "ff_new_weapon_switch_speed", "1", FCVAR_REPLICATED, "0.5s weapon switch time instead of 0.67s." );
+ConVar ff_old_healonkill( "ff_old_healonkill", "0", FCVAR_REPLICATED, "Restore the ability to overheal when gaining health on a kill." );
+ConVar ff_allow_taunt_sticky( "ff_allow_taunt_sticky", "0", FCVAR_REPLICATED, "Allow Demoman to detonate stickies while taunting." );
+ConVar ff_disable_dropped_weapon( "ff_disable_dropped_weapon", "0", FCVAR_REPLICATED, "Fallen ammo packs are replaced with weapons." );
+ConVar ff_use_new_flame( "ff_use_new_flame", "1", FCVAR_REPLICATED, "0 - Old Flamethrower particle and old afterburn mechanic, 1 - Modern Flamethrower particle, 2 - Modern Flamethrower particle without density ramp up nerf." );
+ConVar ff_use_new_airblast( "ff_use_new_airblast", "1", FCVAR_REPLICATED, "If set to 0, restore pre-JI airblast." );
+ConVar ff_allow_taunt_medigun_heal( "ff_allow_taunt_medigun_heal", "0", FCVAR_REPLICATED, "Allow Medic to continue healing while taunting." );
+ConVar ff_allow_jump_after_scoped_shot( "ff_allow_jump_after_scoped_shot", "0", FCVAR_REPLICATED, "Can jump immediately after firing a scoped shot." );
+ConVar ff_disable_minigun_flinch_immunity( "ff_disable_minigun_flinch_immunity", "0", FCVAR_REPLICATED, "Disable Sniper's flinch immunity against long range Minigun hits." );
+ConVar ff_allow_taunt_huntsman_duel( "ff_allow_taunt_huntsman_duel", "0", FCVAR_REPLICATED, "Restore Huntsman Sniper's ability to have a taunt duel against another Huntsman Sniper." );
 
 #ifndef GAME_DLL
 extern ConVar cl_burninggibs;
@@ -5690,14 +5694,11 @@ void CTFGameRules::RadiusDamage( CTFRadiusDamageInfo &info )
 				// Heal on hits
 				int iModHealthOnHit = 0;
 				CALL_ATTRIB_HOOK_INT_ON_OTHER( info.dmgInfo->GetWeapon(), iModHealthOnHit, add_health_on_radius_damage );
-				int iOldModHealthOnHit = 0;
-				CALL_ATTRIB_HOOK_INT_ON_OTHER( info.dmgInfo->GetWeapon(), iOldModHealthOnHit, add_onhit_addhealth2 );
-				if ( iModHealthOnHit || iOldModHealthOnHit )
+				if ( iModHealthOnHit )
 				{
 					// Scale Health mod with damage dealt, input being the maximum amount of health possible
 					float flScale = Clamp( nDamageDealt / flBaseDamage, 0.f, 1.0f );
 					iModHealthOnHit = (int)( (float)iModHealthOnHit * flScale );
-					iModHealthOnHit += (int)( (float)iOldModHealthOnHit * iDamageEnemies );
 					int iHealed = info.dmgInfo->GetAttacker()->TakeHealth( iModHealthOnHit, DMG_GENERIC );
 					if ( iHealed )
 					{
