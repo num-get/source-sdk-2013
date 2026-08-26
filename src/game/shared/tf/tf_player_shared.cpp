@@ -184,7 +184,6 @@ ConVar tf_allow_taunt_switch( "tf_allow_taunt_switch", "0", FCVAR_REPLICATED, "0
 
 ConVar tf_allow_all_team_partner_taunt( "tf_allow_all_team_partner_taunt", "1", FCVAR_REPLICATED | FCVAR_DEVELOPMENTONLY );
 
-extern ConVar ff_new_shield_charge;
 extern ConVar ff_allow_taunt_sticky;
 extern ConVar ff_use_new_flame;
 
@@ -6117,13 +6116,15 @@ void CTFPlayerShared::EndCharge()
 		// Impacts drain the charge meter completely.
 		float flMeterAtImpact = m_flChargeMeter;
 
+		bool bNewShieldCharge = true;
 		CTFWearableDemoShield *pWearableShield = GetEquippedDemoShield( m_pOuter );
 		if ( pWearableShield )
 		{
 			pWearableShield->ShieldBash( m_pOuter, flMeterAtImpact );
+			CALL_ATTRIB_HOOK_INT_ON_OTHER( pWearableShield, bNewShieldCharge, obsolete );
 		}
 
-		if ( GetNextMeleeCrit() == MELEE_NOCRIT || ff_new_shield_charge.GetBool() )
+		if ( GetNextMeleeCrit() == MELEE_NOCRIT || bNewShieldCharge )
 			CalcChargeCrit();
 
 		// Removing the condition here would cause issues with prediction, so we set the
@@ -6168,10 +6169,13 @@ void CTFPlayerShared::CalcChargeCrit( bool bForceCrit )
 	// Keying on TideTurner
 	int iDemoChargeDamagePenalty = 0;
 	CALL_ATTRIB_HOOK_INT_ON_OTHER( m_pOuter, iDemoChargeDamagePenalty, lose_demo_charge_on_damage_when_charging );
-	int iNewTideTurner = 1;
+
+	bool bNewShieldCharge = 1;
 	CTFWearableDemoShield *pWearableShield = GetEquippedDemoShield( m_pOuter );
-	CALL_ATTRIB_HOOK_INT_ON_OTHER( pWearableShield, iNewTideTurner, obsolete );
-	if ( iDemoChargeDamagePenalty && iNewTideTurner )
+	if ( pWearableShield )
+		CALL_ATTRIB_HOOK_INT_ON_OTHER( pWearableShield, bNewShieldCharge, obsolete );
+
+	if ( iDemoChargeDamagePenalty && bNewShieldCharge )
 	{
 		if ( bForceCrit || GetDemomanChargeMeter() <= 75 )
 		{
@@ -6205,10 +6209,15 @@ void CTFPlayerShared::OnAddShieldCharge( void )
 #else
 	m_hPlayersVisibleAtChargeStart.Purge();
 
+	bool bNewShieldCharge = true;
+	CTFWearableDemoShield *pWearableShield = GetEquippedDemoShield( m_pOuter );
+	if ( pWearableShield )
+		CALL_ATTRIB_HOOK_INT_ON_OTHER( pWearableShield, bNewShieldCharge, obsolete );
+
 	// Remove debuffs
 	for ( int i = 0; g_aDebuffConditions[i] != TF_COND_LAST; i++ )
 	{
-		if ( ff_new_shield_charge.GetBool() )
+		if ( bNewShieldCharge )
 		{
 			RemoveCond( g_aDebuffConditions[i] );
 		}
@@ -14346,26 +14355,32 @@ void CTFPlayerShared::UpdateCloakMeter( void )
 #ifdef GAME_DLL
 		// staging_spy
 		float flReduction = gpGlobals->frametime * 0.75f;
-		for ( int i = 0; g_aDebuffConditions[i] != TF_COND_LAST; i++ )
+		int iNewFeignDeath = 1;
+		CTFWeaponInvis *pWatch = (CTFWeaponInvis *) m_pOuter->Weapon_OwnsThisID( TF_WEAPON_INVIS );
+		CALL_ATTRIB_HOOK_INT_ON_OTHER( pWatch, iNewFeignDeath, obsolete );
+		if ( !( !iNewFeignDeath && pWatch->HasFeignDeath() ) )
 		{
-			if ( InCond( g_aDebuffConditions[i] ) )
+			for ( int i = 0; g_aDebuffConditions[i] != TF_COND_LAST; i++ )
 			{
-				if ( m_ConditionData[g_aDebuffConditions[i]].m_flExpireTime != PERMANENT_CONDITION )
-				{			
-					m_ConditionData[g_aDebuffConditions[i]].m_flExpireTime = MAX( m_ConditionData[g_aDebuffConditions[i]].m_flExpireTime - flReduction, 0 );
-				}
-				// Burning and Bleeding and extra timers
-				if ( g_aDebuffConditions[i] == TF_COND_BURNING )
+				if ( InCond( g_aDebuffConditions[i] ) )
 				{
-					// Reduce the duration of this burn
-					m_flAfterburnDuration -= flReduction;
-				}
-				else if ( g_aDebuffConditions[i] == TF_COND_BLEEDING )
-				{
-					// Reduce the duration of this bleeding 
-					FOR_EACH_VEC( m_PlayerBleeds, i )
+					if ( m_ConditionData[g_aDebuffConditions[i]].m_flExpireTime != PERMANENT_CONDITION )
 					{
-						m_PlayerBleeds[i].flBleedingRemoveTime -= flReduction;
+						m_ConditionData[g_aDebuffConditions[i]].m_flExpireTime = MAX( m_ConditionData[g_aDebuffConditions[i]].m_flExpireTime - flReduction, 0 );
+					}
+					// Burning and Bleeding and extra timers
+					if ( g_aDebuffConditions[i] == TF_COND_BURNING )
+					{
+						// Reduce the duration of this burn
+						m_flAfterburnDuration -= flReduction;
+					}
+					else if ( g_aDebuffConditions[i] == TF_COND_BLEEDING )
+					{
+						// Reduce the duration of this bleeding
+						FOR_EACH_VEC( m_PlayerBleeds, i )
+						{
+							m_PlayerBleeds[i].flBleedingRemoveTime -= flReduction;
+						}
 					}
 				}
 			}

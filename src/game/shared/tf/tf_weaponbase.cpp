@@ -95,7 +95,6 @@ extern ConVar cl_crosshair_file;
 #endif
 
 extern ConVar ff_new_weapon_switch_speed;
-extern ConVar ff_new_shield_charge;
 extern ConVar ff_use_new_airblast;
 
 //=============================================================================
@@ -1287,7 +1286,7 @@ bool CTFWeaponBase::Deploy( void )
 		int iIsSword = 0;
 		CALL_ATTRIB_HOOK_INT_ON_OTHER( pLastWeapon, iIsSword, is_a_sword );
 		CALL_ATTRIB_HOOK_INT( iIsSword, is_a_sword );
-		if ( iIsSword && ff_new_shield_charge.GetBool() )
+		if ( iIsSword )
 		{
 			// swords deploy and holster 75% slower
 			flDeployTimeMultiplier *= 1.75f;

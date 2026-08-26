@@ -702,7 +702,7 @@
 			"moditem"	"1"
 			"item_type_name" 	"#TF_Wearable_Shield"
 			"item_name"		"#TF_Unique_Achievement_Shield"
-			"item_description"	"#TF_Unique_Achievement_Shield_Desc"
+			"item_description"	"#TF_Unique_Achievement_Shield_Desc2"
 			"item_slot"		"secondary"
 			"equip_region"	"arms"
 			"anim_slot"		"FORCE_NOT_USED"
@@ -746,6 +746,11 @@
 				{
 					"attribute_class"	"allowed_in_medieval_mode"
 					"value"	"1"
+				}
+				"obsolete ammo penalty"
+				{
+					"attribute_class"	"obsolete"
+					"value"	"0"
 				}
 			}
 			"mouse_pressed_sound"	"ui/item_wood_pole_pickup.wav"
@@ -979,50 +984,15 @@
 		"60013"
 		{
 			"name"	"Vintage Powerjack"
+			"prefab" "weapon_powerjack paintkit_base"
 			"first_sale_date"	"2010/09/29"
-			"prefab" "paintkit_base"
+			"particle_suffix"	"powerjack"
 			"tags"
 			{
 				"can_be_festivized"		"1"
 			}
-			"item_class"	"tf_weapon_fireaxe"
-			"craft_class"	"weapon"
-			"craft_material_type"	"weapon"
-			"capabilities"
-			{
-				"nameable"				"1"
-			}
-			"tags"
-			{
-				"can_deal_damage"			"1"
-				"can_deal_critical_damage"		"1"
-			}
-			"item_logname"	"powerjack"
-			"item_iconname"	"powerjack"
-			"show_in_armory"	"1"
 			"moditem"	"1"
-			"item_type_name"	"#TF_Weapon_SledgeHammer"
-			"item_name"	"#TF_ThePowerjack"
-			"item_slot"	"melee"
-			"image_inventory"	"backpack/workshop/weapons/c_models/c_powerjack/c_powerjack"
-			"image_inventory_size_w"		"128"
-			"image_inventory_size_h"		"82"
-			"model_player"	"models/workshop/weapons/c_models/c_powerjack/c_powerjack.mdl"
-			"attach_to_hands"	"1"
-			"inspect_panel_dist" "65"
 			"item_quality"	"rarity2"
-			"propername"	"1"
-			"min_ilevel"	"5"
-			"max_ilevel"	"5"
-			"used_by_classes"
-			{
-				"pyro"	"1"
-			}
-			"static_attrs"
-			{
-				"min_viewmodel_offset"				"10 2 -9"
-				"weapon_stattrak_module_scale"			"0.6"
-			}
 			"attributes"
 			{
 				"heal on kill"
@@ -1030,15 +1000,9 @@
 					"attribute_class"	"heal_on_kill"
 					"value"	"75"
 				}
-				"dmg from melee increased"
-				{
-					"attribute_class"	"dmg_from_melee"
-					"value"	"1.2"
-				}
 			}
 			"visuals"
 			{
-				"sound_melee_hit"	"Weapon_Machete.HitFlesh"
 				"attached_models_festive"
 				{
 					"0"
@@ -1047,9 +1011,6 @@
 					}
 				}
 			}
-			"mouse_pressed_sound"	"ui/item_heavy_gun_pickup.wav"
-			"drop_sound"		"ui/item_heavy_gun_drop.wav"
-			"particle_suffix"	"powerjack"
 		}
 
 		"60014"
@@ -1868,79 +1829,6 @@
 
 		"60023"
 		{
-			"name"			"Vintage Amputator"
-			"first_sale_date"	"2010/12/08"
-			"prefab"		"paintkit_base"
-			"item_class"		"tf_weapon_bonesaw"
-			"craft_class"		"weapon"
-			"craft_material_type"		"weapon"
-			"capabilities"
-			{
-				"nameable"		"1"
-			}
-			"tags"
-			{
-				"can_deal_damage"			"1"
-				"can_deal_critical_damage"	"1"
-				"can_heal_allies"			"1"
-				"can_be_festivized"		"1"
-			}
-			"item_logname"		"amputator"
-			"item_iconname"		"amputator"
-			"show_in_armory"	"1"
-			"moditem"	"1"
-			"item_type_name"	"#TF_Weapon_Bonesaw"
-			"item_name"		"#TF_Amputator"
-			"item_slot"		"melee"
-			"image_inventory"	"backpack/workshop/weapons/c_models/c_amputator/c_amputator"
-			"image_inventory_size_w"		"128"
-			"image_inventory_size_h"		"82"
-			"model_player"		"models/workshop/weapons/c_models/c_amputator/c_amputator.mdl"
-			"attach_to_hands"	"1"
-			"inspect_panel_dist" "42"
-			"item_quality"		"rarity2"
-			"propername"		"1"
-			"min_ilevel"		"15"
-			"max_ilevel"		"15"
-			"used_by_classes"
-			{
-				"medic"	"1"
-			}
-			"static_attrs"
-			{
-				"min_viewmodel_offset"			"10 0 -12"
-				"weapon_stattrak_module_scale"		"0.608"
-			}
-			"attributes"
-			{
-				"enables aoe heal"
-				{
-					"attribute_class"	"enables_aoe_heal"
-					"value"	"1"
-				}
-				"special taunt"
-				{
-					"attribute_class"	"special_taunt"
-					"value" "1"
-				}
-			}
-			"visuals"
-			{
-				"attached_models_festive"
-				{
-					"0"
-					{
-						"model"	"models/workshop/weapons/c_models/c_amputator/c_amputator_festivizer.mdl"
-					}
-				}
-			}
-			"mouse_pressed_sound"	"ui/item_metal_weapon_pickup.wav"
-			"drop_sound"		"ui/item_metal_weapon_drop.wav"
-			"particle_suffix"	"amputator"
-		}
-
-		"60024"
-		{
 			"name"	"Vintage Ullapool Caber"
 			"first_sale_date"	"2010/12/08"
 			"item_class"	"tf_weapon_stickbomb"
@@ -2010,7 +1898,7 @@
 			}
 		}
 
-		"60025"
+		"60024"
 		{
 			"name"			"Vintage Loch-n-Load"
 			"first_sale_date"	"2010/12/08"
@@ -2115,7 +2003,7 @@
 			}
 		}
 		
-		"60026"
+		"60025"
 		{
 			"name"	"Vintage Warrior's Spirit"
 			"first_sale_date"	"2010/12/08"
@@ -2188,7 +2076,7 @@
 			"drop_sound" "ui/item_boxing_gloves_drop.wav"
 		}
 
-		"60027"
+		"60026"
 		{
 			"name"	"Vintage Fists of Steel"
 			"first_sale_date"	"2010/12/20"
@@ -2278,7 +2166,7 @@
 			}
 		}
 
-		"60028"
+		"60027"
 		{
 			"name"	"Vintage Half-Zatoichi"
 			"first_sale_date"	"2011/03/08"
@@ -2346,7 +2234,7 @@
 			"drop_sound"		"ui/item_metal_weapon_drop.wav"
 		}
 
-		"60029"
+		"60028"
 		{
 			"name"	"Vintage Persian Persuader"
 			"prefab"	"weapon_sword paintkit_base"
@@ -2440,7 +2328,7 @@
 		}
 
 
-		"60030"
+		"60029"
 		{
 			"name"			"Vintage Splendid Screen"
 			"first_sale_date"	"2011/03/21"
@@ -2462,7 +2350,7 @@
 			"item_logname" "splendid_screen"
 			"item_iconname" "splendid_screen"
 			"item_name"		"#TF_SplendidScreen"
-			"item_description"	"#TF_SplendidScreen_Desc"
+			"item_description"	"#TF_Unique_Achievement_Shield_Desc2"
 			"item_slot"		"secondary"
 			"equip_region"	"arms"
 			"anim_slot"		"FORCE_NOT_USED"
@@ -2510,6 +2398,11 @@
 					"attribute_class"	"allowed_in_medieval_mode"
 					"value"	"1"
 				}
+				"obsolete ammo penalty"
+				{
+					"attribute_class"	"obsolete"
+					"value"	"0"
+				}
 			}
 			"visuals"
 			{
@@ -2541,7 +2434,7 @@
 			"drop_sound"		"ui/item_wood_pole_drop.wav"
 		}
 
-		"60031"
+		"60030"
 		{
 			"name"	"Vintage Quick-Fix"
 			"prefab"	"valve"
@@ -2667,7 +2560,7 @@
 			"drop_sound"		"ui/item_heavy_gun_drop.wav"
 		}
 
-		"60032"
+		"60031"
 		{
 			"name"	"Vintage Solemn Vow"
 			"prefab"	"valve weapon_melee_allclass"
@@ -2735,7 +2628,7 @@
 			"drop_sound"		"ui/item_metal_weapon_drop.wav"
 		}
 
-		"60033"
+		"60032"
 		{
 			"name"	"Vintage Liberty Launcher"
 			"first_sale_date"	"2011/03/23"
@@ -2811,7 +2704,7 @@
 			"drop_sound"		"ui/item_heavy_gun_drop.wav"
 		}
 
-		"60034"
+		"60033"
 		{
 			"name"	"Vintage Reserve Shooter"
 			"first_sale_date"	"2011/03/23"
@@ -2901,7 +2794,7 @@
 			"particle_suffix"	"reserve_shooter"
 		}
 
-		"60035"
+		"60034"
 		{
 			"name"	"Vintage Market Gardener"
 			"first_sale_date"	"2011/03/23"
@@ -2972,7 +2865,7 @@
 			"drop_sound"		"ui/item_shovel_drop.wav"
 		}
 
-		"60036"
+		"60035"
 		{
 			"name"	"Vintage Eviction Notice"
 			"first_sale_date"	"2011/04/14"
@@ -3069,7 +2962,7 @@
 			"drop_sound"		"ui/item_light_gun_drop.wav"
 		}
 
-		"60037"
+		"60036"
 		{
 			"name"	"Vintage Cow Mangler 5000"
 			"first_sale_date"	"2011/07/13"
@@ -3172,7 +3065,7 @@
 			"drop_sound"		"ui/item_heavy_gun_drop.wav"
 		}
 
-		"60038"
+		"60037"
 		{
 			"name"	"Vintage Righteous Bison"
 			"first_sale_date"	"2011/07/13"
@@ -3265,7 +3158,7 @@
 			"drop_sound"		"ui/item_light_gun_drop.wav"
 		}
 
-		"60039"
+		"60038"
 		{
 			"name"	"Vintage Soda Popper"
 			"first_sale_date"	"2011/05/10"
@@ -3398,7 +3291,7 @@
 			"particle_suffix"	"soda_popper"
 		}
 
-		"60040"
+		"60039"
 		{
 			"name"	"Vintage Atomizer"
 			"first_sale_date"	"2011/05/10"
@@ -3475,7 +3368,7 @@
 			"drop_sound"		"ui/item_metal_weapon_drop.wav"
 		}
 
-		"60041"
+		"60040"
 		{
 			"name"	"Vintage Postal Pummeler"
 			"prefab"	"valve"
@@ -3550,7 +3443,7 @@
 			}
 		}
 
-		"60042"
+		"60041"
 		{
 			"name"	"Vintage Enforcer"
 			"first_sale_date"	"2011/05/15"
@@ -3629,7 +3522,7 @@
 			}
 		}
 
-		"60043"
+		"60042"
 		{
 			"name"	"Vintage Wanga Prick"
 			"first_sale_date"	"2011/10/28"
@@ -3700,7 +3593,7 @@
 			}
 		}
 
-		"60044"
+		"60043"
 		{
 			"name"	"Vintage Pomson 6000"
 			"first_sale_date"	"2011/12/15"
@@ -3809,7 +3702,7 @@
 			"drop_sound"		"ui/item_heavy_gun_drop.wav"
 		}
 
-		"60045"
+		"60044"
 		{
 			"name"	"Vintage Phlogistinator"
 			"prefab"	"weapon_newflame"
@@ -3923,7 +3816,7 @@
 			"drop_sound"		"ui/item_heavy_gun_drop.wav"
 		}
 
-		"60046"
+		"60045"
 		{
 			"name"	"Vintage Spy-cicle"
 			"first_sale_date"	"2011/12/19"
@@ -4004,7 +3897,7 @@
 			}
 		}
 
-		"60047"
+		"60046"
 		{
 			"name"	"Vintage Beggar's Bazooka"
 			"first_sale_date"	"2012/06/27"
@@ -4105,7 +3998,7 @@
 			"drop_sound"			"ui/item_heavy_gun_drop.wav"
 		}
 
-		"60048"
+		"60047"
 		{
 			"name"	"Vintage Baby Face's Blaster"
 			"prefab"		"weapon_scattergun"
@@ -4179,7 +4072,7 @@
 			}
 		}
 
-		"60049"
+		"60048"
 		{
 			"name" "Vintage Pretty Boy's Pocket Pistol"
 			"capabilities"
@@ -4260,7 +4153,7 @@
 			"drop_sound"		"ui/item_light_gun_drop.wav"
 		}
 
-		"60050"
+		"60049"
 		{
 			"name"	"Vintage Flying Guillotine"
 			"first_sale_date"	"2012/08/02"
@@ -4361,7 +4254,7 @@
 			"drop_sound"		"ui/item_metal_weapon_drop.wav"
 		}
 
-		"60051"
+		"60050"
 		{
 			"name"			"Vintage Loose Cannon"
 			"prefab"		"paintkit_base"
@@ -4464,7 +4357,7 @@
 			}
 		}
 
-		"60052"
+		"60051"
 		{
 			"name"	"Vintage Rescue Ranger"
 			"prefab" "paintkit_base"
@@ -4567,7 +4460,7 @@
 			"particle_suffix"	"rescue_ranger"
 		}
 
-		"60053"
+		"60052"
 		{
 			"name"	"Vintage Vaccinator"
 			"first_sale_date"	"2012/12/19"
@@ -4739,7 +4632,7 @@
 			"drop_sound"		"ui/item_heavy_gun_drop.wav"
 		}
 
-		"60054"
+		"60053"
 		{
 			"name"			"Vintage Tide Turner"
 			"first_sale_date"		"2014/06/18"
@@ -4759,7 +4652,7 @@
 			"moditem"	"1"
 			"item_type_name" 	"#TF_Wearable_Shield"
 			"item_name"		"#TF_TideTurner"
-			"item_description"	"#TF_Unique_Achievement_Shield_Desc"
+			"item_description"	"#TF_Unique_Achievement_Shield_Desc2"
 			"item_slot"		"secondary"
 			"equip_region"	"arms"
 			"anim_slot"		"FORCE_NOT_USED"
@@ -4824,7 +4717,7 @@
 			"drop_sound"		"ui/item_wood_pole_drop.wav"
 		}
 
-		"60055"
+		"60054"
 		{
 			"name"	"Vintage Panic Attack Shotgun"
 			"first_sale_date"	"2014/12/23"

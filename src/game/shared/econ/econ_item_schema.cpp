@@ -3018,6 +3018,8 @@ const char *CEconItemSchema::FindStringTableEntry( const char *pszTableName, int
 #endif
 #endif // WITH_STREAMABLE_WEAPONS
 
+extern ConVar ff_sword_weapon_switch_penalty;
+
 bool CEconItemDefinition::BInitFromKV( KeyValues *pKVItem, CUtlVector<CUtlString> *pVecErrors /* = NULL */ )
 {
 	// Set standard members
@@ -3327,6 +3329,12 @@ bool CEconItemDefinition::BInitFromKV( KeyValues *pKVItem, CUtlVector<CUtlString
 		}
 	}
 
+	bool bShouldRestore = true;
+	if ( V_stristr ( GetItemClass(), "tf_weapon_sword" ) )
+	{
+		bShouldRestore = false;
+	}
+
 	// Single-line static attribute parsing.
 	{
 		KeyValues *pKVStaticAttrsKey = m_pKVItem->FindKey( "static_attrs" );
@@ -3337,7 +3345,7 @@ bool CEconItemDefinition::BInitFromKV( KeyValues *pKVItem, CUtlVector<CUtlString
 				static_attrib_t staticAttrib;
 
 				SCHEMA_INIT_SUBSTEP( staticAttrib.BInitFromKV_SingleLine( GetDefinitionName(), pKVKey, pVecErrors, false ) );
-				if ( !staticAttrib.bShouldDelete )
+				if ( !staticAttrib.bShouldDelete || ( staticAttrib.bShouldRestore && bShouldRestore ) )
 				{
 					m_vecStaticAttributes.AddToTail( staticAttrib );
 
@@ -3357,7 +3365,7 @@ bool CEconItemDefinition::BInitFromKV( KeyValues *pKVItem, CUtlVector<CUtlString
 			static_attrib_t staticAttrib;
 
 			SCHEMA_INIT_SUBSTEP( staticAttrib.BInitFromKV_MultiLine( GetDefinitionName(), pKVKey, pVecErrors ) );
-			if ( !staticAttrib.bShouldDelete )
+			if ( !staticAttrib.bShouldDelete || ( staticAttrib.bShouldRestore && bShouldRestore ) )
 			{
 				m_vecStaticAttributes.AddToTail( staticAttrib );
 
@@ -3440,6 +3448,12 @@ bool static_attrib_t::BInitFromKV_MultiLine( const char *pszContext, KeyValues *
 
 		const char *pszValue = pKVAttribute->GetString( "value", NULL );
 
+		if ( !ff_sword_weapon_switch_penalty.GetBool() && V_stristr (pAttrDef->GetAttributeClass(), "is_a_sword") && strcmp(pszValue, "72") == 0 )
+		{
+			bShouldDelete = true;
+			bShouldRestore = true;
+		}
+
 		// Found an attribute to delete
 		if ( strcmp(pszValue, "delete") == 0 )
 		{
@@ -3478,6 +3492,12 @@ bool static_attrib_t::BInitFromKV_SingleLine( const char *pszContext, KeyValues 
 		pAttrType->InitializeNewEconAttributeValue( &m_value );
 
 		const char *pszValue = pKVAttribute->GetString();
+
+		if ( !ff_sword_weapon_switch_penalty.GetBool() && V_stristr (pAttrDef->GetAttributeClass(), "is_a_sword") && strcmp(pszValue, "72") == 0 )
+		{
+			bShouldDelete = true;
+			bShouldRestore = true;
+		}
 
 		// Found an attribute to delete
 		if ( strcmp(pszValue, "delete") == 0 )
