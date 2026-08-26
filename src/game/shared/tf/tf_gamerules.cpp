@@ -860,7 +860,7 @@ ConVar tf_sticky_radius_ramp_time( "tf_sticky_radius_ramp_time", "2.0", FCVAR_DE
 ConVar tf_sticky_airdet_radius( "tf_sticky_airdet_radius", "0.85", FCVAR_DEVELOPMENTONLY | FCVAR_CHEAT | FCVAR_REPLICATED, "Radius Scale if detonated in the air" );
 
 ConVar ff_minigun_spinup_penalty( "ff_minigun_spinup_penalty", "1", FCVAR_REPLICATED, "Apply damage and accuracy penalty on the minigun during the first second of spun-up time." );
-ConVar ff_new_shield_charge( "ff_new_shield_charge", "1", FCVAR_REPLICATED, "0 - guaranteed melee crit on a shield bash, only deal impact damage if the charge meter is <40%, each head increases impact damage by 20%, 1 - impact damage at any range, remove debuff, each head increases impact damage by 10%, 75% slower deploy and holster speed on sword weapons." );
+ConVar ff_sword_weapon_switch_penalty( "ff_sword_weapon_switch_penalty", "1", FCVAR_REPLICATED, "75% slower deploy and holster speed on sword weapons, put cl_reload_item_schema and sv_reload_item_schema commands inside autoexec.cfg and listenserver.cfg/server.cfg respectively to apply change on launch." );
 ConVar ff_use_new_grenade( "ff_use_new_grenade", "1", FCVAR_REPLICATED, "Uses the modern grenade explosion radius (146Hu) instead of the older ones (159Hu), direct hit will always deal full damage rather than depending on where the grenade struck the enemy." );
 ConVar ff_use_new_parachute( "ff_use_new_parachute", "1", FCVAR_REPLICATED, "Remove the parachute updraft effect while on fire, -25% max air velocity, cannot redeploy parachute." );
 ConVar ff_old_kamikaze( "ff_old_kamikaze", "0", FCVAR_REPLICATED, "Equipping the Rocket Jumper prevents self damage from the Kamikaze taunt kill." );
@@ -5837,20 +5837,19 @@ int CTFRadiusDamageInfo::ApplyToEntity( CBaseEntity *pEntity )
 	{
 		switch( pWeapon->GetWeaponID() )
 		{
-			case TF_WEAPON_PIPEBOMBLAUNCHER :
 			case TF_WEAPON_GRENADELAUNCHER :
+				if ( !iNewGrenade || !ff_use_new_grenade.GetBool() )
+				{
+					flAdjustedDamage *= 1.12f;
+				}
+			case TF_WEAPON_PIPEBOMBLAUNCHER :
 			case TF_WEAPON_CANNON :
 				flAdjustedDamage *= 0.75f;
 				break;
 			case TF_WEAPON_STICKBOMB :
-				if (iNewGrenade)
+				if ( iNewGrenade )
 					flAdjustedDamage *= 0.75f;
 				break;
-		}
-
-		if ( pWeapon->GetWeaponID() == TF_WEAPON_GRENADELAUNCHER && ( !iNewGrenade || !ff_use_new_grenade.GetBool() ) )
-		{
-			flAdjustedDamage *= 1.12f;
 		}
 	}
 
@@ -7436,13 +7435,13 @@ float CTFGameRules::ApplyOnDamageAliveModifyRules( const CTakeDamageInfo &info, 
 		outParams.bSendPreFeignDamage = false;
 		if ( pVictim && pVictim->IsPlayerClass( TF_CLASS_SPY ) && ( info.GetDamageCustom() != TF_DMG_CUSTOM_TELEFRAG ) && !pVictim->IsTaunting() && !iAttackIgnoresResists )
 		{
+			int iNewFeignDeath = 1;
+			CTFWeaponInvis *pWatch = (CTFWeaponInvis *) pVictim->Weapon_OwnsThisID( TF_WEAPON_INVIS );
+			CALL_ATTRIB_HOOK_INT_ON_OTHER( pWatch, iNewFeignDeath, obsolete );
 			// Reduce damage taken if we have recently feigned death.
 			if ( pVictim->m_Shared.InCond( TF_COND_FEIGN_DEATH ) || pVictim->m_Shared.IsFeignDeathReady() )
 			{
 				// Damage reduction is proportional to cloak remaining (60%->20%)
-				int iNewFeignDeath = 1;
-				CTFWeaponInvis *pWatch = (CTFWeaponInvis *) pVictim->Weapon_OwnsThisID( TF_WEAPON_INVIS );
-				CALL_ATTRIB_HOOK_INT_ON_OTHER( pWatch, iNewFeignDeath, obsolete );
 				float flDamageReduction = iNewFeignDeath ? RemapValClamped( pVictim->m_Shared.GetSpyCloakMeter(), 50.0f, 0.0f, tf_feign_death_damage_scale.GetFloat(), tf_stealth_damage_reduction.GetFloat() ): 0.1f;
 
 				// On Activate Reduce Remaining Cloak by 50%
@@ -7476,7 +7475,7 @@ float CTFGameRules::ApplyOnDamageAliveModifyRules( const CTakeDamageInfo &info, 
 				}
 			}
 			// Standard Stealth gives small damage reduction
-			else if ( pVictim->m_Shared.InCond( TF_COND_STEALTHED ) )
+			else if ( pVictim->m_Shared.InCond( TF_COND_STEALTHED ) && !( !iNewFeignDeath && pWatch->HasFeignDeath() ) )
 			{
 				flRealDamage *= tf_stealth_damage_reduction.GetFloat();
 			}

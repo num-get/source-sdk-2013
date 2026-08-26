@@ -32,8 +32,6 @@ BEGIN_DATADESC( CTFWearableDemoShield )
 END_DATADESC()
 // -- Data Desc
 
-extern ConVar ff_new_shield_charge;
-
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
@@ -199,7 +197,9 @@ void CTFWearableDemoShield::ShieldBash( CTFPlayer *pPlayer, float flCurrentCharg
 		ApplyMultiDamage();
 
 		// Calculate charge crit if we did any bash damage
-		pOwner->m_Shared.CalcChargeCrit( !ff_new_shield_charge.GetBool() );
+		bool bNewShieldCharge = true;
+		CALL_ATTRIB_HOOK_INT_ON_OTHER( pOwner, bNewShieldCharge, obsolete );
+		pOwner->m_Shared.CalcChargeCrit( !bNewShieldCharge );
 	}
 
 	UTIL_ScreenShake( pOwner->WorldSpaceCenter(), 25.0, 150.0, 1.0, 750, SHAKE_START );
@@ -213,8 +213,14 @@ void CTFWearableDemoShield::ShieldBash( CTFPlayer *pPlayer, float flCurrentCharg
 float CTFWearableDemoShield::CalculateChargeDamage( float flCurrentChargeMeter )
 {
 	float flImpactDamage = RemapValClamped( flCurrentChargeMeter, 90.0f, 40.0f, 15.0f, 50.0f );
-	
-	if( !ff_new_shield_charge.GetBool() )
+
+	CTFPlayer *pOwner = ToTFPlayer( GetOwnerEntity() );
+	if ( !pOwner )
+		return flImpactDamage;
+
+	bool bNewShieldCharge = true;
+	CALL_ATTRIB_HOOK_INT_ON_OTHER( pOwner, bNewShieldCharge, obsolete );
+	if( !bNewShieldCharge )
 	{
 		if ( flCurrentChargeMeter <= 40.0f )
 		{
@@ -226,10 +232,6 @@ float CTFWearableDemoShield::CalculateChargeDamage( float flCurrentChargeMeter )
 		}
 	}
 
-	CTFPlayer *pOwner = ToTFPlayer( GetOwnerEntity() );
-	if ( !pOwner )
-		return flImpactDamage;
-	
 	int iFullImpactDamage = 0;
 	CALL_ATTRIB_HOOK_INT_ON_OTHER( pOwner, iFullImpactDamage, no_charge_impact_range );
 	if ( iFullImpactDamage )
@@ -241,14 +243,9 @@ float CTFWearableDemoShield::CalculateChargeDamage( float flCurrentChargeMeter )
 	int iDecaps = Min( pOwner->m_Shared.GetDecapitations(), 5 );
 	if ( iDecaps > 0 )
 	{
-		if( ff_new_shield_charge.GetBool() )
-		{
-			flImpactDamage *= (1.0f + iDecaps * 0.1f );
-		}
-		else
-		{
-			flImpactDamage *= (1.0f + iDecaps * 0.2f );
-		}
+		float flImpactBonusScale = bNewShieldCharge ? 0.1f : 0.2f;
+
+		flImpactDamage *= (1.0f + iDecaps * flImpactBonusScale );
 	}
 
 	CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pOwner, flImpactDamage, charge_impact_damage );

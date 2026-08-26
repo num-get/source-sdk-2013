@@ -18638,11 +18638,13 @@ void CTFPlayer::DoTauntAttack( void )
 						if ( !pVictim->IsMiniBoss() )
 						{
 							pVictim->m_Shared.StunPlayer( 3.0f, 1.0, TF_STUN_BOTH | TF_STUN_NO_EFFECTS, this );
-						}
-
-						if ( iTauntAttack == TAUNTATK_SNIPER_ARROW_STAB_IMPALE && ff_allow_taunt_huntsman_duel.GetBool() )
-						{
-							pVictim->m_flTauntNextStartTime = gpGlobals->curtime;
+							if ( iTauntAttack == TAUNTATK_SNIPER_ARROW_STAB_IMPALE )
+							{
+								if ( pVictim->m_Shared.IsControlStunned() && ff_allow_taunt_huntsman_duel.GetBool() )
+								{
+									pVictim->m_flTauntNextStartTime = gpGlobals->curtime;
+								}
+							}
 						}
 
 						if ( iTauntAttack == TAUNTATK_ENGINEER_ARM_IMPALE )

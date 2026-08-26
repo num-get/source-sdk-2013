@@ -77,8 +77,8 @@ CTFProjectile_EnergyRing::CTFProjectile_EnergyRing()
 
 #ifdef GAME_DLL
 	m_flLastHitTime = 0.f;
-#endif
 	m_flInitTime = 0.f;
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -195,8 +195,9 @@ void CTFProjectile_EnergyRing::Spawn()
 	{
 		CollisionProp()->UseTriggerBounds( true, 24, true );
 	}
-
+#ifdef GAME_DLL
 	m_flInitTime = gpGlobals->curtime;
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -270,15 +271,18 @@ void CTFProjectile_EnergyRing::ProjectileTouch( CBaseEntity *pOther )
 	{
 		if ( iNewRaygun == 2 )
 		{
-			if ( pOther->InSameTeam( this ) )
+			if ( pOther->IsPlayer() && pOther->InSameTeam( pOwner ) )
 			{
 				CTFPlayer *pPlayer = ToTFPlayer( pOther );
-				if( pPlayer )
+
+				// Only care about Snipers
+				if ( pPlayer->IsPlayerClass( TF_CLASS_SNIPER ) )
 				{
-					CTFCompoundBow *pBow = static_cast<CTFCompoundBow *>( pPlayer->GetActiveTFWeapon() );
-					if ( pBow )
+					// Does he have the bow?
+					CTFWeaponBase *pWpn = pPlayer->GetActiveTFWeapon();
+					if ( pWpn && pWpn->GetWeaponID() == TF_WEAPON_COMPOUND_BOW )
 					{
-						// Light the bow on fire.
+						CTFCompoundBow *pBow = static_cast<CTFCompoundBow*>( pWpn );
 						pBow->SetArrowAlight( true );
 					}
 				}
@@ -297,9 +301,9 @@ void CTFProjectile_EnergyRing::ProjectileTouch( CBaseEntity *pOther )
 		{
 			lifeTimeScale = RemapValClamped( gpGlobals->curtime - m_flInitTime, 0.175f, 0.35f, 1.0f, 0.6f );
 		}
-		
+
 		const int nDamage = GetDamage() * lifeTimeScale;
-		
+
 		int iDmgType = GetDamageType();
 		if ( iNewRaygun == 2 )
 		{
