@@ -67,6 +67,7 @@ PRECACHE_REGISTER_FN(PrecacheRing);
 #ifdef GAME_DLL
 ConVar tf_bison_tick_time( "tf_bison_tick_time", "0.025", FCVAR_CHEAT );
 #endif
+extern ConVar tf_flamethrower_maxdamagedist;
 
 //-----------------------------------------------------------------------------
 // Purpose:
@@ -78,7 +79,6 @@ CTFProjectile_EnergyRing::CTFProjectile_EnergyRing()
 #ifdef GAME_DLL
 	m_flLastHitTime = 0.f;
 #endif
-	m_flInitTime = 0.f;
 }
 
 //-----------------------------------------------------------------------------
@@ -189,14 +189,15 @@ void CTFProjectile_EnergyRing::Spawn()
 	SetRenderMode( kRenderNone	);
 	SetSolidFlags( FSOLID_TRIGGER | FSOLID_NOT_SOLID );
 	SetCollisionGroup( TFCOLLISION_GROUP_ROCKETS );
+#ifdef GAME_DLL
 	int iNewRaygun = 0;
 	CALL_ATTRIB_HOOK_INT_ON_OTHER( GetOwnerEntity(), iNewRaygun, energy_weapon_no_ammo );
 	if ( iNewRaygun == 2 )
 	{
 		CollisionProp()->UseTriggerBounds( true, 24, true );
 	}
-
-	m_flInitTime = gpGlobals->curtime;
+	m_vecInitialPos = GetAbsOrigin();
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -270,15 +271,18 @@ void CTFProjectile_EnergyRing::ProjectileTouch( CBaseEntity *pOther )
 	{
 		if ( iNewRaygun == 2 )
 		{
-			if ( pOther->InSameTeam( this ) )
+			if ( pOther->IsPlayer() && pOther->InSameTeam( pOwner ) )
 			{
 				CTFPlayer *pPlayer = ToTFPlayer( pOther );
-				if( pPlayer )
+
+				// Only care about Snipers
+				if ( pPlayer->IsPlayerClass( TF_CLASS_SNIPER ) )
 				{
-					CTFCompoundBow *pBow = static_cast<CTFCompoundBow *>( pPlayer->GetActiveTFWeapon() );
-					if ( pBow )
+					// Does he have the bow?
+					CTFWeaponBase *pWpn = pPlayer->GetActiveTFWeapon();
+					if ( pWpn && pWpn->GetWeaponID() == TF_WEAPON_COMPOUND_BOW )
 					{
-						// Light the bow on fire.
+						CTFCompoundBow *pBow = static_cast<CTFCompoundBow*>( pWpn );
 						pBow->SetArrowAlight( true );
 					}
 				}
@@ -291,23 +295,26 @@ void CTFProjectile_EnergyRing::ProjectileTouch( CBaseEntity *pOther )
 
 		m_flLastHitTime = gpGlobals->curtime;
 
-		float lifeTimeScale = 1.f;
+		float flDamage = GetDamage();
 
 		if ( iNewRaygun == 2 )
 		{
-			lifeTimeScale = RemapValClamped( gpGlobals->curtime - m_flInitTime, 0.175f, 0.35f, 1.0f, 0.6f );
-		}
-		
-		const int nDamage = GetDamage() * lifeTimeScale;
-		
-		int iDmgType = GetDamageType();
-		if ( iNewRaygun == 2 )
-		{
-			iDmgType ^= DMG_BULLET ^ DMG_USEDISTANCEMOD ^ DMG_NOCLOSEDISTANCEMOD ^ DMG_PREVENT_PHYSICS_FORCE;
-			iDmgType |= DMG_SONIC;
+			const float flDistance = GetAbsOrigin().DistTo( m_vecInitialPos );
+			flDamage *= RemapValClamped( flDistance, tf_flamethrower_maxdamagedist.GetFloat()/2, tf_flamethrower_maxdamagedist.GetFloat(), 1.0f, 0.60f );
 		}
 
-		CTakeDamageInfo info( this, pOwner, GetLauncher(), nDamage, iDmgType, TF_DMG_CUSTOM_PLASMA );
+		const int nDamage = RoundFloatToInt( flDamage );
+
+		CTakeDamageInfo info( this, pOwner, GetLauncher(), nDamage, GetDamageType(), TF_DMG_CUSTOM_PLASMA );
+
+		if ( iNewRaygun == 2 )
+		{
+			int iDmgType = GetDamageType();
+			iDmgType ^= DMG_SONIC | DMG_BULLET | DMG_USEDISTANCEMOD | DMG_NOCLOSEDISTANCEMOD | DMG_PREVENT_PHYSICS_FORCE;
+			info.SetDamageType( iDmgType );
+			info.SetDamageForce( GetAbsVelocity() ); // Fix "== vec3_origin" check errors caused by setting damage type to DMG_SONIC
+		}
+
 		info.SetReportedPosition( pOwner->GetAbsOrigin() );
 		info.SetDamagePosition( pTrace->endpos );
 

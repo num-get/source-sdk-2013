@@ -747,7 +747,7 @@ void CTFStunBall::ApplyBallImpactEffectOnVictim( CBaseEntity *pOther )
 		int iStunFlags = ( bMax ) ? TF_STUN_SPECIAL_SOUND | TF_STUN_MOVEMENT : TF_STUN_SOUND | TF_STUN_MOVEMENT;
 		if ( !iSlowBall )
 		{
-			iStunFlags = ( bMax ) ? TF_STUN_SPECIAL_SOUND | TF_STUN_CONTROLS : TF_STUN_SOUND | TF_STUN_LOSER_STATE;
+			iStunFlags = ( bMax ) ? TF_STUN_SPECIAL_SOUND | TF_STUN_CONTROLS : TF_STUN_LOSER_STATE | TF_STUN_MOVEMENT;
 		}
 		float flStunAmount = 0.5f;
 		float flStunDuration = Max( 2.f, tf_scout_stunball_base_duration.GetFloat() * flLifeTimeRatio );
@@ -757,7 +757,7 @@ void CTFStunBall::ApplyBallImpactEffectOnVictim( CBaseEntity *pOther )
 		}
 
 		// MvM bots
-		if ( TFGameRules() && TFGameRules()->GameModeUsesUpgrades() && pPlayer->IsBot() )
+		if ( TFGameRules() && TFGameRules()->GameModeUsesUpgrades() && pPlayer->IsBot() && iSlowBall )
 		{
 			// Distance mod
 			flStunAmount = ( bMax ) ? 1.f : RemapValClamped( flLifeTimeRatio, 0.1f, 0.99f, 0.5f, 0.75 );
@@ -796,7 +796,7 @@ void CTFStunBall::ApplyBallImpactEffectOnVictim( CBaseEntity *pOther )
 	info.SetAttacker( GetOwnerEntity() );
 	info.SetInflictor( pInflictor ); 
 	info.SetWeapon( pInflictor );
-	info.SetDamage( ( flLifeTimeRatio >= 1.f && iSlowBall ) ? GetDamage() * 1.5f : GetDamage() );		
+	info.SetDamage( ( flLifeTimeRatio >= 1.f && iSlowBall ) ? GetDamage() * 1.5f : GetDamage() );
 	info.SetDamageCustom( TF_DMG_CUSTOM_BASEBALL );
 	info.SetDamageForce( GetDamageForce() );
 	info.SetDamagePosition( GetAbsOrigin() );

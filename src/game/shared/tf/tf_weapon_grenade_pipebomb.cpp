@@ -1427,6 +1427,11 @@ float CTFGrenadePipebombProjectile::GetDamageRadius()
 	float flRadiusMod = 1.0f;
 
 #ifdef GAME_DLL
+	int iNewGrenade = 1;
+	CALL_ATTRIB_HOOK_INT_ON_OTHER( GetOriginalLauncher(), iNewGrenade, obsolete );
+	if ( !ff_use_new_grenade.GetBool() || iNewGrenade != 1 )
+		flRadiusMod *= 1.08904109589f;
+
 	// winbomb prevention.
 	// Air Det
 	if ( m_iType == TF_GL_MODE_REMOTE_DETONATE )
