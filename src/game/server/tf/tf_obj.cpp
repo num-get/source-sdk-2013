@@ -2134,8 +2134,8 @@ bool CBaseObject::Construct( float flHealth )
 		// Minibuildings build health at a reduced rate
 		// Staging_engy
 		{
-			float mini_mult = !IsOldMiniBuilding() ? 0.5f : 0.f;
-			SetHealth( Min( (float)GetMaxHealth(), m_flHealth + (IsMiniBuilding() ? (flHealth * mini_mult) : flHealth) ) );
+			float flMult = !IsOldMiniBuilding() ? 0.5f : 0.f;
+			SetHealth( Min( (float)GetMaxHealth(), m_flHealth + (IsMiniBuilding() ? (flHealth * flMult) : flHealth) ) );
 		}
 
 		// Return true if we're constructed now
@@ -2195,9 +2195,6 @@ float CBaseObject::GetConstructionMultiplier( void )
 		return -1.0f;
 
 	float flMultiplier = 1.0;
-
-	if ( IsMiniBuilding() && IsOldMiniBuilding() )
-		flMultiplier *= 4.f;
 
 	// expire all the old 
 	int i = m_ConstructorList.LastInorder();

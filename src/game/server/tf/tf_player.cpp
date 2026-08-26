@@ -8306,6 +8306,17 @@ float CTFPlayer::GetObjectBuildSpeedMultiplier( int iObjectType, bool bIsRedeplo
 		break;
 	}
 
+	if ( iObjectType == OBJ_SENTRYGUN )
+	{
+		int iNewMiniSentry = 1;
+		CEconEntity *pRobotArm = dynamic_cast<CEconEntity *>( Weapon_OwnsThisID( TF_WEAPON_WRENCH ) );
+		CALL_ATTRIB_HOOK_INT_ON_OTHER ( pRobotArm, iNewMiniSentry, obsolete )
+		if ( !iNewMiniSentry )
+		{
+			flBuildRate += bIsRedeploy ? 5.0 : 3.0f;
+		}
+	}
+
 	return flBuildRate - 1.0f; // sub out the initial 1 so the final result is added
 }
 
@@ -18638,11 +18649,13 @@ void CTFPlayer::DoTauntAttack( void )
 						if ( !pVictim->IsMiniBoss() )
 						{
 							pVictim->m_Shared.StunPlayer( 3.0f, 1.0, TF_STUN_BOTH | TF_STUN_NO_EFFECTS, this );
-						}
-
-						if ( iTauntAttack == TAUNTATK_SNIPER_ARROW_STAB_IMPALE && ff_allow_taunt_huntsman_duel.GetBool() )
-						{
-							pVictim->m_flTauntNextStartTime = gpGlobals->curtime;
+							if ( iTauntAttack == TAUNTATK_SNIPER_ARROW_STAB_IMPALE )
+							{
+								if ( pVictim->m_Shared.IsControlStunned() && ff_allow_taunt_huntsman_duel.GetBool() )
+								{
+									pVictim->m_flTauntNextStartTime = gpGlobals->curtime;
+								}
+							}
 						}
 
 						if ( iTauntAttack == TAUNTATK_ENGINEER_ARM_IMPALE )
