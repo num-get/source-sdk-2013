@@ -458,7 +458,7 @@ void ClientModeTFNormal::Init()
 			pPanel->MakePopup( false );
 			m_pGameUI->SetLoadingBackgroundDialog( pPanel->GetVPanel() );
 
-			if ( CommandLine()->CheckParm( "-classic" ) )
+			if ( CommandLine()->CheckParm( "-nonewmenu" ) )
 			{
 				m_pGameUI->SetMainMenuOverride(NULL);
 			}

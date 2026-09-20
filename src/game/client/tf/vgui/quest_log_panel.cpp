@@ -916,7 +916,7 @@ void CQuestLogPanel::SetVisible( bool bState )
 	}
 	else if ( IsVisible() )
 	{
-		if ( !CommandLine()->CheckParm( "-classic" ) )
+		if ( !CommandLine()->CheckParm( "-nonewmenu" ) )
 		{
 			// Detach from the GameUI when we hide
 			IViewPortPanel *pMMOverride = gViewPortInterface->FindPanelByName( PANEL_MAINMENUOVERRIDE );

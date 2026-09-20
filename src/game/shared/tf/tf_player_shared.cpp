@@ -186,6 +186,9 @@ ConVar tf_allow_all_team_partner_taunt( "tf_allow_all_team_partner_taunt", "1", 
 
 extern ConVar ff_allow_taunt_sticky;
 extern ConVar ff_use_new_flame;
+extern ConVar ff_building_gun_mettle;
+extern ConVar ff_spy_gun_mettle;
+extern ConVar ff_medic_tough_break;
 
 // AFTERBURN
 const float tf_afterburn_max_duration = 10.f;
@@ -8356,7 +8359,7 @@ void CTFPlayerShared::Disguise( int nTeam, int nClass, CTFPlayer* pDesiredTarget
 
 	// STAGING_SPY
 	// Quick disguise if you already disguised
-	if ( InCond( TF_COND_DISGUISED ) )
+	if ( InCond( TF_COND_DISGUISED ) && ff_spy_gun_mettle.GetBool() )
 	{
 		flTimeToDisguise = TF_TIME_TO_QUICK_DISGUISE;
 	}
@@ -10981,6 +10984,11 @@ float CTFPlayer::TeamFortress_CalculateMaxSpeed( bool bIgnoreSpecialAbility /*= 
 
 	bool bAllowSlowing = m_Shared.InCond( TF_COND_HALLOWEEN_BOMB_HEAD ) ? false : true;
 
+	if ( playerclass == TF_CLASS_SPY && maxfbspeed >= 320.f && !ff_spy_gun_mettle.GetBool() )
+	{
+		maxfbspeed *= 0.9375f;
+	}
+
 	if ( m_Shared.InCond( TF_COND_DISGUISED_AS_DISPENSER ) && !m_Shared.IsStealthed() )
 	{
 		maxfbspeed = 0.0f;
@@ -11090,7 +11098,7 @@ float CTFPlayer::TeamFortress_CalculateMaxSpeed( bool bIgnoreSpecialAbility /*= 
 	if ( m_Shared.IsCarryingObject() && bCarryPenalty && bAllowSlowing )
 	{
 		// STAGING_ENGY
-		maxfbspeed *= 0.90f;
+		maxfbspeed *= !ff_building_gun_mettle.GetBool() ? 0.75f : 0.90f;
 	}
 
 	if ( m_Shared.IsLoserStateStunned() && bAllowSlowing )
@@ -11119,7 +11127,7 @@ float CTFPlayer::TeamFortress_CalculateMaxSpeed( bool bIgnoreSpecialAbility /*= 
 		if ( pWeapon )
 		{
 			CWeaponMedigun *pMedigun = dynamic_cast< CWeaponMedigun* >( pWeapon );
-			if ( pMedigun )
+			if ( pMedigun && ( ff_medic_tough_break.GetBool() || pMedigun->GetMedigunType() == MEDIGUN_QUICKFIX ) )
 			{
 				// Medics match faster classes when healing them
 				CTFPlayer *pHealTarget = ToTFPlayer( pMedigun->GetHealTarget() );
@@ -11657,7 +11665,14 @@ int CTFPlayerShared::CalculateObjectCost( CTFPlayer* pBuilder, int iObjectType )
 	}
 
 	CALL_ATTRIB_HOOK_INT_ON_OTHER( pBuilder, nCost, building_cost_reduction );
-	
+
+	if ( iObjectType == OBJ_TELEPORTER && !ff_building_gun_mettle.GetBool() )
+	{
+		nCost *= 2.5f;
+		int nLeftOver = nCost % 5;
+		nCost -= nLeftOver;
+	}
+
 	return nCost;
 }
 
@@ -14358,7 +14373,7 @@ void CTFPlayerShared::UpdateCloakMeter( void )
 		int iNewFeignDeath = 1;
 		CTFWeaponInvis *pWatch = (CTFWeaponInvis *) m_pOuter->Weapon_OwnsThisID( TF_WEAPON_INVIS );
 		CALL_ATTRIB_HOOK_INT_ON_OTHER( pWatch, iNewFeignDeath, obsolete );
-		if ( !( !iNewFeignDeath && pWatch->HasFeignDeath() ) )
+		if ( !( !iNewFeignDeath && pWatch->HasFeignDeath() ) && ff_spy_gun_mettle.GetBool() )
 		{
 			for ( int i = 0; g_aDebuffConditions[i] != TF_COND_LAST; i++ )
 			{

@@ -107,7 +107,7 @@ void CTFAbuseReportManager::ActivateSubmitReportUI()
 	Assert( g_AbuseReportDlg.Get() == NULL );
 	Assert( m_pIncidentData != NULL );
 
-	if ( CommandLine()->CheckParm( "-classic" ) )
+	if ( CommandLine()->CheckParm( "-nonewmenu" ) )
 	{
 		engine->ExecuteClientCmd("gameui_activate");
 		vgui::SETUP_PANEL( new CAbuseReportDlg( NULL, m_pIncidentData ) );

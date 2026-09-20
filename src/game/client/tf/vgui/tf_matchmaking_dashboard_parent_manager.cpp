@@ -181,7 +181,7 @@ void CMMDashboardParentManager::AttachToTopMostPopup()
 
 	Panel *pPopup = ipanel()->GetPanel( (VPANEL)top, GetControlsModuleName());
 
-	if ( !CommandLine()->CheckParm( "-classic" ) )
+	if ( !CommandLine()->CheckParm( "-nonewmenu" ) )
 	{
 		if ( !pPopup && gViewPortInterface )
 		{

@@ -1560,7 +1560,7 @@ static void CL_OpenSteamWorkshopDialog( const CCommand &args )
 {
 	if ( g_pSteamWorkshopDialog.Get() == NULL )
 	{
-		if ( CommandLine()->CheckParm( "-classic" ) )
+		if ( CommandLine()->CheckParm( "-nonewmenu" ) )
 		{
 			g_pSteamWorkshopDialog = vgui::SETUP_PANEL(new CSteamWorkshopDialog(NULL));
 		}

@@ -108,6 +108,7 @@ ConVar tf_obj_damage_tank_achievement_amount( "tf_obj_damage_tank_achievement_am
 
 extern short g_sModelIndexFireball;
 extern ConVar tf_cheapobjects;
+extern ConVar ff_building_gun_mettle;
 
 // Minimum distance between 2 objects to ensure player movement between them
 #define MINIMUM_OBJECT_SAFE_DISTANCE		100
@@ -354,13 +355,15 @@ void CBaseObject::SetTransmit( CCheckTransmitInfo *pInfo, bool bAlways )
 //-----------------------------------------------------------------------------
 bool CBaseObject::IsOldMiniBuilding( void ) const
 {
+	int iMiniSentry = 0;
 	int iNewMiniSentry = 1;
 	if ( GetBuilder() )
 	{
 		CTFRobotArm *pRobotArm = dynamic_cast<CTFRobotArm*>( GetBuilder()->Weapon_OwnsThisID( TF_WEAPON_WRENCH ) );
-		CALL_ATTRIB_HOOK_INT_ON_OTHER ( pRobotArm, iNewMiniSentry, obsolete )
+		CALL_ATTRIB_HOOK_INT_ON_OTHER ( pRobotArm, iMiniSentry, wrench_builds_minisentry );
+		CALL_ATTRIB_HOOK_INT_ON_OTHER ( pRobotArm, iNewMiniSentry, obsolete );
 	}
-	return !iNewMiniSentry;
+	return iMiniSentry && !iNewMiniSentry;
 }
 
 //-----------------------------------------------------------------------------
@@ -2211,7 +2214,14 @@ float CBaseObject::GetConstructionMultiplier( void )
 			// STAGING_ENGY
 			// each Player adds a fixed amount of speed boost
 			// Carry deploy hits add more
-			flMultiplier += ( m_ConstructorList[iThis].flValue );
+			if ( !ff_building_gun_mettle.GetBool() )
+			{
+				flMultiplier *= ( m_ConstructorList[iThis].flValue );
+			}
+			else
+			{
+				flMultiplier += ( m_ConstructorList[iThis].flValue );
+			}
 		}
 	}
 
@@ -2219,7 +2229,14 @@ float CBaseObject::GetConstructionMultiplier( void )
 	CTFPlayer* pBuilder = GetOwner();
 	if( pBuilder )
 	{
-		flMultiplier += pBuilder->GetObjectBuildSpeedMultiplier( ObjectType(), m_bCarryDeploy );
+		if ( !ff_building_gun_mettle.GetBool() )
+		{
+			flMultiplier *= pBuilder->GetObjectBuildSpeedMultiplier( ObjectType(), m_bCarryDeploy );
+		}
+		else
+		{
+			flMultiplier += pBuilder->GetObjectBuildSpeedMultiplier( ObjectType(), m_bCarryDeploy );
+		}
 	}
 
 	return flMultiplier;
@@ -2285,9 +2302,13 @@ void CBaseObject::CreateObjectGibs( void )
 
 	// grant some percentage of the cost to build if number of metal to drop is not specified
 	const float flMetalCostPercentage = 0.5f;
-	const int nTotalMetal = pObjectInfo->m_iMetalToDropInGibs == 0 ? pObjectInfo->m_Cost * flMetalCostPercentage : pObjectInfo->m_iMetalToDropInGibs;
+	int nTotalMetal = pObjectInfo->m_iMetalToDropInGibs == 0 ? pObjectInfo->m_Cost * flMetalCostPercentage : pObjectInfo->m_iMetalToDropInGibs;
 
-	
+	if ( GetType() == OBJ_TELEPORTER && !ff_building_gun_mettle.GetBool() )
+	{
+		nTotalMetal *= 2.4f;
+	}
+
 	int nMetalPerGib = nTotalMetal / m_aGibs.Count();
 	int nLeftOver = nTotalMetal % m_aGibs.Count();
 
@@ -2976,7 +2997,12 @@ int CBaseObject::Command_Repair( CTFPlayer *pActivator, float flAmount, float fl
 {
 	if ( !CanBeRepaired() )
 		return false;
-	
+
+	if ( !ff_building_gun_mettle.GetBool() && flRepairToMetalRatio == 3.f )
+	{
+		flRepairToMetalRatio *= 1.66666666667f;
+	}
+
 	float flRepairAmountMax = flAmount * flRepairMod;
 	int iRepairAmount = Min( RoundFloatToInt( flRepairAmountMax ), GetMaxHealth() - RoundFloatToInt( GetHealth() ) );
 	int iRepairCost = ceil( (float)( iRepairAmount ) / flRepairToMetalRatio );

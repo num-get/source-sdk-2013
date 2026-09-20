@@ -1495,7 +1495,7 @@ public:
 		if ( msg.BReadStr( &url ) )
 		{
 			steamapicontext->SteamFriends()->ActivateGameOverlayToWebPage( url.Get() );
-			if ( !CommandLine()->CheckParm( "-classic" ) )
+			if ( !CommandLine()->CheckParm( "-nonewmenu" ) )
 			{
 				IViewPortPanel *pMMOverride = ( gViewPortInterface->FindPanelByName( PANEL_MAINMENUOVERRIDE ) );
 				if ( pMMOverride )

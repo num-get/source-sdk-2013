@@ -78,6 +78,7 @@ END_NETWORK_TABLE()
 
 LINK_ENTITY_TO_CLASS( tf_wearable_robot_arm, CTFWearableRobotArm );
 
+extern ConVar ff_building_gun_mettle;
 //=============================================================================
 //
 // Weapon Wrench functions.
@@ -250,16 +251,23 @@ void CTFWrench::Equip( CBaseCombatCharacter *pOwner )
 	CTFPlayer *pPlayer = ToTFPlayer( pOwner );
 	if ( pPlayer )
 	{
-		// if switching too gunslinger, blow up other sentry
-		int iMiniSentry = 0;
-		CALL_ATTRIB_HOOK_INT( iMiniSentry, wrench_builds_minisentry );
-		if ( iMiniSentry )
+		if ( !ff_building_gun_mettle.GetBool() )
 		{
-			// Just detonate Sentries
-			CObjectSentrygun *pSentry = dynamic_cast<CObjectSentrygun*>( pPlayer->GetObjectOfType( OBJ_SENTRYGUN ) );
-			if ( pSentry )
+			pPlayer->RemoveAllObjects( true );
+		}
+		else
+		{
+			// if switching too gunslinger, blow up other sentry
+			int iMiniSentry = 0;
+			CALL_ATTRIB_HOOK_INT( iMiniSentry, wrench_builds_minisentry );
+			if ( iMiniSentry )
 			{
-				pSentry->DetonateObject();
+				// Just detonate Sentries
+				CObjectSentrygun *pSentry = dynamic_cast<CObjectSentrygun*>( pPlayer->GetObjectOfType( OBJ_SENTRYGUN ) );
+				if ( pSentry )
+				{
+					pSentry->DetonateObject();
+				}
 			}
 		}
 	}
@@ -275,7 +283,7 @@ void CTFWrench::Detach( void )
 	CTFPlayer *pPlayer = GetTFPlayerOwner();
 	if ( pPlayer )
 	{
-		bool bDetonateObjects = true;
+		bool bDetonateObjects = ff_building_gun_mettle.GetBool();
 
 		// In MvM mode, leave engineer's buildings after he dies
 		if ( TFGameRules() && TFGameRules()->IsMannVsMachineMode() )
@@ -333,8 +341,14 @@ void CTFWrench::ApplyBuildingHealthUpgrade( void )
 ConVar tf_construction_build_rate_multiplier( "tf_construction_build_rate_multiplier", "1.5f", FCVAR_REPLICATED | FCVAR_DEVELOPMENTONLY );
 float CTFWrench::GetConstructionValue( void )
 {
-	float flValue = tf_construction_build_rate_multiplier.GetFloat();
+	float flValue = !ff_building_gun_mettle.GetBool() ? tf_construction_build_rate_multiplier.GetFloat() * 0.666666666667f : tf_construction_build_rate_multiplier.GetFloat();
 	CALL_ATTRIB_HOOK_FLOAT( flValue, mult_construction_value );
+
+	if ( !ff_building_gun_mettle.GetBool() )
+	{
+		flValue += 1.f;
+	}
+
 	return flValue;
 }
 

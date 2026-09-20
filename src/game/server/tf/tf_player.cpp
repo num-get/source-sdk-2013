@@ -298,6 +298,8 @@ extern ConVar ff_disable_dropped_weapon;
 extern ConVar ff_disable_falldamage_scream;
 extern ConVar ff_disable_minigun_flinch_immunity;
 extern ConVar ff_allow_taunt_huntsman_duel;
+extern ConVar ff_building_gun_mettle;
+extern ConVar ff_medic_tough_break;
 
 #if defined( _DEBUG ) || defined( STAGING_ONLY )
 extern ConVar mp_developer;
@@ -1810,7 +1812,7 @@ void CTFPlayer::RegenThink( void )
 
 		// If you are healing a hurt patient, increase your base regen
 		CTFPlayer *pPatient = ToTFPlayer( MedicGetHealTarget() );
-		if ( pPatient && pPatient->GetHealth() < pPatient->GetMaxHealth() )
+		if ( pPatient && pPatient->GetHealth() < pPatient->GetMaxHealth() && ff_medic_tough_break.GetBool() )
 		{
 			// Double regen amount
 			flRegenAmt += TF_REGEN_AMOUNT;
@@ -8288,32 +8290,62 @@ float CTFPlayer::GetObjectBuildSpeedMultiplier( int iObjectType, bool bIsRedeplo
 {
 	float flBuildRate = 1.f; // need a base value for mult
 
-	switch( iObjectType )
+	int iMiniSentry = 0;
+	int iNewMiniSentry = 1;
+	CEconEntity *pRobotArm = dynamic_cast<CEconEntity *>( Weapon_OwnsThisID( TF_WEAPON_WRENCH ) );
+	CALL_ATTRIB_HOOK_INT_ON_OTHER ( pRobotArm, iMiniSentry, wrench_builds_minisentry );
+	CALL_ATTRIB_HOOK_INT_ON_OTHER ( pRobotArm, iNewMiniSentry, obsolete );
+
+	if ( !ff_building_gun_mettle.GetBool() )
 	{
-	case OBJ_SENTRYGUN:
-		CALL_ATTRIB_HOOK_FLOAT( flBuildRate, sentry_build_rate_multiplier );
-		flBuildRate += bIsRedeploy ? 2.0 : 0.0f;
-		break;
-
-	case OBJ_TELEPORTER:
-		CALL_ATTRIB_HOOK_FLOAT( flBuildRate, teleporter_build_rate_multiplier );
-		flBuildRate += bIsRedeploy ? 3.0 : 0.0f;
-		break;
-
-	case OBJ_DISPENSER:
-		CALL_ATTRIB_HOOK_FLOAT( flBuildRate, teleporter_build_rate_multiplier );
-		flBuildRate += bIsRedeploy ? 3.0 : 0.0f;
-		break;
-	}
-
-	if ( iObjectType == OBJ_SENTRYGUN )
-	{
-		int iNewMiniSentry = 1;
-		CEconEntity *pRobotArm = dynamic_cast<CEconEntity *>( Weapon_OwnsThisID( TF_WEAPON_WRENCH ) );
-		CALL_ATTRIB_HOOK_INT_ON_OTHER ( pRobotArm, iNewMiniSentry, obsolete )
-		if ( !iNewMiniSentry )
+		switch( iObjectType )
 		{
-			flBuildRate += bIsRedeploy ? 5.0 : 3.0f;
+		case OBJ_SENTRYGUN:
+			CALL_ATTRIB_HOOK_FLOAT( flBuildRate, sentry_build_rate_multiplier );
+			if ( iMiniSentry && !iNewMiniSentry )
+			{
+				flBuildRate *= 4.f;
+			}
+			break;
+
+		case OBJ_TELEPORTER:
+			CALL_ATTRIB_HOOK_FLOAT( flBuildRate, teleporter_build_rate_multiplier );
+			break;
+
+		case OBJ_DISPENSER:
+			CALL_ATTRIB_HOOK_FLOAT( flBuildRate, teleporter_build_rate_multiplier );
+			break;
+		}
+
+		if ( bIsRedeploy )
+		{
+			flBuildRate *= 2.f;
+		}
+
+		flBuildRate += 1.f;
+	}
+	else
+	{
+		switch( iObjectType )
+		{
+		case OBJ_SENTRYGUN:
+			CALL_ATTRIB_HOOK_FLOAT( flBuildRate, sentry_build_rate_multiplier );
+			flBuildRate += bIsRedeploy ? 2.0 : 0.0f;
+			if ( iMiniSentry && !iNewMiniSentry )
+			{
+				flBuildRate += bIsRedeploy ? 5.0 : 3.0f;
+			}
+			break;
+
+		case OBJ_TELEPORTER:
+			CALL_ATTRIB_HOOK_FLOAT( flBuildRate, teleporter_build_rate_multiplier );
+			flBuildRate += bIsRedeploy ? 3.0 : 0.0f;
+			break;
+
+		case OBJ_DISPENSER:
+			CALL_ATTRIB_HOOK_FLOAT( flBuildRate, teleporter_build_rate_multiplier );
+			flBuildRate += bIsRedeploy ? 3.0 : 0.0f;
+			break;
 		}
 	}
 
