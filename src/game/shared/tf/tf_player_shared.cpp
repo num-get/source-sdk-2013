@@ -186,6 +186,9 @@ ConVar tf_allow_all_team_partner_taunt( "tf_allow_all_team_partner_taunt", "1", 
 
 extern ConVar ff_allow_taunt_sticky;
 extern ConVar ff_use_new_flame;
+extern ConVar ff_building_gun_mettle;
+extern ConVar ff_spy_gun_mettle;
+extern ConVar ff_medic_tough_break;
 
 // AFTERBURN
 const float tf_afterburn_max_duration = 10.f;
@@ -2893,18 +2896,13 @@ void CTFPlayerShared::ConditionGameRulesThink( void )
 			// Burn the player (if not pyro, who does not take persistent burning damage)
 			if ( ( TF_CLASS_PYRO != m_pOuter->GetPlayerClass()->GetClassIndex() ) || InCond( TF_COND_BURNING_PYRO ) )
 			{
-				float flBurnDamage = TF_BURNING_DMG;
+				float flBurnDamage = ff_use_new_flame.GetInt() > 0 ? TF_BURNING_DMG : 3;
 				int nKillType = TF_DMG_CUSTOM_BURNING;
-
-				if ( !ff_use_new_flame.GetBool() )
-				{
-					flBurnDamage = 3;
-				}
 
 				if ( m_hBurnWeapon )
 				{
 					if ( ( m_hBurnWeapon.Get()->GetWeaponID() == TF_WEAPON_FLAME_BALL
-						|| m_hBurnWeapon.Get()->GetWeaponID() == TF_WEAPON_JAR_GAS ) && !ff_use_new_flame.GetBool() )
+						|| m_hBurnWeapon.Get()->GetWeaponID() == TF_WEAPON_JAR_GAS ) && ff_use_new_flame.GetInt() < 1 )
 					{
 						flBurnDamage = TF_BURNING_DMG;
 					}
@@ -6798,7 +6796,7 @@ void CTFPlayerShared::Burn( CTFPlayer *pAttacker, CTFWeaponBase *pWeapon, float 
 	{
 		m_flAfterburnDuration = flFlameLife;
 	}
-	else if ( !ff_use_new_flame.GetBool() && !bIsFlameBall && !bIsJarGas )
+	else if ( ff_use_new_flame.GetInt() < 1 && !bIsFlameBall && !bIsJarGas )
 	{
 		if ( bIsParticleCannon )
 		{
@@ -8356,7 +8354,7 @@ void CTFPlayerShared::Disguise( int nTeam, int nClass, CTFPlayer* pDesiredTarget
 
 	// STAGING_SPY
 	// Quick disguise if you already disguised
-	if ( InCond( TF_COND_DISGUISED ) )
+	if ( InCond( TF_COND_DISGUISED ) && ff_spy_gun_mettle.GetBool() )
 	{
 		flTimeToDisguise = TF_TIME_TO_QUICK_DISGUISE;
 	}
@@ -10981,6 +10979,11 @@ float CTFPlayer::TeamFortress_CalculateMaxSpeed( bool bIgnoreSpecialAbility /*= 
 
 	bool bAllowSlowing = m_Shared.InCond( TF_COND_HALLOWEEN_BOMB_HEAD ) ? false : true;
 
+	if ( playerclass == TF_CLASS_SPY && maxfbspeed == 320.f && !ff_spy_gun_mettle.GetBool() )
+	{
+		maxfbspeed -= 20.f;
+	}
+
 	if ( m_Shared.InCond( TF_COND_DISGUISED_AS_DISPENSER ) && !m_Shared.IsStealthed() )
 	{
 		maxfbspeed = 0.0f;
@@ -11090,7 +11093,7 @@ float CTFPlayer::TeamFortress_CalculateMaxSpeed( bool bIgnoreSpecialAbility /*= 
 	if ( m_Shared.IsCarryingObject() && bCarryPenalty && bAllowSlowing )
 	{
 		// STAGING_ENGY
-		maxfbspeed *= 0.90f;
+		maxfbspeed *= !ff_building_gun_mettle.GetBool() ? 0.75f : 0.90f;
 	}
 
 	if ( m_Shared.IsLoserStateStunned() && bAllowSlowing )
@@ -11119,7 +11122,7 @@ float CTFPlayer::TeamFortress_CalculateMaxSpeed( bool bIgnoreSpecialAbility /*= 
 		if ( pWeapon )
 		{
 			CWeaponMedigun *pMedigun = dynamic_cast< CWeaponMedigun* >( pWeapon );
-			if ( pMedigun )
+			if ( pMedigun && ( ff_medic_tough_break.GetBool() || pMedigun->GetMedigunType() == MEDIGUN_QUICKFIX ) )
 			{
 				// Medics match faster classes when healing them
 				CTFPlayer *pHealTarget = ToTFPlayer( pMedigun->GetHealTarget() );
@@ -11648,6 +11651,10 @@ int CTFPlayerShared::CalculateObjectCost( CTFPlayer* pBuilder, int iObjectType )
 
 	if ( iObjectType == OBJ_TELEPORTER )
 	{
+		if ( !ff_building_gun_mettle.GetBool() && nCost == 50 )
+		{
+			nCost += 75;
+		}
 		float flCostMod = 1.f;
 		CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pBuilder, flCostMod, mod_teleporter_cost );
 		if ( flCostMod != 1.f )
@@ -12324,12 +12331,6 @@ bool CTFPlayer::CanAttack( int iCanAttackFlags )
 
 	Assert( pRules );
 
-	CTFPipebombLauncher *pPipebombLauncher = static_cast<CTFPipebombLauncher*>( Weapon_OwnsThisID( TF_WEAPON_PIPEBOMBLAUNCHER ) );
-	if ( pPipebombLauncher && ff_allow_taunt_sticky.GetBool() )
-	{
-		iCanAttackFlags |= TF_CAN_ATTACK_FLAG_PIPEBOMBLAUNCHER;
-	}
-
 	if ( IsViewingCYOAPDA() )
 		return false;
 
@@ -12361,6 +12362,12 @@ bool CTFPlayer::CanAttack( int iCanAttackFlags )
 
 	if ( IsTaunting() )
 	{
+		CTFPipebombLauncher *pPipebombLauncher = static_cast<CTFPipebombLauncher*>( Weapon_OwnsThisID( TF_WEAPON_PIPEBOMBLAUNCHER ) );
+		if ( pPipebombLauncher && ff_allow_taunt_sticky.GetBool() )
+		{
+			iCanAttackFlags |= TF_CAN_ATTACK_FLAG_PIPEBOMBLAUNCHER;
+		}
+
 		if ( !( iCanAttackFlags & TF_CAN_ATTACK_FLAG_PIPEBOMBLAUNCHER ) )
 			return false;
 
@@ -14358,7 +14365,7 @@ void CTFPlayerShared::UpdateCloakMeter( void )
 		int iNewFeignDeath = 1;
 		CTFWeaponInvis *pWatch = (CTFWeaponInvis *) m_pOuter->Weapon_OwnsThisID( TF_WEAPON_INVIS );
 		CALL_ATTRIB_HOOK_INT_ON_OTHER( pWatch, iNewFeignDeath, obsolete );
-		if ( !( !iNewFeignDeath && pWatch->HasFeignDeath() ) )
+		if ( !( !iNewFeignDeath && pWatch->HasFeignDeath() ) && ff_spy_gun_mettle.GetBool() )
 		{
 			for ( int i = 0; g_aDebuffConditions[i] != TF_COND_LAST; i++ )
 			{

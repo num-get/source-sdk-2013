@@ -87,6 +87,8 @@ enum target_ranges
 
 #define VECTOR_CONE_TF_SENTRY		Vector( 0.1, 0.1, 0 )
 
+extern ConVar ff_building_gun_mettle;
+extern ConVar ff_spy_gun_mettle;
 //-----------------------------------------------------------------------------
 // Purpose: Only send the LocalWeaponData to the player carrying the weapon
 //-----------------------------------------------------------------------------
@@ -541,7 +543,7 @@ void CObjectSentrygun::StartUpgrading( void )
 	{
 	case 2:
 		SetModel( SENTRY_MODEL_LEVEL_2_UPGRADE );
-		m_flHeavyBulletResist = SENTRYGUN_MINIGUN_RESIST_LVL_2;
+		m_flHeavyBulletResist = !ff_building_gun_mettle.GetBool() ? ( SENTRYGUN_MINIGUN_RESIST_LVL_2 * 1.33333333333f ) : SENTRYGUN_MINIGUN_RESIST_LVL_2;
 		SetViewOffset( SENTRYGUN_EYE_OFFSET_LEVEL_2 );
 		m_iMaxAmmoShells = SENTRYGUN_MAX_SHELLS_2 * flMaxAmmoMult;
 		break;
@@ -551,7 +553,7 @@ void CObjectSentrygun::StartUpgrading( void )
 		{
 			m_iAmmoRockets = SENTRYGUN_MAX_ROCKETS;
 		}
-		m_flHeavyBulletResist = SENTRYGUN_MINIGUN_RESIST_LVL_3;
+		m_flHeavyBulletResist = !ff_building_gun_mettle.GetBool() ? ( SENTRYGUN_MINIGUN_RESIST_LVL_3 * 1.65f ) : SENTRYGUN_MINIGUN_RESIST_LVL_3;
 		SetViewOffset( SENTRYGUN_EYE_OFFSET_LEVEL_3 );
 		m_iMaxAmmoShells = SENTRYGUN_MAX_SHELLS_3 * flMaxAmmoMult;
 		break;
@@ -1989,7 +1991,7 @@ int CObjectSentrygun::OnTakeDamage( const CTakeDamageInfo &info )
 		// Take less damage if the owner is causing additional damage.
 		if ( pSapper && ( info.GetAttacker() == pSapper->GetOwner() ) )
 		{
-			float flDamage = newInfo.GetDamage() * SENTRYGUN_SAPPER_OWNER_DAMAGE_MODIFIER;
+			float flDamage = newInfo.GetDamage() * ( !ff_spy_gun_mettle.GetBool() ? ( SENTRYGUN_SAPPER_OWNER_DAMAGE_MODIFIER * 0.5f ) : SENTRYGUN_SAPPER_OWNER_DAMAGE_MODIFIER );
 			newInfo.SetDamage( flDamage );
 		}
 	}

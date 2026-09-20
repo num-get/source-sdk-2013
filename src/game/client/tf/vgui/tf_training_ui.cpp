@@ -2168,7 +2168,7 @@ void CL_ShowTrainingDialog( const CCommand &args )
 {
 	if ( g_pTrainingDialog.Get() == NULL )
 	{
-		if ( CommandLine()->CheckParm( "-classic" ) )
+		if ( CommandLine()->CheckParm( "-nonewmenu" ) )
 		{
 			g_pTrainingDialog = new CTrainingDialog(NULL);
 		}

@@ -91,6 +91,7 @@ ConVar weapon_vaccinator_resist_duration( "weapon_vaccinator_resist_duration", "
 static const char *s_pszMedigunHealTargetThink = "MedigunHealTargetThink";
 
 extern ConVar tf_invuln_time;
+extern ConVar ff_medic_tough_break;
 
 #ifdef CLIENT_DLL
 //-----------------------------------------------------------------------------
@@ -1349,7 +1350,7 @@ bool CWeaponMedigun::FindAndHealTargets( void )
 					{
 						flChargeAmount *= 4.f;
 					}
-					else if ( TFGameRules()->InSetup() && TFGameRules()->GetActiveRoundTimer() )
+					else if ( TFGameRules()->InSetup() && TFGameRules()->GetActiveRoundTimer() && ff_medic_tough_break.GetBool() )
 					{
 						flChargeAmount *= 3.f;
 					}
@@ -2059,6 +2060,11 @@ void CWeaponMedigun::WeaponIdle( void )
 //-----------------------------------------------------------------------------
 void CWeaponMedigun::StopHealSound( bool bStopHealingSound, bool bStopNoTargetSound, bool bStopDetachSound )
 {
+	if ( !bStopDetachSound )
+	{
+		bStopDetachSound = !ff_medic_tough_break.GetBool();
+	}
+
 	if ( bStopHealingSound && m_pHealSound )
 	{
 		CSoundEnvelopeController::GetController().SoundDestroy( m_pHealSound );

@@ -19,6 +19,7 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
+extern ConVar ff_building_gun_mettle;
 //-----------------------------------------------------------------------------
 // Purpose: Visualizes a respawn room to the enemy team
 //-----------------------------------------------------------------------------
@@ -133,7 +134,7 @@ void CFuncRespawnRoom::RespawnRoomTouch(CBaseEntity *pOther)
 				pPlayer->GetItem()->Drop( pPlayer, true, true, true );
 			}
 
-			if ( pPlayer->m_Shared.IsCarryingObject() && TFGameRules()->IsMannVsMachineMode() )
+			if ( pPlayer->m_Shared.IsCarryingObject() && ( TFGameRules()->IsMannVsMachineMode() || !ff_building_gun_mettle.GetBool() ) )
 			{
 				CObjectSentrygun *pSentry = dynamic_cast< CObjectSentrygun* >( pPlayer->m_Shared.GetCarriedObject() );
 				if ( pSentry )

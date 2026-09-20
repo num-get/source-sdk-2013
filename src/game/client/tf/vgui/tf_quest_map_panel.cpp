@@ -125,7 +125,7 @@ CQuestMapPanel* GetQuestMapPanel()
 {
 	if ( g_pQuestMapPanel == NULL )
 	{
-		if ( CommandLine()->CheckParm( "-classic" ) )
+		if ( CommandLine()->CheckParm( "-nonewmenu" ) )
 		{
 			g_pQuestMapPanel = new CQuestMapPanel(NULL, "QuestMap");
 		}
