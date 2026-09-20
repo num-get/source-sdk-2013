@@ -41,6 +41,7 @@ LINK_ENTITY_TO_CLASS(obj_attachment_sapper, CObjectSapper);
 PRECACHE_REGISTER(obj_attachment_sapper);
 
 ConVar	obj_sapper_amount( "obj_sapper_amount", "25", FCVAR_NONE, "Amount of health inflicted by a Sapper object per second" );
+extern ConVar ff_building_gun_mettle;
 
 #define SAPPER_THINK_CONTEXT		"SapperThink"
 #define SAPPER_REMOVE_DISABLE_TIME			0.5f
@@ -648,7 +649,7 @@ void CObjectSapper::Killed( const CTakeDamageInfo &info )
 	}
 
 	CBaseObject *pParent = GetParentObject();
-	if ( pParent )
+	if ( pParent && ff_building_gun_mettle.GetBool() )
 	{
 		pParent->SetPlasmaDisabled( SAPPER_REMOVE_DISABLE_TIME );
 	}

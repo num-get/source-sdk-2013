@@ -875,6 +875,9 @@ ConVar ff_allow_taunt_medigun_heal( "ff_allow_taunt_medigun_heal", "0", FCVAR_RE
 ConVar ff_allow_jump_after_scoped_shot( "ff_allow_jump_after_scoped_shot", "0", FCVAR_REPLICATED, "Can jump immediately after firing a scoped shot." );
 ConVar ff_disable_minigun_flinch_immunity( "ff_disable_minigun_flinch_immunity", "0", FCVAR_REPLICATED, "Disable Sniper's flinch immunity against long range Minigun hits." );
 ConVar ff_allow_taunt_huntsman_duel( "ff_allow_taunt_huntsman_duel", "0", FCVAR_REPLICATED, "Restore Huntsman Sniper's ability to have a taunt duel against another Huntsman Sniper." );
+ConVar ff_building_gun_mettle( "ff_building_gun_mettle", "1", FCVAR_REPLICATED, "Toggles Engineer's hauling move speed, construction, deploy speed for certain buildings, building costs, and minigun resistance. Set to 1 by default" );
+ConVar ff_spy_gun_mettle( "ff_spy_gun_mettle", "1", FCVAR_REPLICATED, "Toggles Spy's higher move speed, debuff reduction while cloaked, and damage to sapped Sentries. Set to 1 by default" );
+ConVar ff_medic_tough_break( "ff_medic_tough_break", "1", FCVAR_REPLICATED, "Toggles Medic's higher self regen when healing a hurt patient, 3x ÜberCharge build rate during setup time, and mirroring patient's speed with non-Quick-Fix Medigun. Set to 1 by default" );
 
 #ifndef GAME_DLL
 extern ConVar cl_burninggibs;
@@ -7475,7 +7478,7 @@ float CTFGameRules::ApplyOnDamageAliveModifyRules( const CTakeDamageInfo &info, 
 				}
 			}
 			// Standard Stealth gives small damage reduction
-			else if ( pVictim->m_Shared.InCond( TF_COND_STEALTHED ) && !( !iNewFeignDeath && pWatch->HasFeignDeath() ) )
+			else if ( pVictim->m_Shared.InCond( TF_COND_STEALTHED ) && !( !iNewFeignDeath && pWatch->HasFeignDeath() ) && ff_spy_gun_mettle.GetBool() )
 			{
 				flRealDamage *= tf_stealth_damage_reduction.GetFloat();
 			}

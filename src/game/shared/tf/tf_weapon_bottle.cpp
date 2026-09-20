@@ -219,9 +219,10 @@ void CTFStickBomb::Precache( void )
 float CTFStickBomb::GetMeleeDamage( CBaseEntity *pTarget, int* piDamageType, int* piCustomDamage )
 {
 	float flDamage = BaseClass::GetMeleeDamage( pTarget, piDamageType, piCustomDamage );
+	const int iDamage = m_pWeaponInfo->GetWeaponData( m_iWeaponMode ).m_nDamage;
 	int iNewCaber = 1;
 	CALL_ATTRIB_HOOK_INT ( iNewCaber, obsolete )
-	if ( !iNewCaber )
+	if ( !iNewCaber && iDamage == 55 )
 	{
 		flDamage *= 0.636363636364f;
 	}
