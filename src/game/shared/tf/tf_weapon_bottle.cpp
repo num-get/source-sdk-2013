@@ -220,9 +220,9 @@ float CTFStickBomb::GetMeleeDamage( CBaseEntity *pTarget, int* piDamageType, int
 {
 	float flDamage = BaseClass::GetMeleeDamage( pTarget, piDamageType, piCustomDamage );
 	const int iDamage = m_pWeaponInfo->GetWeaponData( m_iWeaponMode ).m_nDamage;
-	int iNewCaber = 1;
-	CALL_ATTRIB_HOOK_INT ( iNewCaber, obsolete )
-	if ( !iNewCaber && iDamage == 55 )
+	bool bNewCaber = true;
+	CALL_ATTRIB_HOOK_INT ( bNewCaber, obsolete )
+	if ( !bNewCaber && iDamage == 55 )
 	{
 		flDamage *= 0.636363636364f;
 	}
@@ -272,9 +272,9 @@ void CTFStickBomb::Smack( void )
 				dmgType |= DMG_CRITICAL;
 
 			float flDamage = 75.0f;
-			int iNewCaber = 1;
-			CALL_ATTRIB_HOOK_INT ( iNewCaber, obsolete )
-			if ( !iNewCaber )
+			bool bNewCaber = true;
+			CALL_ATTRIB_HOOK_INT ( bNewCaber, obsolete )
+			if ( !bNewCaber )
 			{
 				flDamage = 100.0f;
 			}
