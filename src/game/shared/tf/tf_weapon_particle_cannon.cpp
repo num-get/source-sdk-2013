@@ -529,7 +529,7 @@ char const *CTFParticleCannon::GetShootSound( int iIndex ) const
 		bool bLastReload = (Energy_GetEnergy()+Energy_GetRechargeCost()) == Energy_GetMaxEnergy();
 		if ( bLastReload )
 		{
-			return ( iNewParticleCannon == 2 ) ? "Weapon_CowMangler.ReloadFinal.Old" : "Weapon_CowMangler.ReloadFinal";
+			return iNewParticleCannon == 2 ? "Weapon_CowMangler.ReloadFinal.Old" : "Weapon_CowMangler.ReloadFinal";
 		}
 	}
 

@@ -244,8 +244,8 @@ void CTFRocketLauncher::Misfire( void )
 			pRocket->Explode( &tr, pPlayer );
 
 			int nCanOverload = 0;
-			CALL_ATTRIB_HOOK_INT_ON_OTHER( pPlayer, nCanOverload, can_overload );
-			if ( nCanOverload > 1 )
+			CALL_ATTRIB_HOOK_INT( nCanOverload, can_overload );
+			if ( nCanOverload == 2 )
 			{
 				m_iClip1++;
 				pPlayer->RemoveAmmo( 1, m_iPrimaryAmmoType );

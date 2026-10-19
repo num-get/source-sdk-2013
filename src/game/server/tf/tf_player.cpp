@@ -5106,7 +5106,7 @@ bool CTFPlayer::AddToSpyKnife( float value, bool force )
 
 	int iMode = 0;
 	CALL_ATTRIB_HOOK_INT_ON_OTHER ( pWpn, iMode, freeze_backstab_victim )
-	if ( iMode > 1 )
+	if ( iMode == 2 )
 		return false;
 
 	return pWpn->DecreaseRegenerationTime( value, force );
@@ -8290,11 +8290,11 @@ float CTFPlayer::GetObjectBuildSpeedMultiplier( int iObjectType, bool bIsRedeplo
 {
 	float flBuildRate = 1.f; // need a base value for mult
 
-	int iMiniSentry = 0;
-	int iNewMiniSentry = 1;
+	bool bMiniSentry = false;
+	bool bNewMiniSentry = true;
 	CEconEntity *pRobotArm = dynamic_cast<CEconEntity *>( Weapon_OwnsThisID( TF_WEAPON_WRENCH ) );
-	CALL_ATTRIB_HOOK_INT_ON_OTHER ( pRobotArm, iMiniSentry, wrench_builds_minisentry );
-	CALL_ATTRIB_HOOK_INT_ON_OTHER ( pRobotArm, iNewMiniSentry, obsolete );
+	CALL_ATTRIB_HOOK_INT_ON_OTHER ( pRobotArm, bMiniSentry, wrench_builds_minisentry );
+	CALL_ATTRIB_HOOK_INT_ON_OTHER ( pRobotArm, bNewMiniSentry, obsolete );
 
 	if ( !ff_building_gun_mettle.GetBool() )
 	{
@@ -8302,7 +8302,7 @@ float CTFPlayer::GetObjectBuildSpeedMultiplier( int iObjectType, bool bIsRedeplo
 		{
 		case OBJ_SENTRYGUN:
 			CALL_ATTRIB_HOOK_FLOAT( flBuildRate, sentry_build_rate_multiplier );
-			if ( iMiniSentry && !iNewMiniSentry )
+			if ( bMiniSentry && !bNewMiniSentry )
 			{
 				flBuildRate *= 4.f;
 			}
@@ -8331,7 +8331,7 @@ float CTFPlayer::GetObjectBuildSpeedMultiplier( int iObjectType, bool bIsRedeplo
 		case OBJ_SENTRYGUN:
 			CALL_ATTRIB_HOOK_FLOAT( flBuildRate, sentry_build_rate_multiplier );
 			flBuildRate += bIsRedeploy ? 2.0 : 0.0f;
-			if ( iMiniSentry && !iNewMiniSentry )
+			if ( bMiniSentry && !bNewMiniSentry )
 			{
 				flBuildRate += bIsRedeploy ? 5.0 : 3.0f;
 			}
@@ -9208,7 +9208,7 @@ int CTFPlayer::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 		if ( pBoneSaw->GetBonesawType() == BONESAW_UBER_SAVEDONDEATH )
 		{
 			float flPreserveUber = 0;
-			CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pWeapon, flPreserveUber, ubercharge_preserved_on_spawn_max );
+			CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pBoneSaw, flPreserveUber, ubercharge_preserved_on_spawn_max );
 			if ( flPreserveUber > 0 )
 			{
 				// Spawn their spleen
@@ -9835,13 +9835,13 @@ int CTFPlayer::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 			{
 				flInverseRageGainScale = 12.f;
 			}
-			else if ( iMode == 1 )
+			else if ( iMode == 2 )
 			{
-				flInverseRageGainScale = 3.f;
+				flInverseRageGainScale = 2.25f;
 			}
 			else
 			{
-				flInverseRageGainScale = 2.25f;
+				flInverseRageGainScale = 3.f;
 			}
 			HandleRageGain( pTFAttacker, kRageBuffFlag_OnBurnDamageDealt, info.GetDamage() * flRageScale, flInverseRageGainScale );
 		}
@@ -10207,20 +10207,20 @@ bool CTFPlayer::CheckBlockBackstab( CTFPlayer *pTFAttacker )
 				// Unequip.
 				CTFWearable *pItem = dynamic_cast<CTFWearable *>( pEntity );
 				pItem->Break();
-				if ( iBackStabShield == 1 )
+				if ( iBackStabShield == 2 )
+				{
+					pItem->RemoveFrom( this );
+				}
+				else
 				{
 					pItem->AddEffects( EF_NODRAW );
 
 					// reset the charge.
 					m_Shared.SetItemChargeMeter( LOADOUT_POSITION_SECONDARY, 0.f );
 				}
-				else
-				{
-					pItem->RemoveFrom( this );
-				}
 			}
 
-			if ( iBackStabShield > 1 )
+			if ( iBackStabShield == 2 )
 			{
 				UTIL_Remove( pEntity );
 			}
@@ -10845,7 +10845,7 @@ int CTFPlayer::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 							(int)GetAbsOrigin().y,
 							(int)GetAbsOrigin().z );
 
-						int bNewDartGun = 1;
+						bool bNewDartGun = true;
 						CALL_ATTRIB_HOOK_INT_ON_OTHER ( pSniper, bNewDartGun, obsolete )
 						if ( ( IsHeadshot( info.GetDamageCustom() ) || LastHitGroup() == HITGROUP_HEAD ) && bNewDartGun )
 						{
@@ -11679,8 +11679,8 @@ void CTFPlayer::OnKilledOther_Effects( CBaseEntity *pVictim, const CTakeDamageIn
 		int iTargetHealth = ( int )( ( ( float )iRestoreHealthToPercentageOnKill / 100.0f ) * ( float )iRestoreMax ) + 1;
 
 		int iHonorbound = 0;
-		CALL_ATTRIB_HOOK_INT( iHonorbound, honorbound );
-		int iBaseMaxHealth = iHonorbound < 2 ? ( GetMaxHealth() * 1.5 ) : GetMaxHealth(),
+		CALL_ATTRIB_HOOK_INT_ON_OTHER( pWeapon, iHonorbound, honorbound );
+		int iBaseMaxHealth = iHonorbound == 2 ? GetMaxHealth() : GetMaxHealth() * 1.5,
 			iNewHealth = Min( GetHealth() + iTargetHealth, iBaseMaxHealth ),
 			iDeltaHealth = Max(iNewHealth - GetHealth(), 0);
 
@@ -15843,10 +15843,10 @@ void CTFPlayer::SpyDeadRingerDeath( const CTakeDamageInfo& info )
 	if ( !CanGoInvisible( true ) || ( m_Shared.GetSpyCloakMeter() < 100.0f ) )
 		return;
 
-	int iNewFeignDeath = 1;
+	bool bNewFeignDeath = true;
 	CTFWeaponInvis *pWpn = (CTFWeaponInvis *)Weapon_OwnsThisID( TF_WEAPON_INVIS );
-	CALL_ATTRIB_HOOK_INT_ON_OTHER( pWpn, iNewFeignDeath, obsolete );
-	if ( iNewFeignDeath )
+	CALL_ATTRIB_HOOK_INT_ON_OTHER( pWpn, bNewFeignDeath, obsolete );
+	if ( bNewFeignDeath )
 	{
 		m_Shared.SetSpyCloakMeter( 50.0f );
 	}
@@ -15856,7 +15856,7 @@ void CTFPlayer::SpyDeadRingerDeath( const CTakeDamageInfo& info )
 	FeignDeath( info, true );
 
 	// Go feign death.
-	float feign_duration = iNewFeignDeath ? tf_feign_death_duration.GetFloat() : 6.f;
+	float feign_duration = bNewFeignDeath ? tf_feign_death_duration.GetFloat() : 6.f;
 	m_Shared.AddCond( TF_COND_FEIGN_DEATH, feign_duration );
 	m_bGoingFeignDeath = false;
 }
@@ -18080,12 +18080,7 @@ void CTFPlayer::Taunt( taunts_t iTauntIndex, int iTauntConcept )
 					// Pyro needs high defense while he's taunting
 					int iMode = 0;
 					CALL_ATTRIB_HOOK_INT( iMode, burn_damage_earns_rage );
-					if ( iMode == 1 )
-					{
-						m_Shared.AddCond( TF_COND_MEGAHEAL, 2.60f );
-						m_Shared.AddCond( TF_COND_INVULNERABLE_USER_BUFF, 2.60f );
-					}
-					else
+					if ( iMode == 2 )
 					{
 						m_Shared.AddCond( TF_COND_DEFENSEBUFF_HIGH, 3.0f );
 						if ( GetHealth() < GetMaxHealth() )
@@ -18093,7 +18088,11 @@ void CTFPlayer::Taunt( taunts_t iTauntIndex, int iTauntConcept )
 							SetHealth( GetMaxHealth() );
 						}
 					}
-					
+					else
+					{
+						m_Shared.AddCond( TF_COND_MEGAHEAL, 2.60f );
+						m_Shared.AddCond( TF_COND_INVULNERABLE_USER_BUFF, 2.60f );
+					}
 				}
 			}
 		}

@@ -3585,9 +3585,9 @@ void CTFPlayerShared::OnRemovePhase( void )
 	MessageEnd();
 
 	CTFLunchBox_Drink *pWpn = (CTFLunchBox_Drink *) m_pOuter->Weapon_OwnsThisID( TF_WEAPON_LUNCHBOX );
-	int iSlowMovement = 1;
-	CALL_ATTRIB_HOOK_INT_ON_OTHER ( pWpn, iSlowMovement, obsolete )
-	if ( m_iPhaseDamage && iSlowMovement )
+	bool bSlowMovement = true;
+	CALL_ATTRIB_HOOK_INT_ON_OTHER ( pWpn, bSlowMovement, obsolete )
+	if ( m_iPhaseDamage && bSlowMovement )
 	{
 		// Apply slow based on how much damage we took while active
 		float flSlowDuration = 5.f; //RemapValClamped( m_iPhaseDamage, 10.f, 1000.f, 2.f, 6.f );
@@ -5166,7 +5166,7 @@ void CTFPlayerShared::OnAddFireImmune( void )
 #ifdef CLIENT_DLL
 	int iMode = 0;
 	CALL_ATTRIB_HOOK_INT_ON_OTHER ( m_pOuter, iMode, freeze_backstab_victim )
-	if ( !m_pOuter->IsPlayerClass( TF_CLASS_SPY ) || iMode == 1 )
+	if ( !m_pOuter->IsPlayerClass( TF_CLASS_SPY ) || iMode != 2 )
 	{
 		AddUberScreenEffect( m_pOuter );
 	}
@@ -5187,7 +5187,7 @@ void CTFPlayerShared::OnRemoveFireImmune( void )
 #ifdef CLIENT_DLL
 	int iMode = 0;
 	CALL_ATTRIB_HOOK_INT_ON_OTHER ( m_pOuter, iMode, freeze_backstab_victim )
-	if ( !m_pOuter->IsPlayerClass( TF_CLASS_SPY ) || iMode == 1 )
+	if ( !m_pOuter->IsPlayerClass( TF_CLASS_SPY ) || iMode != 2 )
 	{
 		RemoveUberScreenEffect( m_pOuter );
 	}
@@ -6168,7 +6168,7 @@ void CTFPlayerShared::CalcChargeCrit( bool bForceCrit )
 	int iDemoChargeDamagePenalty = 0;
 	CALL_ATTRIB_HOOK_INT_ON_OTHER( m_pOuter, iDemoChargeDamagePenalty, lose_demo_charge_on_damage_when_charging );
 
-	bool bNewShieldCharge = 1;
+	bool bNewShieldCharge = true;
 	CTFWearableDemoShield *pWearableShield = GetEquippedDemoShield( m_pOuter );
 	if ( pWearableShield )
 		CALL_ATTRIB_HOOK_INT_ON_OTHER( pWearableShield, bNewShieldCharge, obsolete );
@@ -6704,9 +6704,12 @@ void CTFPlayerShared::Burn( CTFPlayer *pAttacker, CTFWeaponBase *pWeapon, float 
 		AddCond( TF_COND_BURNING, -1.f, pAttacker );
 		m_flFlameBurnTime = gpGlobals->curtime + TF_BURNING_FREQUENCY;
 		m_flAfterburnDuration = pWeapon ? pWeapon->GetInitialAfterburnDuration() : 0.f;
-		
-		// Reduces direct healing effectiveness
-		AddCond( TF_COND_HEALING_DEBUFF, m_flAfterburnDuration, pAttacker );
+
+		if ( ff_use_new_flame.GetInt() > 0 )
+		{
+			// Reduces direct healing effectiveness
+			AddCond( TF_COND_HEALING_DEBUFF, m_flAfterburnDuration, pAttacker );
+		}
 
 		// let the attacker know he burned me
 		if ( pAttacker && !bVictimIsImmunePyro )
@@ -7181,11 +7184,11 @@ void CTFPlayerShared::OnRemoveStealthed( void )
 #endif
 
 	// End feign death if we leave stealth for some reason.
-	int iNewFeignDeath = 1;
-	CALL_ATTRIB_HOOK_INT_ON_OTHER( pWpn, iNewFeignDeath, obsolete );
+	bool bNewFeignDeath = true;
+	CALL_ATTRIB_HOOK_INT_ON_OTHER( pWpn, bNewFeignDeath, obsolete );
 	if ( InCond( TF_COND_FEIGN_DEATH ) )
 	{
-		if ( m_flCloakMeter > 40.0f && !iNewFeignDeath )
+		if ( m_flCloakMeter > 40.0f && !bNewFeignDeath )
 			m_flCloakMeter = 40.0f;
 
 		RemoveCond( TF_COND_FEIGN_DEATH );
@@ -7250,11 +7253,11 @@ void CTFPlayerShared::OnRemoveStealthedUserBuffFade( void )
 void CTFPlayerShared::OnAddFeignDeath( void )
 {
 	CTFWeaponInvis *pWpn = (CTFWeaponInvis *) m_pOuter->Weapon_OwnsThisID( TF_WEAPON_INVIS );
-	int iNewFeignDeath = 1;
-	CALL_ATTRIB_HOOK_INT_ON_OTHER( pWpn, iNewFeignDeath, obsolete );
+	bool bNewFeignDeath = true;
+	CALL_ATTRIB_HOOK_INT_ON_OTHER( pWpn, bNewFeignDeath, obsolete );
 #ifdef CLIENT_DLL
 	// STAGING_SPY
-	if ( iNewFeignDeath )
+	if ( bNewFeignDeath )
 	{
 		AddUberScreenEffect( m_pOuter );
 	}
@@ -7268,7 +7271,7 @@ void CTFPlayerShared::OnAddFeignDeath( void )
 
 	// STAGING_SPY
 	// Add a speed boost while feigned and afterburn immunity while running away
-	if ( iNewFeignDeath )
+	if ( bNewFeignDeath )
 	{
 		AddCond( TF_COND_SPEED_BOOST, tf_feign_death_speed_duration.GetFloat() );
 		AddCond( TF_COND_AFTERBURN_IMMUNE, tf_feign_death_speed_duration.GetFloat() );
@@ -7276,7 +7279,7 @@ void CTFPlayerShared::OnAddFeignDeath( void )
 
 	SetFeignDeathReady( false );
 
-	float feign_duration = iNewFeignDeath ? tf_feign_death_speed_duration.GetFloat() : 6.f;
+	float feign_duration = bNewFeignDeath ? tf_feign_death_speed_duration.GetFloat() : 6.f;
 	m_flFeignDeathEnd = gpGlobals->curtime + feign_duration;
 }
 
@@ -7288,9 +7291,9 @@ void CTFPlayerShared::OnRemoveFeignDeath( void )
 #ifdef CLIENT_DLL
 	// STAGING_SPY
 	CTFWeaponInvis *pWpn = (CTFWeaponInvis *) m_pOuter->Weapon_OwnsThisID( TF_WEAPON_INVIS );
-	int iNewFeignDeath = 1;
-	CALL_ATTRIB_HOOK_INT_ON_OTHER( pWpn, iNewFeignDeath, obsolete );
-	if ( iNewFeignDeath )
+	bool bNewFeignDeath = true;
+	CALL_ATTRIB_HOOK_INT_ON_OTHER( pWpn, bNewFeignDeath, obsolete );
+	if ( bNewFeignDeath )
 	{
 		RemoveUberScreenEffect( m_pOuter );
 	}
@@ -9847,9 +9850,9 @@ bool CTFPlayerShared::AddToSpyCloakMeter( float val, bool bForce )
 			CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pWpn, val, ReducedCloakFromAmmo );
 		}
 
-		int iNewFeignDeath = 1;
-		CALL_ATTRIB_HOOK_INT_ON_OTHER( pWpn, iNewFeignDeath, obsolete );
-		if ( pWpn->HasFeignDeath() && !iNewFeignDeath )
+		bool bNewFeignDeath = true;
+		CALL_ATTRIB_HOOK_INT_ON_OTHER( pWpn, bNewFeignDeath, obsolete );
+		if ( pWpn->HasFeignDeath() && !bNewFeignDeath )
 		{
 			val = Min( val, 35.0f );
 		}
@@ -11195,10 +11198,10 @@ float CTFPlayer::TeamFortress_CalculateMaxSpeed( bool bIgnoreSpecialAbility /*= 
 			maxfbspeed *= RemapValClamped( m_Shared.GetScoutHypeMeter(), 0.0f, 100.0f, 1.0f, 1.45f );
 		}
 		// Crit-a-Cola gives a move bonus while active
-		int iNewCola = 1;
+		bool bNewCola = true;
 		CTFLunchBox_Drink *pCola = dynamic_cast< CTFLunchBox_Drink* >( Weapon_OwnsThisID( TF_WEAPON_LUNCHBOX ) );
-		CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pCola, iNewCola, obsolete );
-		if ( m_Shared.InCond( TF_COND_ENERGY_BUFF ) && !iNewCola )
+		CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pCola, bNewCola, obsolete );
+		if ( m_Shared.InCond( TF_COND_ENERGY_BUFF ) && !bNewCola )
 		{
 			maxfbspeed *= 1.25f;
 		}
@@ -14301,9 +14304,9 @@ void CTFPlayerShared::SetScoutHypeMeter( float val )
 bool CTFPlayerShared::IsNewSodaPopper( void ) const
 {
 	CTFSodaPopper *pWpn = (CTFSodaPopper *) m_pOuter->Weapon_OwnsThisID( TF_WEAPON_SODA_POPPER );
-	int iNewSodaPopper = 1;
-	CALL_ATTRIB_HOOK_INT_ON_OTHER ( pWpn, iNewSodaPopper, obsolete )
-	return iNewSodaPopper;
+	bool bNewSodaPopper = true;
+	CALL_ATTRIB_HOOK_INT_ON_OTHER ( pWpn, bNewSodaPopper, obsolete )
+	return bNewSodaPopper;
 }
 
 //-----------------------------------------------------------------------------
@@ -14362,10 +14365,10 @@ void CTFPlayerShared::UpdateCloakMeter( void )
 #ifdef GAME_DLL
 		// staging_spy
 		float flReduction = gpGlobals->frametime * 0.75f;
-		int iNewFeignDeath = 1;
+		bool bNewFeignDeath = true;
 		CTFWeaponInvis *pWatch = (CTFWeaponInvis *) m_pOuter->Weapon_OwnsThisID( TF_WEAPON_INVIS );
-		CALL_ATTRIB_HOOK_INT_ON_OTHER( pWatch, iNewFeignDeath, obsolete );
-		if ( !( !iNewFeignDeath && pWatch->HasFeignDeath() ) && ff_spy_gun_mettle.GetBool() )
+		CALL_ATTRIB_HOOK_INT_ON_OTHER( pWatch, bNewFeignDeath, obsolete );
+		if ( !( !bNewFeignDeath && pWatch->HasFeignDeath() ) && ff_spy_gun_mettle.GetBool() )
 		{
 			for ( int i = 0; g_aDebuffConditions[i] != TF_COND_LAST; i++ )
 			{

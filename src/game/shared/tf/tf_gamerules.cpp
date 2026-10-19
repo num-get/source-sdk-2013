@@ -5832,8 +5832,8 @@ int CTFRadiusDamageInfo::ApplyToEntity( CBaseEntity *pEntity )
 	flAdjustedDamage = RemapValClamped( flDistanceToEntity, 0, flRadius, dmgInfo->GetDamage(), dmgInfo->GetDamage() * flFalloff );
 
 	CTFWeaponBase *pWeapon = dynamic_cast<CTFWeaponBase *>(dmgInfo->GetWeapon());
-	int iNewGrenade = 1;
-	CALL_ATTRIB_HOOK_INT_ON_OTHER ( pWeapon, iNewGrenade, obsolete )
+	bool bNewGrenade = true;
+	CALL_ATTRIB_HOOK_INT_ON_OTHER ( pWeapon, bNewGrenade, obsolete )
 
 	// Grenades & Pipebombs do less damage to ourselves.
 	if ( pEntity == dmgInfo->GetAttacker() && pWeapon )
@@ -5841,7 +5841,7 @@ int CTFRadiusDamageInfo::ApplyToEntity( CBaseEntity *pEntity )
 		switch( pWeapon->GetWeaponID() )
 		{
 			case TF_WEAPON_GRENADELAUNCHER :
-				if ( !iNewGrenade || !ff_use_new_grenade.GetBool() )
+				if ( !bNewGrenade || !ff_use_new_grenade.GetBool() )
 				{
 					flAdjustedDamage *= 1.12f;
 				}
@@ -5850,7 +5850,7 @@ int CTFRadiusDamageInfo::ApplyToEntity( CBaseEntity *pEntity )
 				flAdjustedDamage *= 0.75f;
 				break;
 			case TF_WEAPON_STICKBOMB :
-				if ( iNewGrenade )
+				if ( bNewGrenade )
 					flAdjustedDamage *= 0.75f;
 				break;
 		}
@@ -6267,7 +6267,7 @@ bool CTFGameRules::ApplyOnDamageModifyRules( CTakeDamageInfo &info, CBaseEntity 
 				if ( IsHeadshot( info.GetDamageCustom() ) || pVictim->LastHitGroup() == HITGROUP_HEAD )
 				{
 					CTFSniperRifle *pSniper = static_cast< CTFSniperRifle* >( pWeapon );
-					int bNewDartGun = 1;
+					bool bNewDartGun = true;
 					CALL_ATTRIB_HOOK_INT_ON_OTHER ( pSniper, bNewDartGun, obsolete )
 					if ( pSniper->IsZoomed() && pSniper->GetJarateTime() )
 					{
@@ -7438,17 +7438,17 @@ float CTFGameRules::ApplyOnDamageAliveModifyRules( const CTakeDamageInfo &info, 
 		outParams.bSendPreFeignDamage = false;
 		if ( pVictim && pVictim->IsPlayerClass( TF_CLASS_SPY ) && ( info.GetDamageCustom() != TF_DMG_CUSTOM_TELEFRAG ) && !pVictim->IsTaunting() && !iAttackIgnoresResists )
 		{
-			int iNewFeignDeath = 1;
+			bool bNewFeignDeath = true;
 			CTFWeaponInvis *pWatch = (CTFWeaponInvis *) pVictim->Weapon_OwnsThisID( TF_WEAPON_INVIS );
-			CALL_ATTRIB_HOOK_INT_ON_OTHER( pWatch, iNewFeignDeath, obsolete );
+			CALL_ATTRIB_HOOK_INT_ON_OTHER( pWatch, bNewFeignDeath, obsolete );
 			// Reduce damage taken if we have recently feigned death.
 			if ( pVictim->m_Shared.InCond( TF_COND_FEIGN_DEATH ) || pVictim->m_Shared.IsFeignDeathReady() )
 			{
 				// Damage reduction is proportional to cloak remaining (60%->20%)
-				float flDamageReduction = iNewFeignDeath ? RemapValClamped( pVictim->m_Shared.GetSpyCloakMeter(), 50.0f, 0.0f, tf_feign_death_damage_scale.GetFloat(), tf_stealth_damage_reduction.GetFloat() ): 0.1f;
+				float flDamageReduction = !bNewFeignDeath ? 0.1f : RemapValClamped( pVictim->m_Shared.GetSpyCloakMeter(), 50.0f, 0.0f, tf_feign_death_damage_scale.GetFloat(), tf_stealth_damage_reduction.GetFloat() );
 
 				// On Activate Reduce Remaining Cloak by 50%
-				if ( pVictim->m_Shared.IsFeignDeathReady() && iNewFeignDeath )
+				if ( pVictim->m_Shared.IsFeignDeathReady() && bNewFeignDeath )
 				{
 					flDamageReduction = tf_feign_death_activate_damage_scale.GetFloat();
 				}
@@ -7458,7 +7458,7 @@ float CTFGameRules::ApplyOnDamageAliveModifyRules( const CTakeDamageInfo &info, 
 
 				flRealDamage *= flDamageReduction;
 
-				if ( !pVictim->m_Shared.IsFeignDeathReady() && !iNewFeignDeath )
+				if ( !pVictim->m_Shared.IsFeignDeathReady() && !bNewFeignDeath )
 				{
 					pVictim->m_Shared.ReduceFeignDeathDuration( RemapValClamped ( flRealDamage, 0.1f, 25.f, 0.1f, 2.5f ) );
 				}
@@ -7478,7 +7478,7 @@ float CTFGameRules::ApplyOnDamageAliveModifyRules( const CTakeDamageInfo &info, 
 				}
 			}
 			// Standard Stealth gives small damage reduction
-			else if ( pVictim->m_Shared.InCond( TF_COND_STEALTHED ) && !( !iNewFeignDeath && pWatch->HasFeignDeath() ) && ff_spy_gun_mettle.GetBool() )
+			else if ( pVictim->m_Shared.InCond( TF_COND_STEALTHED ) && !( !bNewFeignDeath && pWatch->HasFeignDeath() ) && ff_spy_gun_mettle.GetBool() )
 			{
 				flRealDamage *= tf_stealth_damage_reduction.GetFloat();
 			}
@@ -16932,7 +16932,7 @@ bool CTFGameRules::PlayerMayCapturePoint( CBasePlayer *pPlayer, int iPointIndex,
 		return false;
 	}
 
-	int iBlockCapping = 1;
+	bool bBlockCapping = true;
 #ifdef GAME_DLL
 	for ( int i = 0; i < pTFPlayer->m_Shared.GetNumHealers(); i++ )
 	{
@@ -16943,12 +16943,12 @@ bool CTFGameRules::PlayerMayCapturePoint( CBasePlayer *pPlayer, int iPointIndex,
 		CWeaponMedigun *pMedigun = dynamic_cast <CWeaponMedigun*>( pMedic->GetActiveTFWeapon() );
 		if ( pMedigun && pMedigun->IsReleasingCharge() && pMedigun->GetMedigunType() == MEDIGUN_QUICKFIX )
 		{
-			CALL_ATTRIB_HOOK_INT_ON_OTHER ( pMedigun, iBlockCapping, obsolete );
+			CALL_ATTRIB_HOOK_INT_ON_OTHER ( pMedigun, bBlockCapping, obsolete );
 		}
 	}
 #endif
 
-	if ( ( pTFPlayer->m_Shared.IsInvulnerable() || ( iBlockCapping && pTFPlayer->m_Shared.InCond( TF_COND_MEGAHEAL ) ) ) && !IsMannVsMachineMode() )
+	if ( ( pTFPlayer->m_Shared.IsInvulnerable() || ( bBlockCapping && pTFPlayer->m_Shared.InCond( TF_COND_MEGAHEAL ) ) ) && !IsMannVsMachineMode() )
 	{
 		if ( pszReason )
 		{

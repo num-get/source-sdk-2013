@@ -391,9 +391,9 @@ void CTFWeaponBaseGrenadeProj::Explode( trace_t *pTrace, int bitsDamageType )
 
 	float flRadius = GetDamageRadius();
 
-	int iNewGrenade = 1;
-	CALL_ATTRIB_HOOK_INT_ON_OTHER( GetOriginalLauncher(), iNewGrenade, obsolete );
-	CTFRadiusDamageInfo radiusinfo( &info, vecOrigin, flRadius, NULL, ( ff_use_new_grenade.GetBool() && iNewGrenade == 1 ) ? TF_GRENADE_JUMP_RADIUS : 159 );
+	bool bNewGrenade = true;
+	CALL_ATTRIB_HOOK_INT_ON_OTHER( GetOriginalLauncher(), bNewGrenade, obsolete );
+	CTFRadiusDamageInfo radiusinfo( &info, vecOrigin, flRadius, NULL, ( !ff_use_new_grenade.GetBool() || !bNewGrenade ) ? 159 : TF_GRENADE_JUMP_RADIUS );
 	TFGameRules()->RadiusDamage( radiusinfo );
 
 	// Don't decal players with scorch.

@@ -2071,7 +2071,7 @@ bool CTFWeaponBase::ReloadSingly( void )
 				int nCanOverload = 0;
 				CALL_ATTRIB_HOOK_INT( nCanOverload, can_overload );
 				if ( ( !CanOverload() && ( Clip1() == GetMaxClip1() || pPlayer->GetAmmoCount( m_iPrimaryAmmoType ) <= 0 ) ) ||
-						( CanOverload() && nCanOverload > 1 && pPlayer->GetAmmoCount( m_iPrimaryAmmoType ) <= 0 ) )
+						( CanOverload() && nCanOverload == 2 && pPlayer->GetAmmoCount( m_iPrimaryAmmoType ) <= 0 ) )
 				{
 					m_iReloadMode.Set( TF_RELOAD_FINISH );
 				}
@@ -2582,7 +2582,7 @@ bool CTFWeaponBase::CanInspect() const
 {
 	int iInspect = 0;
 	CALL_ATTRIB_HOOK_INT( iInspect, weapon_allow_inspect );
-	return iInspect > -1;
+	return iInspect >= 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -5555,15 +5555,15 @@ void CTFWeaponBase::ApplyOnInjuredAttributes( CTFPlayer *pVictim, CTFPlayer *pAt
 		{
 			int iMode = 0;
 			CALL_ATTRIB_HOOK_INT_ON_OTHER ( pVictim, iMode, freeze_backstab_victim )
-			if ( iMode == 1 )
+			if ( iMode == 2 )
+			{
+				pVictim->m_Shared.AddCond( TF_COND_FIRE_IMMUNE, iBecomeFireproofOnHitByFire );
+			}
+			else
 			{
 				pVictim->m_Shared.AddCond( TF_COND_FIRE_IMMUNE, 1.f );
 				// STAGING_SPY
 				pVictim->m_Shared.AddCond( TF_COND_AFTERBURN_IMMUNE, iBecomeFireproofOnHitByFire );
-			}
-			else
-			{
-				pVictim->m_Shared.AddCond( TF_COND_FIRE_IMMUNE, iBecomeFireproofOnHitByFire );
 			}
 
 			if ( pVictim->m_Shared.InCond( TF_COND_BURNING ) )

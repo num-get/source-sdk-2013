@@ -355,15 +355,15 @@ void CBaseObject::SetTransmit( CCheckTransmitInfo *pInfo, bool bAlways )
 //-----------------------------------------------------------------------------
 bool CBaseObject::IsOldMiniBuilding( void ) const
 {
-	int iMiniSentry = 0;
-	int iNewMiniSentry = 1;
+	bool bMiniSentry = false;
+	bool bNewMiniSentry = true;
 	if ( GetBuilder() )
 	{
 		CTFRobotArm *pRobotArm = dynamic_cast<CTFRobotArm*>( GetBuilder()->Weapon_OwnsThisID( TF_WEAPON_WRENCH ) );
-		CALL_ATTRIB_HOOK_INT_ON_OTHER ( pRobotArm, iMiniSentry, wrench_builds_minisentry );
-		CALL_ATTRIB_HOOK_INT_ON_OTHER ( pRobotArm, iNewMiniSentry, obsolete );
+		CALL_ATTRIB_HOOK_INT_ON_OTHER ( pRobotArm, bMiniSentry, wrench_builds_minisentry );
+		CALL_ATTRIB_HOOK_INT_ON_OTHER ( pRobotArm, bNewMiniSentry, obsolete );
 	}
-	return iMiniSentry && !iNewMiniSentry;
+	return bMiniSentry && !bNewMiniSentry;
 }
 
 //-----------------------------------------------------------------------------
@@ -2137,8 +2137,7 @@ bool CBaseObject::Construct( float flHealth )
 		// Minibuildings build health at a reduced rate
 		// Staging_engy
 		{
-			float flMult = !IsOldMiniBuilding() ? 0.5f : 0.f;
-			SetHealth( Min( (float)GetMaxHealth(), m_flHealth + (IsMiniBuilding() ? (flHealth * flMult) : flHealth) ) );
+			SetHealth( Min( (float)GetMaxHealth(), m_flHealth + (IsMiniBuilding() ? (IsOldMiniBuilding() ? 0.f : flHealth * 0.5f) : flHealth) ) );
 		}
 
 		// Return true if we're constructed now
@@ -2315,7 +2314,7 @@ void CBaseObject::CreateObjectGibs( void )
 	if ( IsMiniBuilding() )
 	{
 		// STAGING_ENGY
-		nMetalPerGib = !IsOldMiniBuilding() ? 0 : 7;
+		nMetalPerGib = IsOldMiniBuilding() ? 7 : 0;
 		nLeftOver = 0;
 	}
 

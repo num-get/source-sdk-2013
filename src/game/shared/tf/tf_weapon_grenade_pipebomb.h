@@ -108,7 +108,10 @@ public:
 	// Overrides.
 	virtual void	Spawn();
 	virtual void	Precache();
-	
+
+	virtual void	InitGrenade( const Vector &velocity, const AngularImpulse &angVelocity, CBaseCombatCharacter *pOwner, const CTFWeaponInfo &weaponInfo );
+	virtual void	InitGrenade( const Vector &velocity, const AngularImpulse &angVelocity, CBaseCombatCharacter *pOwner, const int iDamage, const float flRadius );
+
 	virtual void	BounceSound( void );
 	virtual void	Detonate();
 	virtual void	Fizzle();
