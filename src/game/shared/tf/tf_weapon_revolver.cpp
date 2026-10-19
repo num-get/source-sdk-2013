@@ -102,7 +102,7 @@ bool CTFRevolver::CanFireCriticalShot( bool bIsHeadshot, CBaseEntity *pTarget /*
 	if ( pPlayer && pPlayer->m_Shared.IsCritBoosted() )
 		return true;
 
-	int bRangeLimit = 1;
+	bool bRangeLimit = true;
 	CALL_ATTRIB_HOOK_INT ( bRangeLimit, obsolete )
 	// Magic.
 	if ( pTarget && ( pPlayer->GetAbsOrigin() - pTarget->GetAbsOrigin() ).Length2DSqr() > Square( 1200.f ) && bRangeLimit )

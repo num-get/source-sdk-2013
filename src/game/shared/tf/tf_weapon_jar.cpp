@@ -1028,10 +1028,10 @@ void CTFProjectile_Cleaver::OnHit( CBaseEntity *pOther )
 
 	bool bIsMiniCrit = false;
 
-	int iNewCleaver = 1;
-	CALL_ATTRIB_HOOK_INT_ON_OTHER( GetOriginalLauncher(), iNewCleaver, desc_cleaver_description );
+	bool bNewCleaver = 1;
+	CALL_ATTRIB_HOOK_INT_ON_OTHER( GetOriginalLauncher(), bNewCleaver, desc_cleaver_description );
 	float flLifeTime = gpGlobals->curtime - m_flCreationTime;
-	if ( flLifeTime >= FLIGHT_TIME_TO_REDUCE_COOLDOWN && iNewCleaver >= 1 )
+	if ( flLifeTime >= FLIGHT_TIME_TO_REDUCE_COOLDOWN && bNewCleaver )
 	{
 		auto pLauncher = dynamic_cast<CTFWeaponBase*>( pInflictor );
 		if ( pLauncher && pOwner != pPlayer && pLauncher->HasEffectBarRegeneration() )
@@ -1040,7 +1040,7 @@ void CTFProjectile_Cleaver::OnHit( CBaseEntity *pOther )
 		}
 	}
 
-	if ( flLifeTime >= FLIGHT_TIME_TO_MAX_DMG && iNewCleaver < 1 )
+	if ( flLifeTime >= FLIGHT_TIME_TO_MAX_DMG && !bNewCleaver )
 	{
 		bIsMiniCrit = true;
 	}
@@ -1077,7 +1077,7 @@ void CTFProjectile_Cleaver::OnHit( CBaseEntity *pOther )
 	EmitSound_t params;
 	params.m_flSoundTime = 0;
 	params.m_pflSoundDuration = 0;
-	params.m_pSoundName = ( !iNewCleaver ? "Cleaver.ImpactFlesh.Old" : TF_WEAPON_CLEAVER_IMPACT_FLESH_SOUND );
+	params.m_pSoundName = ( !bNewCleaver ? "Cleaver.ImpactFlesh.Old" : TF_WEAPON_CLEAVER_IMPACT_FLESH_SOUND );
 
 	CPASFilter filter( GetAbsOrigin() );
 	filter.RemoveRecipient( pOwner );
@@ -1100,9 +1100,9 @@ void CTFProjectile_Cleaver::Explode( trace_t *pTrace, int bitsDamageType )
 	{
 		if ( !m_bSoundPlayed )
 		{
-			int iNewCleaver = 1;
-			CALL_ATTRIB_HOOK_INT_ON_OTHER( GetOriginalLauncher(), iNewCleaver, desc_cleaver_description );
-			EmitSound( !iNewCleaver ? "Cleaver.ImpactWorld.Old" : TF_WEAPON_CLEAVER_IMPACT_WORLD_SOUND );
+			bool bNewCleaver = 1;
+			CALL_ATTRIB_HOOK_INT_ON_OTHER( GetOriginalLauncher(), bNewCleaver, desc_cleaver_description );
+			EmitSound( !bNewCleaver ? "Cleaver.ImpactWorld.Old" : TF_WEAPON_CLEAVER_IMPACT_WORLD_SOUND );
 			m_bSoundPlayed = true;
 		}
 

@@ -96,7 +96,9 @@ void CTFPistol_ScoutPrimary::SecondaryAttack( void )
 	if ( !pOwner )
 		return;
 
-	if ( IsOldShortstop() )
+	bool bNewShortstop = true;
+	CALL_ATTRIB_HOOK_INT ( bNewShortstop, obsolete )
+	if ( !bNewShortstop )
 		return;
 
 	if ( !CanAttack() )
@@ -234,19 +236,10 @@ void CTFPistol_ScoutPrimary::Precache( void )
 	
 	BaseClass::Precache();
 
-	if ( IsOldShortstop() )
-		m_iPrimaryAmmoType = TF_AMMO_SECONDARY;
-}
-
-//-----------------------------------------------------------------------------
-// Purpose:
-//-----------------------------------------------------------------------------
-bool CTFPistol_ScoutPrimary::IsOldShortstop( void )
-{
-	int bNewShortstop = 1;
+	bool bNewShortstop = true;
 	CALL_ATTRIB_HOOK_INT ( bNewShortstop, obsolete )
-
-	return !bNewShortstop;
+	if ( !bNewShortstop )
+		m_iPrimaryAmmoType = TF_AMMO_SECONDARY;
 }
 
 //============================
