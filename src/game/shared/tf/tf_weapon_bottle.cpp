@@ -105,8 +105,6 @@ PRECACHE_WEAPON_REGISTER( tf_weapon_stickbomb );
 #define TF_BREAKABLE_MELEE_BODY_NOTBROKEN 0
 #define TF_BREAKABLE_MELEE_BODY_BROKEN 1
 
-#define TF_WEAPON_STICKBOMB_DAMAGE 35
-
 //=============================================================================
 //
 // Weapon Breakable Melee functions.
@@ -230,9 +228,15 @@ void CTFStickBomb::Precache( void )
 
 float CTFStickBomb::GetMeleeDamage( CBaseEntity *pTarget, int* piDamageType, int* piCustomDamage )
 {
-	int iNewCaber = 1;
-	CALL_ATTRIB_HOOK_INT ( iNewCaber, obsolete )
-	return iNewCaber ? BaseClass::GetMeleeDamage( pTarget, piDamageType, piCustomDamage ) : TF_WEAPON_STICKBOMB_DAMAGE;
+	float flDamage = BaseClass::GetMeleeDamage( pTarget, piDamageType, piCustomDamage );
+	const int iDamage = m_pWeaponInfo->GetWeaponData( m_iWeaponMode ).m_nDamage;
+	bool bNewCaber = true;
+	CALL_ATTRIB_HOOK_INT ( bNewCaber, obsolete )
+	if ( !bNewCaber && iDamage == 55 )
+	{
+		flDamage *= 0.636363636364f;
+	}
+	return flDamage;
 }
 
 void CTFStickBomb::Smack( void )
@@ -278,9 +282,9 @@ void CTFStickBomb::Smack( void )
 				dmgType |= DMG_CRITICAL;
 
 			float flDamage = 75.0f;
-			int iNewCaber = 1;
-			CALL_ATTRIB_HOOK_INT ( iNewCaber, obsolete )
-			if ( !iNewCaber )
+			bool bNewCaber = true;
+			CALL_ATTRIB_HOOK_INT ( bNewCaber, obsolete )
+			if ( !bNewCaber )
 			{
 				flDamage = 100.0f;
 			}

@@ -460,8 +460,6 @@ CTFGrenadePipebombProjectile* CTFGrenadePipebombProjectile::Create( const Vector
 	
 	const char* pszBombClass = GetPipebombClass( iPipeBombDetonateType );
 	CTFGrenadePipebombProjectile *pGrenade = static_cast<CTFGrenadePipebombProjectile*>( CBaseEntity::CreateNoSpawn( pszBombClass, position, angles, pOwner ) );
-	int iNewGrenade = 1;
-	CALL_ATTRIB_HOOK_INT_ON_OTHER( pOwner->GetActiveWeapon(), iNewGrenade, obsolete );
 	if ( pGrenade )
 	{
 		// Set the pipebomb mode before calling spawn, so the model & associated vphysics get setup properly
@@ -469,7 +467,7 @@ CTFGrenadePipebombProjectile* CTFGrenadePipebombProjectile::Create( const Vector
 		DispatchSpawn( pGrenade );
 
 		pGrenade->InitGrenade( velocity, angVelocity, pOwner, weaponInfo );
-		pGrenade->SetDamage( ( ( ( ff_use_new_grenade.GetBool() && iNewGrenade == 1 ) || pGrenade->m_iType != TF_GL_MODE_REGULAR ) ? pGrenade->GetDamage() : TF_WEAPON_GRENADE_XBOX_DAMAGE ) * flMultDmg );
+		pGrenade->SetDamage( pGrenade->GetDamage() * flMultDmg );
 		pGrenade->SetFullDamage( pGrenade->GetDamage() );
 
 		if ( pGrenade->m_iType != TF_GL_MODE_REMOTE_DETONATE )
@@ -570,6 +568,28 @@ void CTFGrenadePipebombProjectile::Precache()
 	PrecacheScriptSound( TF_WEAPON_CANNON_IMPACT_SOUND );
 
 	BaseClass::Precache();
+}
+
+//-----------------------------------------------------------------------------
+// Purpose:
+//-----------------------------------------------------------------------------
+void CTFGrenadePipebombProjectile::InitGrenade( const Vector &velocity, const AngularImpulse &angVelocity, CBaseCombatCharacter *pOwner, const CTFWeaponInfo &weaponInfo )
+{
+	bool bNewGrenade = 1;
+	CALL_ATTRIB_HOOK_INT_ON_OTHER ( pOwner, bNewGrenade, obsolete )
+	bool bIsOldGrenadeLauncher = ( m_iType == TF_GL_MODE_REGULAR && ( !bNewGrenade || !ff_use_new_grenade.GetBool() ) );
+	const int iDamage = weaponInfo.GetWeaponData( TF_WEAPON_PRIMARY_MODE ).m_nDamage;
+	const float flRadius = weaponInfo.m_flDamageRadius;
+	InitGrenade( velocity, angVelocity, pOwner, ( bIsOldGrenadeLauncher && iDamage == 100 ) ? TF_WEAPON_GRENADE_XBOX_DAMAGE : iDamage, ( !ff_use_new_grenade.GetBool() && flRadius == 146.f ) ? 159.f : flRadius );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose:
+//-----------------------------------------------------------------------------
+void CTFGrenadePipebombProjectile::InitGrenade( const Vector &velocity, const AngularImpulse &angVelocity,
+											CBaseCombatCharacter *pOwner, const int iDamage, const float flRadius )
+{
+	BaseClass::InitGrenade( velocity, angVelocity, pOwner, iDamage, flRadius );
 }
 
 //-----------------------------------------------------------------------------
@@ -784,14 +804,14 @@ void CTFGrenadePipebombProjectile::PipebombTouch( CBaseEntity *pOther )
 					// Impact damage scales with distance
 					float flDistanceSq = (pOther->GetAbsOrigin() - pAttacker->GetAbsOrigin()).LengthSqr();
 					int iNewCannon = 0;
-					CALL_ATTRIB_HOOK_INT_ON_OTHER ( m_hLauncher, iNewCannon, cannonball_push_back )
+					CALL_ATTRIB_HOOK_INT_ON_OTHER ( GetOriginalLauncher(), iNewCannon, cannonball_push_back );
 					float flImpactDamage = iNewCannon != 2 ? RemapValClamped( flDistanceSq, 512 * 512, 1024 * 1024, 50, 25 ) : m_flDamage;
 
 					CTakeDamageInfo info( this, pAttacker, m_hLauncher, vec3_origin, vOrigin, flImpactDamage, GetDamageType(), TF_DMG_CUSTOM_CANNONBALL_PUSH );
 					pOther->TakeDamage( info );
 
 					CTFPlayer *pVictim = ToTFPlayer( pOther );
-					if ( pVictim )
+					if ( pVictim && iNewCannon != 2 )
 					{
 						// apply airblast - Apply stun if they are effectively grounded so we can knock them up
 						if ( !pVictim->m_Shared.InCond( TF_COND_KNOCKED_INTO_AIR ) )
@@ -823,9 +843,9 @@ void CTFGrenadePipebombProjectile::PipebombTouch( CBaseEntity *pOther )
 		}
 
 		// Save this entity as enemy, they will take 100% damage.
-		int iNewGrenade = 1;
-		CALL_ATTRIB_HOOK_INT_ON_OTHER( m_hLauncher, iNewGrenade, obsolete );
-		if ( ff_use_new_grenade.GetBool() && iNewGrenade == 1 )
+		bool bNewGrenade = true;
+		CALL_ATTRIB_HOOK_INT_ON_OTHER( GetOriginalLauncher(), bNewGrenade, obsolete );
+		if ( ff_use_new_grenade.GetBool() && bNewGrenade )
 			m_hEnemy = pOther;
 
 		// Restore damage. See comment in CTFGrenadePipebombProjectile::Create() above to understand this.
@@ -1429,15 +1449,12 @@ float CTFGrenadePipebombProjectile::GetDamageRadius()
 #ifdef GAME_DLL
 	// winbomb prevention.
 	// Air Det
-	if ( m_iType == TF_GL_MODE_REMOTE_DETONATE )
+	if ( m_iType == TF_GL_MODE_REMOTE_DETONATE && ff_use_new_grenade.GetBool() )
 	{
 		if ( m_bTouched == false )
 		{
-			if ( ff_use_new_grenade.GetBool() )
-			{
-				float flArmTime = tf_grenadelauncher_livetime.GetFloat();
-				flRadiusMod *= RemapValClamped( gpGlobals->curtime - m_flCreationTime, flArmTime, flArmTime + tf_sticky_radius_ramp_time.GetFloat(), tf_sticky_airdet_radius.GetFloat(), 1.0 );
-			}
+			float flArmTime = tf_grenadelauncher_livetime.GetFloat();
+			flRadiusMod *= RemapValClamped( gpGlobals->curtime - m_flCreationTime, flArmTime, flArmTime + tf_sticky_radius_ramp_time.GetFloat(), tf_sticky_airdet_radius.GetFloat(), 1.0 );
 		}
 	}
 #endif // GAME_DLL

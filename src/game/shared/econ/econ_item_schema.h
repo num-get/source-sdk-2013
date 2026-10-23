@@ -61,6 +61,7 @@ struct static_attrib_t
 		iDefIndex = 0;
 		m_value.asBlobPointer = NULL;
 		bShouldDelete = false;
+		bShouldRestore = false;
 	}
 
 	~static_attrib_t()
@@ -72,11 +73,13 @@ struct static_attrib_t
 		iDefIndex = rhs.iDefIndex;
 		m_value = rhs.m_value;
 		bShouldDelete = false;
+		bShouldRestore = false;
 	}
 
 	attrib_definition_index_t	iDefIndex;
 	attribute_data_union_t m_value;
 	bool bShouldDelete;
+	bool bShouldRestore;
 
 	// Parses a single subsection from a multi-line attribute block that looks like:
 	//
@@ -2922,6 +2925,9 @@ private:
 
 	// Contains the list of item definitions read in from all data files.
 	ItemDefinitionMap_t									m_mapItems;
+
+	// Contains a mapping from definition name to item definition
+	CUtlDict<CEconItemDefinition*>						m_mapItemsName;
 
 	CUtlMap<int, CQuestObjectiveDefinition*, int >		m_mapQuestObjectives;
 

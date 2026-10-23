@@ -859,17 +859,25 @@ ConVar tf_medieval_autorp( "tf_medieval_autorp", "1", FCVAR_REPLICATED | FCVAR_N
 ConVar tf_sticky_radius_ramp_time( "tf_sticky_radius_ramp_time", "2.0", FCVAR_DEVELOPMENTONLY | FCVAR_CHEAT | FCVAR_REPLICATED, "Amount of time to get full radius after arming" );
 ConVar tf_sticky_airdet_radius( "tf_sticky_airdet_radius", "0.85", FCVAR_DEVELOPMENTONLY | FCVAR_CHEAT | FCVAR_REPLICATED, "Radius Scale if detonated in the air" );
 
-ConVar ff_minigun_spinup_penalty ( "ff_minigun_spinup_penalty", "1", FCVAR_NOTIFY | FCVAR_REPLICATED, "Apply damage and accuracy penalty on the minigun during the first second of spun-up time." );
-ConVar ff_new_shield_charge ( "ff_new_shield_charge", "1", FCVAR_NOTIFY | FCVAR_REPLICATED, "0 - guaranteed melee crit on a shield bash, only deal impact damage if the charge meter is <40%, each head increases impact damage by 20%, 1 - impact damage at any range, remove debuff, each head increases impact damage by 10%, 75% slower deploy and holster speed on sword weapons." );
-ConVar ff_use_new_grenade( "ff_use_new_grenade", "1", FCVAR_NOTIFY | FCVAR_REPLICATED, "Uses the modern grenade explosion radius (146Hu) instead of the older ones (159Hu), direct hit will always deal full damage rather than depending on where the grenade struck the enemy." );
-ConVar ff_use_new_parachute ( "ff_use_new_parachute", "1", FCVAR_NOTIFY | FCVAR_REPLICATED, "Remove the parachute updraft effect while on fire, -25% max air velocity, cannot redeploy parachute." );
-ConVar ff_old_kamikaze ( "ff_old_kamikaze", "0", FCVAR_NOTIFY | FCVAR_REPLICATED, "Equipping the Rocket Jumper prevents self damage from the Kamikaze taunt kill." );
-ConVar ff_lunchbox_self_healing ( "ff_lunchbox_self_healing", "0", FCVAR_NOTIFY | FCVAR_REPLICATED, "Heal yourself instantly by throwing a lunch box item to the ground." );
-ConVar ff_new_weapon_switch_speed ( "ff_new_weapon_switch_speed", "1", FCVAR_NOTIFY | FCVAR_REPLICATED, "0.5s weapon switch time instead of 0.67s." );
-ConVar ff_old_healonkill ( "ff_old_healonkill", "0", FCVAR_NOTIFY | FCVAR_REPLICATED, "Restore the ability to overheal when gaining health on a kill." );
-ConVar ff_allow_taunt_sticky ( "ff_allow_taunt_sticky", "0", FCVAR_NOTIFY | FCVAR_REPLICATED, "Allow Demoman to detonate stickies while taunting." );
-ConVar ff_disable_dropped_weapon ( "ff_disable_dropped_weapon", "0", FCVAR_NOTIFY | FCVAR_REPLICATED, "Fallen ammo packs are replaced with weapons." );
-ConVar ff_use_new_flame( "ff_use_new_flame", "1", FCVAR_NOTIFY | FCVAR_REPLICATED, "0 - Old Flamethrower particle and old afterburn mechanic, 1 - Modern Flamethrower particle, 2 - Modern Flamethrower particle without density ramp up nerf" );
+ConVar ff_minigun_spinup_penalty( "ff_minigun_spinup_penalty", "1", FCVAR_REPLICATED, "Apply damage and accuracy penalty on the minigun during the first second of spun-up time." );
+ConVar ff_sword_weapon_switch_penalty( "ff_sword_weapon_switch_penalty", "1", FCVAR_REPLICATED, "75% slower deploy and holster speed on sword weapons, must be set as a launch option for this command to be functional." );
+ConVar ff_use_new_grenade( "ff_use_new_grenade", "1", FCVAR_REPLICATED, "Uses the modern grenade explosion radius (146Hu) instead of the older ones (159Hu), direct hit will always deal full damage rather than depending on where the grenade struck the enemy." );
+ConVar ff_use_new_parachute( "ff_use_new_parachute", "1", FCVAR_REPLICATED, "Remove the parachute updraft effect while on fire, -25% max air velocity, cannot redeploy parachute." );
+ConVar ff_old_kamikaze( "ff_old_kamikaze", "0", FCVAR_REPLICATED, "Equipping the Rocket Jumper prevents self damage from the Kamikaze taunt kill." );
+ConVar ff_lunchbox_self_healing( "ff_lunchbox_self_healing", "0", FCVAR_REPLICATED, "Heal yourself instantly by throwing a lunch box item to the ground." );
+ConVar ff_new_weapon_switch_speed( "ff_new_weapon_switch_speed", "1", FCVAR_REPLICATED, "0.5s weapon switch time instead of 0.67s." );
+ConVar ff_old_healonkill( "ff_old_healonkill", "0", FCVAR_REPLICATED, "Restore the ability to overheal when gaining health on a kill." );
+ConVar ff_allow_taunt_sticky( "ff_allow_taunt_sticky", "0", FCVAR_REPLICATED, "Allow Demoman to detonate stickies while taunting." );
+ConVar ff_disable_dropped_weapon( "ff_disable_dropped_weapon", "0", FCVAR_REPLICATED, "Fallen ammo packs are replaced with weapons." );
+ConVar ff_use_new_flame( "ff_use_new_flame", "1", FCVAR_REPLICATED, "0 - Old Flamethrower particle and old afterburn mechanic, 1 - Modern Flamethrower particle, 2 - Modern Flamethrower particle without density ramp up nerf." );
+ConVar ff_use_new_airblast( "ff_use_new_airblast", "1", FCVAR_REPLICATED, "If set to 0, restore pre-JI airblast." );
+ConVar ff_allow_taunt_medigun_heal( "ff_allow_taunt_medigun_heal", "0", FCVAR_REPLICATED, "Allow Medic to continue healing while taunting." );
+ConVar ff_allow_jump_after_scoped_shot( "ff_allow_jump_after_scoped_shot", "0", FCVAR_REPLICATED, "Can jump immediately after firing a scoped shot." );
+ConVar ff_disable_minigun_flinch_immunity( "ff_disable_minigun_flinch_immunity", "0", FCVAR_REPLICATED, "Disable Sniper's flinch immunity against long range Minigun hits." );
+ConVar ff_allow_taunt_huntsman_duel( "ff_allow_taunt_huntsman_duel", "0", FCVAR_REPLICATED, "Restore Huntsman Sniper's ability to have a taunt duel against another Huntsman Sniper." );
+ConVar ff_building_gun_mettle( "ff_building_gun_mettle", "1", FCVAR_REPLICATED, "Toggles Engineer's hauling move speed, construction, deploy speed for certain buildings, building costs, and minigun resistance. Set to 1 by default" );
+ConVar ff_spy_gun_mettle( "ff_spy_gun_mettle", "1", FCVAR_REPLICATED, "Toggles Spy's higher move speed, debuff reduction while cloaked, and damage to sapped Sentries. Set to 1 by default" );
+ConVar ff_medic_tough_break( "ff_medic_tough_break", "1", FCVAR_REPLICATED, "Toggles Medic's higher self regen when healing a hurt patient, 3x ÜberCharge build rate during setup time, and mirroring patient's speed with non-Quick-Fix Medigun. Set to 1 by default" );
 
 #ifndef GAME_DLL
 extern ConVar cl_burninggibs;
@@ -943,7 +951,35 @@ ConVar tf_grapplinghook_enable( "tf_grapplinghook_enable", "0", FCVAR_REPLICATED
 
 #ifdef GAME_DLL
 CUtlString s_strNextMvMPopFile;
-CON_COMMAND_F( tf_mvm_popfile, "Change to a target popfile for MvM", FCVAR_GAMEDLL )
+
+static int PopfileCompletion( char const *partial, char commands[ COMMAND_COMPLETION_MAXITEMS ][ COMMAND_COMPLETION_ITEM_LENGTH ] )
+{
+	int matches = 0;
+
+	partial += ARRAYSIZE( "tf_mvm_popfile " ) - 1;
+	const int partialLen = V_strlen( partial );
+
+	if ( TFGameRules() && g_pPopulationManager )
+	{
+		CUtlVector< CUtlString > shortNames;
+		g_pPopulationManager->FindDefaultPopulationFileShortNames( shortNames );
+
+		shortNames.Sort( CUtlString::SortCaseInsensitive );
+
+		for ( int i = 0; i < shortNames.Count() && matches < COMMAND_COMPLETION_MAXITEMS; ++i )
+		{
+			const char *popfile = shortNames[ i ];
+			if ( partialLen == 0 || !V_strncasecmp( popfile, partial, partialLen ) )
+			{
+				V_snprintf( commands[ matches++ ], COMMAND_COMPLETION_ITEM_LENGTH, "tf_mvm_popfile %s", popfile );
+			}
+		}
+	}
+
+	return matches;
+}
+
+CON_COMMAND_F_COMPLETION( tf_mvm_popfile, "Change to a target popfile for MvM", FCVAR_GAMEDLL, PopfileCompletion )
 {
 	// Listenserver host or rcon access only!
 	if ( !UTIL_IsCommandIssuedByServerAdmin() )
@@ -1148,6 +1184,10 @@ ConVar tf_competitive_required_late_join_timeout( "tf_competitive_required_late_
                                                   "How long to wait for late joiners in matches requiring full player counts before canceling the match" );
 ConVar tf_competitive_required_late_join_confirm_timeout( "tf_competitive_required_late_join_confirm_timeout", "30", FCVAR_DEVELOPMENTONLY,
                                                           "How long to wait for the GC to confirm we're in the late join pool before canceling the match" );
+
+ConVar tf_ready_countdown_reduce_per_player( "tf_ready_countdown_reduce_per_player", "30", FCVAR_NONE, "How many seconds we should reduce the countdown timer by per player readying up" );
+ConVar tf_ready_countdown_minimum( "tf_ready_countdown_minimum", "60", FCVAR_NONE, "When players ready up never reduce the countdown timer below this number of seconds" );
+
 #endif // GAME_DLL
 
 ConVar tf_gamemode_community ( "tf_gamemode_community", "0", FCVAR_REPLICATED | FCVAR_NOTIFY | FCVAR_DEVELOPMENTONLY );
@@ -3091,14 +3131,24 @@ void CTFGameRules::PlayerReadyStatus_UpdatePlayerState( CTFPlayer *pTFPlayer, bo
 	{
 		if ( IsMannVsMachineMode() || IsCompetitiveMode() )
 		{
-			// Reduce timer as each player hits Ready, but only once per-player
-			if ( !m_bPlayerReadyBefore[nEntIndex] && m_flRestartRoundTime > gpGlobals->curtime + 60.f )
+			int nReadyCountdownMinimum = tf_ready_countdown_minimum.GetFloat();
+			int nReadyCountdownReducePerPlayer = tf_ready_countdown_reduce_per_player.GetFloat();
+
+			const IMatchGroupDescription* pMatchDesc = GetMatchGroupDescription( GetCurrentMatchGroup() );
+			if ( pMatchDesc )
 			{
-				float flReduceBy = 30.f;
-				if ( m_flRestartRoundTime < gpGlobals->curtime + 90.f )
+				nReadyCountdownMinimum = pMatchDesc->GetReadyCountdownMinimum();
+				nReadyCountdownReducePerPlayer = pMatchDesc->GetReadyCountdownReducePerPlayer();
+			}
+
+			// Reduce timer as each player hits Ready, but only once per-player
+			if ( !m_bPlayerReadyBefore[nEntIndex] && m_flRestartRoundTime > gpGlobals->curtime + nReadyCountdownMinimum )
+			{
+				float flReduceBy = nReadyCountdownReducePerPlayer;
+				if ( m_flRestartRoundTime < gpGlobals->curtime + nReadyCountdownReducePerPlayer + nReadyCountdownMinimum )
 				{
-					// Never reduce below 60 seconds remaining
-					flReduceBy = m_flRestartRoundTime - gpGlobals->curtime - 60.f;
+					// Never reduce below tf_ready_countdown_minimum seconds remaining
+					flReduceBy = m_flRestartRoundTime - gpGlobals->curtime - nReadyCountdownMinimum;
 				}
 
 				m_flRestartRoundTime -= flReduceBy;
@@ -5689,14 +5739,11 @@ void CTFGameRules::RadiusDamage( CTFRadiusDamageInfo &info )
 				// Heal on hits
 				int iModHealthOnHit = 0;
 				CALL_ATTRIB_HOOK_INT_ON_OTHER( info.dmgInfo->GetWeapon(), iModHealthOnHit, add_health_on_radius_damage );
-				int iOldModHealthOnHit = 0;
-				CALL_ATTRIB_HOOK_INT_ON_OTHER( info.dmgInfo->GetWeapon(), iOldModHealthOnHit, add_onhit_addhealth2 );
-				if ( iModHealthOnHit || iOldModHealthOnHit )
+				if ( iModHealthOnHit )
 				{
 					// Scale Health mod with damage dealt, input being the maximum amount of health possible
 					float flScale = Clamp( nDamageDealt / flBaseDamage, 0.f, 1.0f );
 					iModHealthOnHit = (int)( (float)iModHealthOnHit * flScale );
-					iModHealthOnHit += (int)( (float)iOldModHealthOnHit * iDamageEnemies );
 					int iHealed = info.dmgInfo->GetAttacker()->TakeHealth( iModHealthOnHit, DMG_GENERIC );
 					if ( iHealed )
 					{
@@ -5827,28 +5874,27 @@ int CTFRadiusDamageInfo::ApplyToEntity( CBaseEntity *pEntity )
 	flAdjustedDamage = RemapValClamped( flDistanceToEntity, 0, flRadius, dmgInfo->GetDamage(), dmgInfo->GetDamage() * flFalloff );
 
 	CTFWeaponBase *pWeapon = dynamic_cast<CTFWeaponBase *>(dmgInfo->GetWeapon());
-	int iNewGrenade = 1;
-	CALL_ATTRIB_HOOK_INT_ON_OTHER ( pWeapon, iNewGrenade, obsolete )
+	bool bNewGrenade = true;
+	CALL_ATTRIB_HOOK_INT_ON_OTHER ( pWeapon, bNewGrenade, obsolete )
 
 	// Grenades & Pipebombs do less damage to ourselves.
 	if ( pEntity == dmgInfo->GetAttacker() && pWeapon )
 	{
 		switch( pWeapon->GetWeaponID() )
 		{
-			case TF_WEAPON_PIPEBOMBLAUNCHER :
 			case TF_WEAPON_GRENADELAUNCHER :
+				if ( !bNewGrenade || !ff_use_new_grenade.GetBool() )
+				{
+					flAdjustedDamage *= 1.12f;
+				}
+			case TF_WEAPON_PIPEBOMBLAUNCHER :
 			case TF_WEAPON_CANNON :
 				flAdjustedDamage *= 0.75f;
 				break;
 			case TF_WEAPON_STICKBOMB :
-				if (iNewGrenade)
+				if ( bNewGrenade )
 					flAdjustedDamage *= 0.75f;
 				break;
-		}
-
-		if ( pWeapon->GetWeaponID() == TF_WEAPON_GRENADELAUNCHER && ( !iNewGrenade || !ff_use_new_grenade.GetBool() ) )
-		{
-			flAdjustedDamage *= 1.12f;
 		}
 	}
 
@@ -6263,7 +6309,7 @@ bool CTFGameRules::ApplyOnDamageModifyRules( CTakeDamageInfo &info, CBaseEntity 
 				if ( IsHeadshot( info.GetDamageCustom() ) || pVictim->LastHitGroup() == HITGROUP_HEAD )
 				{
 					CTFSniperRifle *pSniper = static_cast< CTFSniperRifle* >( pWeapon );
-					int bNewDartGun = 1;
+					bool bNewDartGun = true;
 					CALL_ATTRIB_HOOK_INT_ON_OTHER ( pSniper, bNewDartGun, obsolete )
 					if ( pSniper->IsZoomed() && pSniper->GetJarateTime() )
 					{
@@ -7002,9 +7048,12 @@ static bool CheckMedicResist( ETFCond ePassiveCond, ETFCond eDeployedCond, CTFPl
 	Assert( pTFProvider );
 	
 	float flDamageScale = 0.f;
-	//float flCritBarDeplete = 0.f;
+	float flCritBarDeplete = 0.f;
 	bool bUberResist = false;
 
+	CWeaponMedigun* pMedigun = dynamic_cast<CWeaponMedigun*>( pTFProvider->Weapon_OwnsThisID( TF_WEAPON_MEDIGUN ) );
+	bool bIsNewVaccinator = true;
+	CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pMedigun, bIsNewVaccinator, obsolete );
 	if( pTFProvider )
 	{
 		switch( eActiveCond )
@@ -7012,40 +7061,43 @@ static bool CheckMedicResist( ETFCond ePassiveCond, ETFCond eDeployedCond, CTFPl
 		case TF_COND_MEDIGUN_UBER_BULLET_RESIST:
 			CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pTFProvider, flDamageScale, medigun_bullet_resist_deployed );
 			bUberResist = true;
-//			if ( bCrit )
-//			{
-//				CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pTFProvider, flCritBarDeplete, medigun_crit_bullet_percent_bar_deplete );
-//			}
+			if ( bCrit )
+			{
+				CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pTFProvider, flCritBarDeplete, medigun_crit_bullet_percent_bar_deplete );
+			}
 			break;
 
 		case TF_COND_MEDIGUN_SMALL_BULLET_RESIST:
 			CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pTFProvider, flDamageScale, medigun_bullet_resist_passive );
+			bUberResist = !bIsNewVaccinator;
 			break;
 
 		case TF_COND_MEDIGUN_UBER_BLAST_RESIST:
 			CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pTFProvider, flDamageScale, medigun_blast_resist_deployed );
 			bUberResist = true;
-			//if( bCrit )
-			//{
-			//	CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pTFProvider, flCritBarDeplete, medigun_crit_blast_percent_bar_deplete );
-			//}
+			if( bCrit )
+			{
+				CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pTFProvider, flCritBarDeplete, medigun_crit_blast_percent_bar_deplete );
+			}
 			break;
 
 		case TF_COND_MEDIGUN_SMALL_BLAST_RESIST:
 			CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pTFProvider, flDamageScale, medigun_blast_resist_passive );
+			bUberResist = !bIsNewVaccinator;
 			break;
 
 		case TF_COND_MEDIGUN_UBER_FIRE_RESIST:
 			CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pTFProvider, flDamageScale, medigun_fire_resist_deployed );
 			bUberResist = true;
-//			if( bCrit )
-//			{
-//				CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pTFProvider, flCritBarDeplete, medigun_crit_fire_percent_bar_deplete );
-//			}
+			if( bCrit )
+			{
+				CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pTFProvider, flCritBarDeplete, medigun_crit_fire_percent_bar_deplete );
+			}
 			break;
 
 		case TF_COND_MEDIGUN_SMALL_FIRE_RESIST:
 			CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pTFProvider, flDamageScale, medigun_fire_resist_passive );
+			bUberResist = !bIsNewVaccinator;
 			break;
 		}
 	}
@@ -7059,28 +7111,28 @@ static bool CheckMedicResist( ETFCond ePassiveCond, ETFCond eDeployedCond, CTFPl
 	if( flDamageScale < 0.f ) 
 		flDamageScale = 0.f;
 
-	//// Dont let the medic heal themselves when they take damage
-	//if( pTFProvider && pTFProvider != pVictim )
-	//{
-	//	// Heal the medic for 10% of the incoming damage
-	//	int nHeal = flRawDamage * 0.10f;
-	//	// Heal!
-	//	int iHealed = pTFProvider->TakeHealth( nHeal, DMG_GENERIC );
+	// Dont let the medic heal themselves when they take damage
+	if( pTFProvider && pTFProvider != pVictim && !bIsNewVaccinator )
+	{
+		// Heal the medic for 25% of the incoming damage
+		int nHeal = flRawDamage * 0.25f;
+		// Heal!
+		int iHealed = pTFProvider->TakeHealth( nHeal, DMG_GENERIC );
 
-	//	// Tell them about it!
-	//	if ( iHealed )
-	//	{
-	//		CTF_GameStats.Event_PlayerHealedOther( pTFProvider, iHealed );
-	//	}
+		// Tell them about it!
+		if ( iHealed )
+		{
+			CTF_GameStats.Event_PlayerHealedOther( pTFProvider, iHealed );
+		}
 
-	//	IGameEvent *event = gameeventmanager->CreateEvent( "player_healonhit" );
-	//	if ( event )
-	//	{
-	//		event->SetInt( "amount", nHeal );
-	//		event->SetInt( "entindex", pTFProvider->entindex() );
-	//		gameeventmanager->FireEvent( event ); 
-	//	}
-	//}
+		IGameEvent *event = gameeventmanager->CreateEvent( "player_healonhit" );
+		if ( event )
+		{
+			event->SetInt( "amount", nHeal );
+			event->SetInt( "entindex", pTFProvider->entindex() );
+			gameeventmanager->FireEvent( event ); 
+		}
+	}
 
 	IGameEvent* event = gameeventmanager->CreateEvent( "damage_resisted" );
 	if ( event )
@@ -7094,14 +7146,14 @@ static bool CheckMedicResist( ETFCond ePassiveCond, ETFCond eDeployedCond, CTFPl
 		flCritBonusDamage = ( pVictim->m_Shared.InCond( TF_COND_HEALING_DEBUFF ) ) ? flCritBonusDamage * PYRO_AFTERBURN_HEALING_REDUCTION : 0.f;
 
 		//CWeaponMedigun* pMedigun = dynamic_cast<CWeaponMedigun*>( pTFProvider->Weapon_OwnsThisID( TF_WEAPON_MEDIGUN ) );
-		//if( pMedigun )
-		//{
-		//	if( pMedigun->GetChargeLevel() > 0.f && pMedigun->IsReleasingCharge() )
+		if( pMedigun )
+		{
+			if( pMedigun->GetChargeLevel() > 0.f && pMedigun->IsReleasingCharge() )
 		//	{
 		//		flCritBonusDamage = 0;
 		//	}
-		//	pMedigun->SubtractCharge( flCritBarDeplete );
-		//}
+			pMedigun->SubtractCharge( flCritBarDeplete );
+		}
 	}
 
 	// Scale the damage!
@@ -7428,17 +7480,17 @@ float CTFGameRules::ApplyOnDamageAliveModifyRules( const CTakeDamageInfo &info, 
 		outParams.bSendPreFeignDamage = false;
 		if ( pVictim && pVictim->IsPlayerClass( TF_CLASS_SPY ) && ( info.GetDamageCustom() != TF_DMG_CUSTOM_TELEFRAG ) && !pVictim->IsTaunting() && !iAttackIgnoresResists )
 		{
+			bool bNewFeignDeath = true;
+			CTFWeaponInvis *pWatch = (CTFWeaponInvis *) pVictim->Weapon_OwnsThisID( TF_WEAPON_INVIS );
+			CALL_ATTRIB_HOOK_INT_ON_OTHER( pWatch, bNewFeignDeath, obsolete );
 			// Reduce damage taken if we have recently feigned death.
 			if ( pVictim->m_Shared.InCond( TF_COND_FEIGN_DEATH ) || pVictim->m_Shared.IsFeignDeathReady() )
 			{
 				// Damage reduction is proportional to cloak remaining (60%->20%)
-				int iNewFeignDeath = 1;
-				CTFWeaponInvis *pWatch = (CTFWeaponInvis *) pVictim->Weapon_OwnsThisID( TF_WEAPON_INVIS );
-				CALL_ATTRIB_HOOK_INT_ON_OTHER( pWatch, iNewFeignDeath, obsolete );
-				float flDamageReduction = iNewFeignDeath ? RemapValClamped( pVictim->m_Shared.GetSpyCloakMeter(), 50.0f, 0.0f, tf_feign_death_damage_scale.GetFloat(), tf_stealth_damage_reduction.GetFloat() ): 0.1f;
+				float flDamageReduction = !bNewFeignDeath ? 0.1f : RemapValClamped( pVictim->m_Shared.GetSpyCloakMeter(), 50.0f, 0.0f, tf_feign_death_damage_scale.GetFloat(), tf_stealth_damage_reduction.GetFloat() );
 
 				// On Activate Reduce Remaining Cloak by 50%
-				if ( pVictim->m_Shared.IsFeignDeathReady() && iNewFeignDeath )
+				if ( pVictim->m_Shared.IsFeignDeathReady() && bNewFeignDeath )
 				{
 					flDamageReduction = tf_feign_death_activate_damage_scale.GetFloat();
 				}
@@ -7448,7 +7500,7 @@ float CTFGameRules::ApplyOnDamageAliveModifyRules( const CTakeDamageInfo &info, 
 
 				flRealDamage *= flDamageReduction;
 
-				if ( !pVictim->m_Shared.IsFeignDeathReady() && !iNewFeignDeath )
+				if ( !pVictim->m_Shared.IsFeignDeathReady() && !bNewFeignDeath )
 				{
 					pVictim->m_Shared.ReduceFeignDeathDuration( RemapValClamped ( flRealDamage, 0.1f, 25.f, 0.1f, 2.5f ) );
 				}
@@ -7468,7 +7520,7 @@ float CTFGameRules::ApplyOnDamageAliveModifyRules( const CTakeDamageInfo &info, 
 				}
 			}
 			// Standard Stealth gives small damage reduction
-			else if ( pVictim->m_Shared.InCond( TF_COND_STEALTHED ) )
+			else if ( pVictim->m_Shared.InCond( TF_COND_STEALTHED ) && !( !bNewFeignDeath && pWatch->HasFeignDeath() ) && ff_spy_gun_mettle.GetBool() )
 			{
 				flRealDamage *= tf_stealth_damage_reduction.GetFloat();
 			}
@@ -7514,7 +7566,7 @@ float CTFGameRules::ApplyOnDamageAliveModifyRules( const CTakeDamageInfo &info, 
 			if ( info.GetWeapon() )
 			{
 				int iNoSelfBlastDamage = 0;
-				if ( ff_old_kamikaze.GetBool() )
+				if ( ff_old_kamikaze.GetBool() && info.GetDamageCustom() == TF_DMG_CUSTOM_TAUNTATK_GRENADE )
 				{
 					CALL_ATTRIB_HOOK_INT_ON_OTHER( info.GetAttacker(), iNoSelfBlastDamage, no_self_blast_dmg );
 				}
@@ -16922,7 +16974,7 @@ bool CTFGameRules::PlayerMayCapturePoint( CBasePlayer *pPlayer, int iPointIndex,
 		return false;
 	}
 
-	int iBlockCapping = 1;
+	bool bBlockCapping = true;
 #ifdef GAME_DLL
 	for ( int i = 0; i < pTFPlayer->m_Shared.GetNumHealers(); i++ )
 	{
@@ -16933,12 +16985,12 @@ bool CTFGameRules::PlayerMayCapturePoint( CBasePlayer *pPlayer, int iPointIndex,
 		CWeaponMedigun *pMedigun = dynamic_cast <CWeaponMedigun*>( pMedic->GetActiveTFWeapon() );
 		if ( pMedigun && pMedigun->IsReleasingCharge() && pMedigun->GetMedigunType() == MEDIGUN_QUICKFIX )
 		{
-			CALL_ATTRIB_HOOK_INT_ON_OTHER ( pMedigun, iBlockCapping, obsolete );
+			CALL_ATTRIB_HOOK_INT_ON_OTHER ( pMedigun, bBlockCapping, obsolete );
 		}
 	}
 #endif
 
-	if ( ( pTFPlayer->m_Shared.IsInvulnerable() || ( iBlockCapping && pTFPlayer->m_Shared.InCond( TF_COND_MEGAHEAL ) ) ) && !IsMannVsMachineMode() )
+	if ( ( pTFPlayer->m_Shared.IsInvulnerable() || ( bBlockCapping && pTFPlayer->m_Shared.InCond( TF_COND_MEGAHEAL ) ) ) && !IsMannVsMachineMode() )
 	{
 		if ( pszReason )
 		{

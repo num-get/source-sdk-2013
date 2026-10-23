@@ -273,6 +273,8 @@ CEconItemView* CTFInventoryManager::AddModItem( int id )
 	pItem->m_unAccountID = 0;
 	pItem->m_unDefIndex = id;
 	pItem->m_unLevel = 1;
+	pItem->SetFlags( 0 );
+	pItem->SetOrigin( kEconItemOrigin_Max );
 	pItem->m_nQuality = 0;
 
 	pItemView->Init( id, AE_USE_SCRIPT_VALUE, AE_USE_SCRIPT_VALUE, false );

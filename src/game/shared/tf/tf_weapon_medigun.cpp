@@ -91,6 +91,7 @@ ConVar weapon_vaccinator_resist_duration( "weapon_vaccinator_resist_duration", "
 static const char *s_pszMedigunHealTargetThink = "MedigunHealTargetThink";
 
 extern ConVar tf_invuln_time;
+extern ConVar ff_medic_tough_break;
 
 #ifdef CLIENT_DLL
 //-----------------------------------------------------------------------------
@@ -288,14 +289,12 @@ void CWeaponMedigun::WeaponReset( void )
 	m_flNextBuzzTime = 0;
 	m_flReleaseStartedAt = 0;
 
-	int iPreserveUber = 0;
 	if ( TFGameRules()->State_Get() == GR_STATE_RND_RUNNING )
 	{
+		int iPreserveUber = 0;
 		CALL_ATTRIB_HOOK_INT_ON_OTHER( pOwner, iPreserveUber, preserve_ubercharge );
 		// This is determined via an attribute in SetStoredChargeLevel()
-		float flPreserveCharge = MIN( m_flChargeLevel, m_flChargeLevelToPreserve );
-		float flPreserveChargeOld = MIN( m_flChargeLevel, iPreserveUber / 100.f );
-		m_flChargeLevel = MAX ( flPreserveCharge, flPreserveChargeOld );
+		m_flChargeLevel = Min( (float)m_flChargeLevel, MAX( m_flChargeLevelToPreserve, iPreserveUber / 100.f ) );
 	}
 	else
 	{
@@ -1301,7 +1300,10 @@ bool CWeaponMedigun::FindAndHealTargets( void )
 				}
 
 				// The resist medigun has a uber charge rate
-				flChargeAmount *= flChargeModifier;
+				bool bIsNewVaccinator = true;
+				CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pOwner, bIsNewVaccinator, obsolete );
+				if ( !( GetMedigunType() == MEDIGUN_RESIST && !bIsNewVaccinator ) )
+					flChargeAmount *= flChargeModifier;
 
 				if ( TFGameRules() && TFGameRules()->IsPowerupMode() )
 				{
@@ -1348,7 +1350,7 @@ bool CWeaponMedigun::FindAndHealTargets( void )
 					{
 						flChargeAmount *= 4.f;
 					}
-					else if ( TFGameRules()->InSetup() && TFGameRules()->GetActiveRoundTimer() )
+					else if ( TFGameRules()->InSetup() && TFGameRules()->GetActiveRoundTimer() && ff_medic_tough_break.GetBool() )
 					{
 						flChargeAmount *= 3.f;
 					}
@@ -1576,7 +1578,7 @@ void CWeaponMedigun::ItemPostFrame( void )
 			m_bCanChangeTarget = true;
 		}
 
-		if ( m_bHealing && ( m_iState != WEAPON_IS_ACTIVE || pOwner->IsTaunting() ) )
+		if ( m_bHealing && ( m_iState != WEAPON_IS_ACTIVE /*|| pOwner->IsTaunting()*/ ) )
 		{
 			RemoveHealingTarget();
 		}
@@ -1825,6 +1827,8 @@ void CWeaponMedigun::SecondaryAttack( void )
 
 	// STAGING_MEDIC
 	// Resist gun early outs if the patient and medic both have the condition (or medic with no patient has condition)
+	bool bIsNewVaccinator = true;
+	CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pOwner, bIsNewVaccinator, obsolete );
 	if ( GetMedigunType() == MEDIGUN_RESIST )
 	{
 		ETFCond uberCond = g_MedigunResistConditions[GetResistType()].uberCond;
@@ -1892,7 +1896,10 @@ void CWeaponMedigun::SecondaryAttack( void )
 		Assert( nCurrentChunk >= 1 );
 
 		CPVSFilter filter( pOwner->WorldSpaceCenter() );
-		pOwner->EmitSound( filter, pOwner->entindex(), CFmtStr( "WeaponMedigun_Vaccinator.Charged_tier_0%d", nCurrentChunk ) );
+		if ( bIsNewVaccinator )
+		{
+			pOwner->EmitSound( filter, pOwner->entindex(), CFmtStr( "WeaponMedigun_Vaccinator.Charged_tier_0%d", nCurrentChunk ) );
+		}
 		pOwner->EmitSound( filter, pOwner->entindex(), g_MedigunEffects[MEDIGUN_CHARGE_BULLET_RESIST].pszChargeOnSound );	
 	}
 	else
@@ -1904,7 +1911,7 @@ void CWeaponMedigun::SecondaryAttack( void )
 	}
 	
 	// STAGING_MEDIC
-	if ( GetMedigunType() != MEDIGUN_RESIST )
+	if ( !( GetMedigunType() == MEDIGUN_RESIST && bIsNewVaccinator ) )
 	{
 		RecalcEffectOnTarget( pOwner );
 	}
@@ -1913,7 +1920,7 @@ void CWeaponMedigun::SecondaryAttack( void )
 	if ( pTFPlayerPatient )
 	{
 		// STAGING_MEDIC
-		if ( GetMedigunType() != MEDIGUN_RESIST )
+		if ( !( GetMedigunType() == MEDIGUN_RESIST && bIsNewVaccinator ) )
 		{
 			RecalcEffectOnTarget( pTFPlayerPatient );
 		}
@@ -1983,15 +1990,29 @@ void CWeaponMedigun::SecondaryAttack( void )
 	if ( GetMedigunType() == MEDIGUN_RESIST )
 	{
 		// Remove charge immediately and just give target and yourself the conditions
-		m_bChargeRelease = false;
+		if ( bIsNewVaccinator )
+			m_bChargeRelease = false;
 #ifdef GAME_DLL
 		float flResistDuration = weapon_vaccinator_resist_duration.GetFloat();
 		CALL_ATTRIB_HOOK_FLOAT_ON_OTHER( pOwner, flResistDuration, add_uber_time );
-		pOwner->m_Shared.AddCond( g_MedigunResistConditions[GetResistType()].uberCond, flResistDuration, pOwner );
-		m_flChargeLevel -= flChunkSize;
-		if ( pTFPlayerPatient )
+		if ( !bIsNewVaccinator )
+		{
+			float flChunkSize = GetMinChargeAmount();
+			int nCurrentChunk = floor(m_flChargeLevel / flChunkSize);
+			m_flEndResistCharge = flChunkSize * Max( 0, (nCurrentChunk - 1) );
+			SetChargeLevel( flChunkSize * nCurrentChunk );
+		}
+		else
+		{
+			pOwner->m_Shared.AddCond( g_MedigunResistConditions[GetResistType()].uberCond, flResistDuration, pOwner );
+			m_flChargeLevel -= flChunkSize;
+			pOwner->m_Shared.SetResistDuration( flResistDuration );
+		}
+
+		if ( pTFPlayerPatient && bIsNewVaccinator )
 		{
 			pTFPlayerPatient->m_Shared.AddCond( g_MedigunResistConditions[GetResistType()].uberCond, flResistDuration, pOwner );
+			pTFPlayerPatient->m_Shared.SetResistDuration( flResistDuration );
 		}
 		if ( TFGameRules() && TFGameRules()->IsMannVsMachineMode() )
 		{
@@ -2039,6 +2060,11 @@ void CWeaponMedigun::WeaponIdle( void )
 //-----------------------------------------------------------------------------
 void CWeaponMedigun::StopHealSound( bool bStopHealingSound, bool bStopNoTargetSound, bool bStopDetachSound )
 {
+	if ( !bStopDetachSound )
+	{
+		bStopDetachSound = !ff_medic_tough_break.GetBool();
+	}
+
 	if ( bStopHealingSound && m_pHealSound )
 	{
 		CSoundEnvelopeController::GetController().SoundDestroy( m_pHealSound );

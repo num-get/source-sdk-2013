@@ -3170,6 +3170,49 @@ bool CStatTrakDigitProxy::HelperOnBindGetStatTrakScore( void *pC_BaseEntity, int
 				}
 			}
 		}
+		else
+		{
+			CTFWeaponBase* pWeap = NULL;
+
+			// Check if it's an attachment for world model
+			C_TFWeaponAttachmentModel* pAttachment = dynamic_cast<C_TFWeaponAttachmentModel*>( pEntity );
+			if ( pAttachment )
+			{
+				// If we're dealing with a world model, Stat Clock will be it's child attachment
+				C_BaseEntity* pParent = pAttachment->GetMoveParent();
+				if ( pParent )
+				{
+					pWeap = dynamic_cast<CTFWeaponBase*>( pParent );
+				}
+			}
+
+			if ( pWeap )
+			{
+				CEconItemView* pItem = pWeap->GetAttributeContainer()->GetItem();
+				if ( pItem && pItem->FindAttribute( GetKillEaterAttr_Score( 0 ), &unScore ) )
+				{
+					*piScore = unScore;
+					bReturnValue = true;
+				}
+			}
+			else
+			{
+				// Are we dealing with a dropped weapon?
+				C_BaseEntity* pParent = pEntity->GetMoveParent();
+				CTFDroppedWeapon* pDroppedWeapon = dynamic_cast<CTFDroppedWeapon*>( pParent );
+
+				if ( pDroppedWeapon )
+				{
+					// We're able to extract item attributes from dropped weapons, including strange count
+					CEconItemView* pItem = pDroppedWeapon->GetItem();
+					if ( pItem && pItem->FindAttribute( GetKillEaterAttr_Score( 0 ), &unScore ) )
+					{
+						*piScore = unScore;
+						bReturnValue = true;
+					}
+				}
+			}
+		}
 	}
 	else
 	{
@@ -6621,8 +6664,8 @@ bool C_TFPlayer::CreateMove( float flInputSampleTime, CUserCmd *pCmd )
 		// Re-add IN_ATTACK2 if player is Demoman with sticky launcher. This is done so they can detonate stickies while taunting.
 		if ( (nCurrentButtons & IN_ATTACK2) && IsPlayerClass( TF_CLASS_DEMOMAN ) )
 		{
-			C_TFWeaponBase *pWeapon = Weapon_OwnsThisID( TF_WEAPON_PIPEBOMBLAUNCHER );
-			if ( pWeapon )
+			C_TFWeaponBase *pPipebombLauncher = Weapon_OwnsThisID( TF_WEAPON_PIPEBOMBLAUNCHER );
+			if ( pPipebombLauncher )
 			{
 				pCmd->buttons |= IN_ATTACK2;
 			}

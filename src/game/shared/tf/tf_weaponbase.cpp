@@ -95,7 +95,7 @@ extern ConVar cl_crosshair_file;
 #endif
 
 extern ConVar ff_new_weapon_switch_speed;
-extern ConVar ff_new_shield_charge;
+extern ConVar ff_use_new_airblast;
 
 //=============================================================================
 //
@@ -1286,7 +1286,7 @@ bool CTFWeaponBase::Deploy( void )
 		int iIsSword = 0;
 		CALL_ATTRIB_HOOK_INT_ON_OTHER( pLastWeapon, iIsSword, is_a_sword );
 		CALL_ATTRIB_HOOK_INT( iIsSword, is_a_sword );
-		if ( iIsSword && ff_new_shield_charge.GetBool() )
+		if ( iIsSword )
 		{
 			// swords deploy and holster 75% slower
 			flDeployTimeMultiplier *= 1.75f;
@@ -2071,7 +2071,7 @@ bool CTFWeaponBase::ReloadSingly( void )
 				int nCanOverload = 0;
 				CALL_ATTRIB_HOOK_INT( nCanOverload, can_overload );
 				if ( ( !CanOverload() && ( Clip1() == GetMaxClip1() || pPlayer->GetAmmoCount( m_iPrimaryAmmoType ) <= 0 ) ) ||
-						( CanOverload() && nCanOverload > 1 && pPlayer->GetAmmoCount( m_iPrimaryAmmoType ) <= 0 ) )
+						( CanOverload() && nCanOverload == 2 && pPlayer->GetAmmoCount( m_iPrimaryAmmoType ) <= 0 ) )
 				{
 					m_iReloadMode.Set( TF_RELOAD_FINISH );
 				}
@@ -2582,7 +2582,7 @@ bool CTFWeaponBase::CanInspect() const
 {
 	int iInspect = 0;
 	CALL_ATTRIB_HOOK_INT( iInspect, weapon_allow_inspect );
-	return iInspect > -1;
+	return iInspect >= 0;
 }
 
 //-----------------------------------------------------------------------------
@@ -5174,12 +5174,12 @@ void CTFWeaponBase::ApplyOnHitAttributes( CBaseEntity *pVictimBaseEntity, CTFPla
 	// Heal on hits
 	int iModHealthOnHit = 0;
 	CALL_ATTRIB_HOOK_INT( iModHealthOnHit, add_onhit_addhealth );
-	if ( iModHealthOnHit )
+	/*if ( iModHealthOnHit )
 	{
 		// Scale Health mod with damage dealt, input being the maximum amount of health possible
 		float flScale = Clamp( info.GetDamage() / info.GetBaseDamage(), 0.f, 1.0f );
 		iModHealthOnHit = Max( 3, (int)( (float)iModHealthOnHit * flScale ) );
-	}
+	}*/
 
 	// Charge meter on hit
 	float flChargeRefill = 0.0f;
@@ -5567,15 +5567,15 @@ void CTFWeaponBase::ApplyOnInjuredAttributes( CTFPlayer *pVictim, CTFPlayer *pAt
 		{
 			int iMode = 0;
 			CALL_ATTRIB_HOOK_INT_ON_OTHER ( pVictim, iMode, freeze_backstab_victim )
-			if ( iMode == 1 )
+			if ( iMode == 2 )
+			{
+				pVictim->m_Shared.AddCond( TF_COND_FIRE_IMMUNE, iBecomeFireproofOnHitByFire );
+			}
+			else
 			{
 				pVictim->m_Shared.AddCond( TF_COND_FIRE_IMMUNE, 1.f );
 				// STAGING_SPY
 				pVictim->m_Shared.AddCond( TF_COND_AFTERBURN_IMMUNE, iBecomeFireproofOnHitByFire );
-			}
-			else
-			{
-				pVictim->m_Shared.AddCond( TF_COND_FIRE_IMMUNE, iBecomeFireproofOnHitByFire );
 			}
 
 			if ( pVictim->m_Shared.InCond( TF_COND_BURNING ) )
@@ -5967,6 +5967,12 @@ bool CTFWeaponBase::DeflectProjectiles()
 	const int maxCollectedEntities = 64;
 	CBaseEntity	*pObjects[ maxCollectedEntities ];
 	int count = UTIL_EntitiesInSphere( pObjects, maxCollectedEntities, vecCenter, GetDeflectionRadius(), FL_CLIENT | FL_GRENADE );
+
+	const Vector vecBlastSize = Vector( 128, 128, 64 );
+	if ( !ff_use_new_airblast.GetBool() )
+	{
+		count = UTIL_EntitiesInBox( pObjects, maxCollectedEntities, vecCenter - vecBlastSize, vecCenter + vecBlastSize, FL_CLIENT | FL_GRENADE );
+	}
 
 	//NDebugOverlay::Sphere( vecCenter, GetDeflectionRadius(), 0, 255, 0, 40, 3 );
 

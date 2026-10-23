@@ -360,7 +360,7 @@ IViewPortPanel* TFViewport::CreatePanelByName(const char *szPanelName)
 	}
 	else if ( Q_strcmp( PANEL_MAINMENUOVERRIDE, szPanelName ) == 0 )
 	{
-		if ( !CommandLine()->CheckParm( "-classic" ) )
+		if ( !CommandLine()->CheckParm( "-nonewmenu" ) )
 		{
 			newpanel = new CHudMainMenuOverride( this );
 		}
@@ -387,7 +387,7 @@ void TFViewport::CreateDefaultPanels( void )
 	AddNewPanel( CreatePanelByName( PANEL_PVE_WIN ), "PANEL_PVE_WIN" );
 	AddNewPanel( CreatePanelByName( PANEL_GIVEAWAY_ITEM ), "PANEL_GIVEAWAY_ITEM" );
 
-	if ( !CommandLine()->CheckParm( "-classic" ) )
+	if ( !CommandLine()->CheckParm( "-nonewmenu" ) )
 	{
 		CHudMainMenuOverride *pMMOverride = (CHudMainMenuOverride*)CreatePanelByName( PANEL_MAINMENUOVERRIDE );
 		if ( pMMOverride )

@@ -95,7 +95,7 @@ void CTFShovel::PrimaryAttack()
 // -----------------------------------------------------------------------------
 bool CTFShovel::HasBothBoost( void )
 {
-	int bNewPickaxe = 1;
+	bool bNewPickaxe = true;
 	CALL_ATTRIB_HOOK_INT ( bNewPickaxe, obsolete )
 	return HasDamageBoost() && !bNewPickaxe;
 }

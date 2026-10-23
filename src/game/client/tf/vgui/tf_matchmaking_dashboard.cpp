@@ -383,7 +383,7 @@ void CTFMatchmakingDashboard::OnCommand( const char *command )
 		return;
 		PopStack( 100, k_eSideRight ); // All y'all
 		PushSlidePanel( GetDashboardPanel().GetTypedPanel< CMatchMakingDashboardSidePanel >( k_ePlayList ) );
-		if ( !CommandLine()->CheckParm( "-classic" ) )
+		if ( !CommandLine()->CheckParm( "-nonewmenu" ) )
 		{
 			CHudMainMenuOverride *pMMOverride = (CHudMainMenuOverride*)( gViewPortInterface->FindPanelByName( PANEL_MAINMENUOVERRIDE ) );
 			pMMOverride->CheckTrainingStatus();
@@ -397,7 +397,7 @@ void CTFMatchmakingDashboard::OnCommand( const char *command )
 		}
 		else
 		{
-			if ( CommandLine()->CheckParm( "-classic" ) )
+			if ( CommandLine()->CheckParm( "-nonewmenu" ) )
 			{
 				ShowConfirmDialog( "#MMenu_PromptQuit_Title", "#MMenu_PromptQuit_Body", "#TF_Coach_Yes", "#TF_Coach_No", ConfirmQuit );
 			}

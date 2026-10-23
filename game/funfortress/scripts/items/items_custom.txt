@@ -202,95 +202,95 @@
 				}
 			}
 		}
-		
-		"9001"
-		{
-			"name"	"Valve Rocket Launcher"
-			"first_sale_date"	"2010/09/29"
-			"prefab"	"weapon_rocketlauncher paintkit_base no_craft"
-			"moditem"	"1"
-			"item_quality"	"developer"
-			"min_ilevel"	"100"
-			"max_ilevel"	"100"
-			"tags"
-			{
-				"can_be_festivized"		"1"
-			}
-			"attributes"
-			{
-				"damage bonus"
-				{
-					"attribute_class"	"mult_dmg"
-					"value"	"10100"
-				}
-				"clip size bonus"
-				{
-					"attribute_class"	"mult_clipsize"
-					"value"	"1100"
-				}
-				"fire rate bonus"
-				{
-					"attribute_class"	"mult_postfiredelay"
-					"value"	"0.25"
-				}
-				"heal on hit for rapidfire"
-				{
-					"attribute_class"	"add_onhit_addhealth"
-					"value"	"250"
-				}
-				"critboost on kill"
-				{
-					"attribute_class"	"add_onkill_critboost_time"
-					"value"	"10"
-				}
-				"Projectile speed increased"
-				{
-					"attribute_class"	"mult_projectile_speed"
-					"value"	"1.5"
-				}
-				"move speed bonus"
-				{
-					"attribute_class"	"mult_player_movespeed"
-					"value"	"2"
-				}
-				"attach particle effect"
-				{
-					"attribute_class"	"set_attached_particle"
-					"value"	"2"
-				}
-			}
-			"visuals"
-			{
-				"styles"
-				{
-					"0"
-					{
-						"skin_red"	"0"
-						"skin_blu"	"1"
-						"selectable"	"0"
-					}
-					"1"
-					{
-						"skin_red"	"8"
-						"skin_blu"	"9"
-						"v_skin_red"	"8"
-						"v_skin_blu"	"9"
-						"selectable"	"0"
-						"image_inventory"	"backpack/weapons/w_models/w_rocketlauncher_gold"
-					}
-				}
-				"attached_models_festive"
-				{
-					"0"
-					{
-						"model"	"models/weapons/c_models/c_rocketlauncher/c_rocketlauncher_festivizer.mdl"
-					}
-				}
-			}
-			"xifier_class_remap"	"rocket_launcher"
-		}
 
-		"32001"
+//		"9001"
+//		{
+//			"name"	"Valve Rocket Launcher"
+//			"first_sale_date"	"2010/09/29"
+//			"prefab"	"weapon_rocketlauncher paintkit_base no_craft"
+//			"moditem"	"1"
+//			"item_quality"	"developer"
+//			"min_ilevel"	"100"
+//			"max_ilevel"	"100"
+//			"tags"
+//			{
+//				"can_be_festivized"		"1"
+//			}
+//			"attributes"
+//			{
+//				"damage bonus"
+//				{
+//					"attribute_class"	"mult_dmg"
+//					"value"	"10100"
+//				}
+//				"clip size bonus"
+//				{
+//					"attribute_class"	"mult_clipsize"
+//					"value"	"1100"
+//				}
+//				"fire rate bonus"
+//				{
+//					"attribute_class"	"mult_postfiredelay"
+//					"value"	"0.25"
+//				}
+//				"heal on hit for rapidfire"
+//				{
+//					"attribute_class"	"add_onhit_addhealth"
+//					"value"	"250"
+//				}
+//				"critboost on kill"
+//				{
+//					"attribute_class"	"add_onkill_critboost_time"
+//					"value"	"10"
+//				}
+//				"Projectile speed increased"
+//				{
+//					"attribute_class"	"mult_projectile_speed"
+//					"value"	"1.5"
+//				}
+//				"move speed bonus"
+//				{
+//					"attribute_class"	"mult_player_movespeed"
+//					"value"	"2"
+//				}
+//				"attach particle effect"
+//				{
+//					"attribute_class"	"set_attached_particle"
+//					"value"	"2"
+//				}
+//			}
+//			"visuals"
+//			{
+//				"styles"
+//				{
+//					"0"
+//					{
+//						"skin_red"	"0"
+//						"skin_blu"	"1"
+//						"selectable"	"0"
+//					}
+//					"1"
+//					{
+//						"skin_red"	"8"
+//						"skin_blu"	"9"
+//						"v_skin_red"	"8"
+//						"v_skin_blu"	"9"
+//						"selectable"	"0"
+//						"image_inventory"	"backpack/weapons/w_models/w_rocketlauncher_gold"
+//					}
+//				}
+//				"attached_models_festive"
+//				{
+//					"0"
+//					{
+//						"model"	"models/weapons/c_models/c_rocketlauncher/c_rocketlauncher_festivizer.mdl"
+//					}
+//				}
+//			}
+//			"xifier_class_remap"	"rocket_launcher"
+//		}
+
+		"60001"
 		{
 			"name"	"Vintage Axtinguisher"
 			"first_sale_date"	"2010/09/29"
@@ -382,7 +382,7 @@
 			"xifier_class_remap"	"axtinguisher"
 		}
 
-		"32002"
+		"60002"
 		{
 			"name"	"Vintage Sandman"
 			"prefab"	"valve"
@@ -474,7 +474,7 @@
 			"drop_sound"		"ui/item_wood_pole_drop.wav"
 		}
 
-		"32003"
+		"60003"
 		{
 			"name"	"Vintage Bonk! Atomic Punch"
 			"prefab"	"valve weapon_bonk"
@@ -495,7 +495,7 @@
 			}
 		}
 
-		"32004"
+		"60004"
 		{
 			"name"			"Vintage Razorback"
 			"prefab"	"valve"
@@ -549,7 +549,7 @@
 			"drop_sound"		"ui/item_wood_pole_drop.wav"
 		}
 
-		"32005"
+		"60005"
 		{
 			"name"	"Vintage Dead Ringer"
 			"prefab"	"valve"
@@ -615,7 +615,7 @@
 			"drop_sound"		"ui/item_watch_drop.wav"
 		}
 
-		"32006"
+		"60006"
 		{
 			"name"	"Vintage Dead Ringer 2"
 			"prefab"	"valve"
@@ -691,7 +691,7 @@
 			"drop_sound"		"ui/item_watch_drop.wav"
 		}
 
-		"32007"
+		"60007"
 		{
 			"name"	"Vintage Ambassador"
 			"first_sale_date"	"2010/09/29"
@@ -797,7 +797,7 @@
 			"drop_sound"		"ui/item_light_gun_drop.wav"
 		}
 
-		"32008"
+		"60008"
 		{
 			"name"	"Vintage Equalizer"
 			"prefab"	"valve"
@@ -881,7 +881,7 @@
 			"drop_sound"		"ui/item_metal_weapon_drop.wav"
 		}
 
-		"32009"
+		"60009"
 		{
 			"name"			"Vintage Chargin' Targe"
 			"first_sale_date"	"2010/09/29"
@@ -901,7 +901,7 @@
 			"moditem"	"1"
 			"item_type_name" 	"#TF_Wearable_Shield"
 			"item_name"		"#TF_Unique_Achievement_Shield"
-			"item_description"	"#TF_Unique_Achievement_Shield_Desc"
+			"item_description"	"#TF_Unique_Achievement_Shield_Desc2"
 			"item_slot"		"secondary"
 			"equip_region"	"arms"
 			"anim_slot"		"FORCE_NOT_USED"
@@ -946,13 +946,18 @@
 					"attribute_class"	"allowed_in_medieval_mode"
 					"value"	"1"
 				}
+				"obsolete ammo penalty"
+				{
+					"attribute_class"	"obsolete"
+					"value"	"0"
+				}
 			}
 			"mouse_pressed_sound"	"ui/item_wood_pole_pickup.wav"
 			"drop_sound"		"ui/item_wood_pole_drop.wav"
 			"xifier_class_remap"	"weapon_targe"
 		}
 
-		"32010"
+		"60010"
 		{
 			"name"	"Vintage Gunslinger"
 			"prefab"	"valve"
@@ -1058,7 +1063,7 @@
 			"drop_sound"		"ui/item_robot_arm_drop.wav"
 		}
 
-		"32011"
+		"60011"
 		{
 			"name"	"Vintage Crit-a-Cola"
 			"prefab"	"valve weapon_scout_drink"
@@ -1099,7 +1104,7 @@
 			}
 		}
 
-		"32012"
+		"60012"
 		{
 			"name"	"Vintage Vita-Saw"
 			"first_sale_date"	"2010/09/29"
@@ -1175,53 +1180,18 @@
 			"drop_sound"		"ui/item_metal_weapon_drop.wav"
 		}
 
-		"32013"
+		"60013"
 		{
 			"name"	"Vintage Powerjack"
+			"prefab" "weapon_powerjack paintkit_base"
 			"first_sale_date"	"2010/09/29"
-			"prefab" "paintkit_base"
+			"particle_suffix"	"powerjack"
 			"tags"
 			{
 				"can_be_festivized"		"1"
 			}
-			"item_class"	"tf_weapon_fireaxe"
-			"craft_class"	"weapon"
-			"craft_material_type"	"weapon"
-			"capabilities"
-			{
-				"nameable"				"1"
-			}
-			"tags"
-			{
-				"can_deal_damage"			"1"
-				"can_deal_critical_damage"		"1"
-			}
-			"item_logname"	"powerjack"
-			"item_iconname"	"powerjack"
-			"show_in_armory"	"1"
 			"moditem"	"1"
-			"item_type_name"	"#TF_Weapon_SledgeHammer"
-			"item_name"	"#TF_ThePowerjack"
-			"item_slot"	"melee"
-			"image_inventory"	"backpack/workshop/weapons/c_models/c_powerjack/c_powerjack"
-			"image_inventory_size_w"		"128"
-			"image_inventory_size_h"		"82"
-			"model_player"	"models/workshop/weapons/c_models/c_powerjack/c_powerjack.mdl"
-			"attach_to_hands"	"1"
-			"inspect_panel_dist" "65"
 			"item_quality"	"rarity2"
-			"propername"	"1"
-			"min_ilevel"	"5"
-			"max_ilevel"	"5"
-			"used_by_classes"
-			{
-				"pyro"	"1"
-			}
-			"static_attrs"
-			{
-				"min_viewmodel_offset"				"10 2 -9"
-				"weapon_stattrak_module_scale"			"0.6"
-			}
 			"attributes"
 			{
 				"heal on kill"
@@ -1229,15 +1199,9 @@
 					"attribute_class"	"heal_on_kill"
 					"value"	"75"
 				}
-				"dmg from melee increased"
-				{
-					"attribute_class"	"dmg_from_melee"
-					"value"	"1.2"
-				}
 			}
 			"visuals"
 			{
-				"sound_melee_hit"	"Weapon_Machete.HitFlesh"
 				"attached_models_festive"
 				{
 					"0"
@@ -1246,12 +1210,9 @@
 					}
 				}
 			}
-			"mouse_pressed_sound"	"ui/item_heavy_gun_pickup.wav"
-			"drop_sound"		"ui/item_heavy_gun_drop.wav"
-			"particle_suffix"	"powerjack"
 		}
 
-		"32014"
+		"60014"
 		{
 			"name"	"Vintage Degreaser"
 			"first_sale_date"	"2010/09/29"
@@ -1337,7 +1298,7 @@
 			"particle_suffix"	"degreaser"
 		}
 
-		"32015"
+		"60015"
 		{
 			"name"	"Vintage Shortstop"
 			"prefab" "paintkit_base"
@@ -1447,7 +1408,7 @@
 			"particle_suffix"	"shortstop"
 		}
 
-		"32016"
+		"60016"
 		{
 			"name"	"Vintage Your Eternal Reward"
 			"first_sale_date"	"2010/09/29"
@@ -1515,7 +1476,7 @@
 			}
 		}
 
-		"32017"
+		"60017"
 		{
 			"name"	"Vintage Black Box"
 			"prefab" "paintkit_base"
@@ -1564,9 +1525,9 @@
 			}
 			"attributes"
 			{
-				"heal on hit for rapidfire 2"
+				"heal on hit for rapidfire"
 				{
-					"attribute_class"	"add_onhit_addhealth2"
+					"attribute_class"	"add_onhit_addhealth"
 					"value"	"15"
 				}
 				"clip size penalty"
@@ -1630,7 +1591,7 @@
 			"particle_suffix"	"black_box"
 		}
 
-		"32018"
+		"60018"
 		{
 			"name"	"Vintage Sydney Sleeper"
 			"first_sale_date"	"2010/09/29"
@@ -1723,7 +1684,7 @@
 			}
 		}
 
-		"32019"
+		"60019"
 		{
 			"name"			"Vintage Darwin's Danger Shield"
 			"first_sale_date"	"2010/09/29"
@@ -1781,7 +1742,7 @@
 			"drop_sound"		"ui/item_leather_pickup.wav"
 		}
 
-		"32020"
+		"60020"
 		{
 			"name"	"Vintage Bushwacka"
 			"first_sale_date"	"2010/09/29"
@@ -1850,7 +1811,7 @@
 			}
 		}
 
-		"32021"
+		"60021"
 		{
 			"name"	"Vintage Gloves of Running Urgently"
 			"first_sale_date"	"2010/09/29"
@@ -1974,7 +1935,7 @@
 			"xifier_class_remap"	"gru"
 		}
 
-		"32022"
+		"60022"
 		{
 			"name"	"Vintage Stickybomb Jumper"
 			"prefab"	"valve"
@@ -2065,80 +2026,7 @@
 			}
 		}
 
-		"32023"
-		{
-			"name"			"Vintage Amputator"
-			"first_sale_date"	"2010/12/08"
-			"prefab"		"paintkit_base"
-			"item_class"		"tf_weapon_bonesaw"
-			"craft_class"		"weapon"
-			"craft_material_type"		"weapon"
-			"capabilities"
-			{
-				"nameable"		"1"
-			}
-			"tags"
-			{
-				"can_deal_damage"			"1"
-				"can_deal_critical_damage"	"1"
-				"can_heal_allies"			"1"
-				"can_be_festivized"		"1"
-			}
-			"item_logname"		"amputator"
-			"item_iconname"		"amputator"
-			"show_in_armory"	"1"
-			"moditem"	"1"
-			"item_type_name"	"#TF_Weapon_Bonesaw"
-			"item_name"		"#TF_Amputator"
-			"item_slot"		"melee"
-			"image_inventory"	"backpack/workshop/weapons/c_models/c_amputator/c_amputator"
-			"image_inventory_size_w"		"128"
-			"image_inventory_size_h"		"82"
-			"model_player"		"models/workshop/weapons/c_models/c_amputator/c_amputator.mdl"
-			"attach_to_hands"	"1"
-			"inspect_panel_dist" "42"
-			"item_quality"		"rarity2"
-			"propername"		"1"
-			"min_ilevel"		"15"
-			"max_ilevel"		"15"
-			"used_by_classes"
-			{
-				"medic"	"1"
-			}
-			"static_attrs"
-			{
-				"min_viewmodel_offset"			"10 0 -12"
-				"weapon_stattrak_module_scale"		"0.608"				
-			}
-			"attributes"
-			{
-				"enables aoe heal"
-				{
-					"attribute_class"	"enables_aoe_heal"
-					"value"	"1"
-				}
-				"special taunt"
-				{
-					"attribute_class"	"special_taunt"
-					"value" "1"
-				}
-			}
-			"visuals"
-			{
-				"attached_models_festive"
-				{
-					"0"
-					{
-						"model"	"models/workshop/weapons/c_models/c_amputator/c_amputator_festivizer.mdl"
-					}
-				}
-			}
-			"mouse_pressed_sound"	"ui/item_metal_weapon_pickup.wav"
-			"drop_sound"		"ui/item_metal_weapon_drop.wav"
-			"particle_suffix"	"amputator"
-		}
-
-		"32024"
+		"60023"
 		{
 			"name"	"Vintage Ullapool Caber"
 			"first_sale_date"	"2010/12/08"
@@ -2209,7 +2097,7 @@
 			}
 		}
 
-		"32025"
+		"60024"
 		{
 			"name"			"Vintage Loch-n-Load"
 			"first_sale_date"	"2010/12/08"
@@ -2314,7 +2202,7 @@
 			}
 		}
 		
-		"32026"
+		"60025"
 		{
 			"name"	"Vintage Warrior's Spirit"
 			"first_sale_date"	"2010/12/08"
@@ -2387,7 +2275,7 @@
 			"drop_sound" "ui/item_boxing_gloves_drop.wav"
 		}
 
-		"32027"
+		"60026"
 		{
 			"name"	"Vintage Fists of Steel"
 			"first_sale_date"	"2010/12/20"
@@ -2477,7 +2365,7 @@
 			}
 		}
 
-		"32028"
+		"60027"
 		{
 			"name"	"Vintage Half-Zatoichi"
 			"first_sale_date"	"2011/03/08"
@@ -2545,7 +2433,7 @@
 			"drop_sound"		"ui/item_metal_weapon_drop.wav"
 		}
 
-		"32029"
+		"60028"
 		{
 			"name"	"Vintage Persian Persuader"
 			"prefab"	"weapon_sword paintkit_base"
@@ -2639,7 +2527,7 @@
 		}
 
 
-		"32030"
+		"60029"
 		{
 			"name"			"Vintage Splendid Screen"
 			"first_sale_date"	"2011/03/21"
@@ -2661,7 +2549,7 @@
 			"item_logname" "splendid_screen"
 			"item_iconname" "splendid_screen"
 			"item_name"		"#TF_SplendidScreen"
-			"item_description"	"#TF_SplendidScreen_Desc"
+			"item_description"	"#TF_Unique_Achievement_Shield_Desc2"
 			"item_slot"		"secondary"
 			"equip_region"	"arms"
 			"anim_slot"		"FORCE_NOT_USED"
@@ -2709,6 +2597,11 @@
 					"attribute_class"	"allowed_in_medieval_mode"
 					"value"	"1"
 				}
+				"obsolete ammo penalty"
+				{
+					"attribute_class"	"obsolete"
+					"value"	"0"
+				}
 			}
 			"visuals"
 			{
@@ -2740,7 +2633,7 @@
 			"drop_sound"		"ui/item_wood_pole_drop.wav"
 		}
 
-		"32031"
+		"60030"
 		{
 			"name"	"Vintage Quick-Fix"
 			"prefab"	"valve"
@@ -2866,7 +2759,7 @@
 			"drop_sound"		"ui/item_heavy_gun_drop.wav"
 		}
 
-		"32032"
+		"60031"
 		{
 			"name"	"Vintage Solemn Vow"
 			"prefab"	"valve weapon_melee_allclass"
@@ -2934,7 +2827,7 @@
 			"drop_sound"		"ui/item_metal_weapon_drop.wav"
 		}
 
-		"32033"
+		"60032"
 		{
 			"name"	"Vintage Liberty Launcher"
 			"first_sale_date"	"2011/03/23"
@@ -3010,7 +2903,7 @@
 			"drop_sound"		"ui/item_heavy_gun_drop.wav"
 		}
 
-		"32034"
+		"60033"
 		{
 			"name"	"Vintage Reserve Shooter"
 			"first_sale_date"	"2011/03/23"
@@ -3100,7 +2993,7 @@
 			"particle_suffix"	"reserve_shooter"
 		}
 
-		"32035"
+		"60034"
 		{
 			"name"	"Vintage Market Gardener"
 			"first_sale_date"	"2011/03/23"
@@ -3171,7 +3064,7 @@
 			"drop_sound"		"ui/item_shovel_drop.wav"
 		}
 
-		"32036"
+		"60035"
 		{
 			"name"	"Vintage Eviction Notice"
 			"first_sale_date"	"2011/04/14"
@@ -3268,7 +3161,7 @@
 			"drop_sound"		"ui/item_light_gun_drop.wav"
 		}
 
-		"32037"
+		"60036"
 		{
 			"name"	"Vintage Cow Mangler 5000"
 			"first_sale_date"	"2011/07/13"
@@ -3371,7 +3264,7 @@
 			"drop_sound"		"ui/item_heavy_gun_drop.wav"
 		}
 
-		"32038"
+		"60037"
 		{
 			"name"	"Vintage Righteous Bison"
 			"first_sale_date"	"2011/07/13"
@@ -3464,7 +3357,7 @@
 			"drop_sound"		"ui/item_light_gun_drop.wav"
 		}
 
-		"32039"
+		"60038"
 		{
 			"name"	"Vintage Soda Popper"
 			"first_sale_date"	"2011/05/10"
@@ -3597,7 +3490,7 @@
 			"particle_suffix"	"soda_popper"
 		}
 
-		"32040"
+		"60039"
 		{
 			"name"	"Vintage Atomizer"
 			"first_sale_date"	"2011/05/10"
@@ -3674,7 +3567,7 @@
 			"drop_sound"		"ui/item_metal_weapon_drop.wav"
 		}
 
-		"32041"
+		"60040"
 		{
 			"name"	"Vintage Postal Pummeler"
 			"prefab"	"valve"
@@ -3749,7 +3642,7 @@
 			}
 		}
 
-		"32042"
+		"60041"
 		{
 			"name"	"Vintage Enforcer"
 			"first_sale_date"	"2011/05/15"
@@ -3828,7 +3721,7 @@
 			}
 		}
 
-		"32043"
+		"60042"
 		{
 			"name"	"Vintage Wanga Prick"
 			"first_sale_date"	"2011/10/28"
@@ -3899,7 +3792,7 @@
 			}
 		}
 
-		"32044"
+		"60043"
 		{
 			"name"	"Vintage Pomson 6000"
 			"first_sale_date"	"2011/12/15"
@@ -4008,7 +3901,7 @@
 			"drop_sound"		"ui/item_heavy_gun_drop.wav"
 		}
 
-		"32045"
+		"60044"
 		{
 			"name"	"Vintage Phlogistinator"
 			"prefab"	"weapon_newflame"
@@ -4122,7 +4015,7 @@
 			"drop_sound"		"ui/item_heavy_gun_drop.wav"
 		}
 
-		"32046"
+		"60045"
 		{
 			"name"	"Vintage Spy-cicle"
 			"first_sale_date"	"2011/12/19"
@@ -4203,7 +4096,7 @@
 			}
 		}
 
-		"32047"
+		"60046"
 		{
 			"name"	"Vintage Beggar's Bazooka"
 			"first_sale_date"	"2012/06/27"
@@ -4304,7 +4197,7 @@
 			"drop_sound"			"ui/item_heavy_gun_drop.wav"
 		}
 
-		"32048"
+		"60047"
 		{
 			"name"	"Vintage Baby Face's Blaster"
 			"prefab"		"weapon_scattergun"
@@ -4378,7 +4271,7 @@
 			}
 		}
 
-		"32049"
+		"60048"
 		{
 			"name" "Vintage Pretty Boy's Pocket Pistol"
 			"capabilities"
@@ -4459,7 +4352,7 @@
 			"drop_sound"		"ui/item_light_gun_drop.wav"
 		}
 
-		"32050"
+		"60049"
 		{
 			"name"	"Vintage Flying Guillotine"
 			"first_sale_date"	"2012/08/02"
@@ -4560,7 +4453,7 @@
 			"drop_sound"		"ui/item_metal_weapon_drop.wav"
 		}
 
-		"32051"
+		"60050"
 		{
 			"name"			"Vintage Loose Cannon"
 			"prefab"		"paintkit_base"
@@ -4663,7 +4556,7 @@
 			}
 		}
 
-		"32052"
+		"60051"
 		{
 			"name"	"Vintage Rescue Ranger"
 			"prefab" "paintkit_base"
@@ -4766,7 +4659,179 @@
 			"particle_suffix"	"rescue_ranger"
 		}
 
-		"32053"
+		"60052"
+		{
+			"name"	"Vintage Vaccinator"
+			"first_sale_date"	"2012/12/19"
+			"item_class"	"tf_weapon_medigun"
+			"craft_class"	"weapon"
+			"craft_material_type"	"weapon"
+			"capabilities"
+			{
+				"nameable"		"1"
+			}
+			"tags"
+			{
+				"can_heal_allies"		"1"
+				"can_be_festivized"		"1"
+			}
+			"show_in_armory"	"1"
+			"moditem"	"1"
+			"item_type_name"	"#TF_Weapon_Medigun_Resist"
+			"item_name"		"#TF_Unique_MediGun_Resist"
+			"item_description"	"#TF_Unique_MediGun_Resist_Desc2"
+			"propername"		"1"
+			"item_slot"		"secondary"
+			"equip_region"	"medigun_backpack"
+			"image_inventory"	"backpack/workshop/weapons/c_models/c_medigun_defense/c_medigun_defense"
+			"image_inventory_size_w"		"128"
+			"image_inventory_size_h"		"82"
+			"model_player"	"models/workshop/weapons/c_models/c_medigun_defense/c_medigun_defense.mdl"
+			"extra_wearable" "models/workshop/weapons/c_models/c_medigun_defense/c_medigun_defensepack.mdl"
+			"attach_to_hands"	"1"
+			"item_quality"	"rarity2"
+			"min_ilevel"	"8"
+			"max_ilevel"	"8"
+			"used_by_classes"
+			{
+				"medic"	"1"
+			}
+			"static_attrs"
+			{
+				"min_viewmodel_offset"		"10 0 -9"
+			}
+			"attributes"
+			{
+				"lunchbox adds minicrits"
+				{
+					"attribute_class"	"set_weapon_mode"
+					"value"	"3"
+				}
+				"ubercharge rate bonus"
+				{
+					"attribute_class"	"mult_medigun_uberchargerate"
+					"value"	"1.5"
+				}
+				"overheal fill rate reduced"
+				{
+					"attribute_class"	"overheal_fill_rate"
+					"value" "0.34"
+				}
+				"kill eater score type"
+				{
+					"attribute_class"	"kill_eater_score_type"
+					"value"				"1"
+				}
+				"kill eater score type 2"
+				{
+					"attribute_class"	"kill_eater_score_type_2"
+					"value" 			"2"
+				}
+				"medigun charge is resists"
+				{
+					"attribute_class"	"set_charge_type"
+					"value"	"3"
+				}
+				"medigun bullet resist passive"
+				{
+					"attribute_class"	"medigun_bullet_resist_passive"
+					"value" "0.1"
+				}
+				"medigun bullet resist deployed"
+				{
+					"attribute_class"	"medigun_bullet_resist_deployed"
+					"value" "0.75"
+				}
+				"medigun crit bullet percent bar deplete"
+				{
+					"attribute_class"	"medigun_crit_bullet_percent_bar_deplete"
+					"value" "0.03"
+				}
+				"medigun blast resist passive"
+				{
+					"attribute_class"	"medigun_blast_resist_passive"
+					"value" "0.1"
+				}
+				"medigun blast resist deployed"
+				{
+					"attribute_class"	"medigun_blast_resist_deployed"
+					"value" "0.75"
+				}
+				"medigun crit blast percent bar deplete"
+				{
+					"attribute_class"	"medigun_crit_blast_percent_bar_deplete"
+					"value" "0.75"
+				}
+				"medigun fire resist passive"
+				{
+					"attribute_class"	"medigun_fire_resist_passive"
+					"value" "0.1"
+				}
+				"medigun fire resist deployed"
+				{
+					"attribute_class"	"medigun_fire_resist_deployed"
+					"value" "0.75"
+				}
+				"medigun crit fire percent bar deplete"
+				{
+					"attribute_class"	"medigun_crit_fire_percent_bar_deplete"
+					"value" "0.01"
+				}
+				"obsolete ammo penalty"
+				{
+					"attribute_class"	"obsolete"
+					"value"	"0"
+				}
+			}
+			"visuals"
+			{
+				"player_bodygroups"
+				{
+					"medic_backpack"			"1"
+				}
+				"attached_models_festive"
+				{
+					"0"
+					{
+						"model"	"models/workshop/weapons/c_models/c_medigun_defense/c_medigun_defense_festivizer.mdl"
+					}
+				}
+			}
+			"visuals_red"
+			{
+				"skin" "0"
+				"custom_particlesystem"
+				{
+					"system"	"medicgun_beam_attrib_overheal_red"
+				}
+				"attached_models_festive"
+				{
+					"0"
+					{
+						"model"	"models/workshop/weapons/c_models/c_medigun_defense/c_medigun_defense_festivizer.mdl"
+					}
+				}
+			}
+			"visuals_blu"
+			{
+				"skin" "1"
+				"custom_particlesystem"
+				{
+					"system"	"medicgun_beam_attrib_overheal_blue"
+				}
+				"attached_models_festive"
+				{
+					"0"
+					{
+						"model"	"models/workshop/weapons/c_models/c_medigun_defense/c_medigun_defense_festivizer.mdl"
+					}
+				}
+			}
+			"mouse_pressed_sound"	"ui/item_heavy_gun_pickup.wav"
+			"drop_sound"		"ui/item_heavy_gun_drop.wav"
+		}
+
+		"60053"
 		{
 			"name"			"Vintage Tide Turner"
 			"first_sale_date"		"2014/06/18"
@@ -4786,7 +4851,7 @@
 			"moditem"	"1"
 			"item_type_name" 	"#TF_Wearable_Shield"
 			"item_name"		"#TF_TideTurner"
-			"item_description"	"#TF_Unique_Achievement_Shield_Desc"
+			"item_description"	"#TF_Unique_Achievement_Shield_Desc2"
 			"item_slot"		"secondary"
 			"equip_region"	"arms"
 			"anim_slot"		"FORCE_NOT_USED"
@@ -4851,7 +4916,7 @@
 			"drop_sound"		"ui/item_wood_pole_drop.wav"
 		}
 
-		"32054"
+		"60054"
 		{
 			"name"	"Vintage Panic Attack Shotgun"
 			"first_sale_date"	"2014/12/23"
@@ -4959,18 +5024,11 @@
 
 	"attributes"
 	{
-		"9001"
+		"16" // heal on hit for rapidfire
 		{
-			"name"	"heal on hit for rapidfire 2"
-			"attribute_class"	"add_onhit_addhealth2"
 			"description_string"	"#Attrib_HealOnHit_Positive2"
-			"description_format"	"value_is_additive"
-			"hidden"	"0"
-			"effect_type"	"positive"
-			"armory_desc"	"on_hit"
-			"stored_as_integer"	"0"
 		}
-		"9002"
+		"9001"
 		{
 			"name"	"set cloak is feign death 2"
 			"attribute_class"	"set_weapon_mode"
@@ -4981,7 +5039,7 @@
 			"armory_desc"	"cloak_type"
 			"stored_as_integer"	"0"
 		}
-		"9003"
+		"9002"
 		{
 			"name"	"mod bat launches balls 2"
 			"attribute_class"	"set_weapon_mode"
@@ -4991,7 +5049,7 @@
 			"effect_type"	"positive"
 			"stored_as_integer"	"0"
 		}
-		"9004"
+		"9003"
 		{
 			"name"	"mod mini-crit airborne 2"
 			"attribute_class"	"mini_crit_airborne"
@@ -5001,7 +5059,7 @@
 			"effect_type"	"positive"
 			"stored_as_integer"	"0"
 		}
-		"9005"
+		"9004"
 		{
 			"name"	"mod shovel damage boost 2"
 			"attribute_class"	"set_weapon_mode"
@@ -5011,7 +5069,7 @@
 			"effect_type"	"positive"
 			"stored_as_integer"	"0"
 		}
-		"9006"
+		"9005"
 		{
 			"name"	"jarate duration 2"
 			"attribute_class"	"jarate_duration"
@@ -5022,7 +5080,7 @@
 			"armory_desc"	"on_hit jarate"
 			"stored_as_integer"	"0"
 		}
-		"9007"
+		"9006"
 		{
 			"name"	"restore health on kill 2"
 			"attribute_class"	"restore_health_on_kill"
@@ -5032,7 +5090,7 @@
 			"effect_type"	"positive"
 			"stored_as_integer"	"0"
 		}
-		"9008"
+		"9007"
 		{
 			"name"	"honorbound 2"
 			"attribute_class"	"honorbound"
@@ -5042,7 +5100,7 @@
 			"effect_type"	"negative"
 			"stored_as_integer"	"0"
 		}
-		"9009"
+		"9008"
 		{
 			"name"	"air dash count 2"
 			"attribute_class"	"air_dash_count2"
@@ -5052,7 +5110,7 @@
 			"effect_type"	"positive"
 			"stored_as_integer"	"0"
 		}
-		"9010"
+		"9009"
 		{
 			"name"	"subtract victim medigun charge on hit 2"
 			"attribute_class"	"subtract_victim_medigun_charge_onhit2"
@@ -5063,7 +5121,7 @@
 			"armory_desc"	"on_hit"
 			"stored_as_integer"	"0"
 		}
-		"9011"
+		"9010"
 		{
 			"name"	"subtract victim cloak on hit 2"
 			"attribute_class"	"subtract_victim_cloak_on_hit2"
@@ -5073,7 +5131,7 @@
 			"effect_type"	"positive"
 			"stored_as_integer"	"0"
 		}
-		"9012"
+		"9011"
 		{
 			"name"	"melts in fire 2"
 			"attribute_class"	"melts_in_fire"
@@ -5083,7 +5141,7 @@
 			"effect_type"	"negative"
 			"stored_as_integer"	"0"
 		}
-		"9013"
+		"9012"
 		{
 			"name"	"become fireproof on hit by fire 2"
 			"attribute_class"	"become_fireproof_on_hit_by_fire"
@@ -5093,7 +5151,7 @@
 			"effect_type"	"positive"
 			"stored_as_integer"	"0"
 		}
-		"9014"
+		"9013"
 		{
 			"name"	"burn damage earns rage 2"
 			"attribute_class"	"burn_damage_earns_rage"
@@ -5103,7 +5161,7 @@
 			"effect_type"	"positive"
 			"stored_as_integer"	"0"
 		}
-		"9015"
+		"9014"
 		{
 			"name"	"damage bonus while undisguised"
 			"attribute_class"		"mult_dmg_undisguised"
@@ -5113,7 +5171,7 @@
 			"effect_type"	"positive"
 			"stored_as_integer"	"0"
 		}
-		"9016"
+		"9015"
 		{
 			"name"	"no primary ammo from dispensers"
 			"attribute_class"	"no_primary_ammo_from_dispensers2"	
@@ -5123,7 +5181,7 @@
 			"effect_type"	"negative"
 			"stored_as_integer"	"1"
 		}
-		"9017"
+		"9016"
 		{
 			"name"	"cleaver description 2"
 			"attribute_class"	"desc_cleaver_description"
@@ -5133,7 +5191,7 @@
 			"effect_type"	"positive"
 			"stored_as_integer"	"0"
 		}
-		"9018"
+		"9017"
 		{
 			"name"	"crit vs stunned players 2"
 			"attribute_class"	"or_crit_vs_playercond"
@@ -5143,7 +5201,7 @@
 			"effect_type"	"positive"
 			"stored_as_integer"	"0"
 		}
-		"9019"
+		"9018"
 		{
 			"name"	"single wep deploy time decreased 2"
 			"attribute_class"	"mult_single_wep_deploy_time"
@@ -5153,7 +5211,7 @@
 			"effect_type"	"positive"
 			"stored_as_integer"	"0"
 		}
-		"9020"
+		"9019"
 		{
 			"name"	"energy buff dmg taken multiplier HIDDEN"
 			"attribute_class"	"energy_buff_dmg_taken_multiplier"
