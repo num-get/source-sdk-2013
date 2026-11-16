@@ -3027,19 +3027,14 @@ void C_BasePlayer::BuildFirstPersonMeathookTransformations( CStudioHdr *hdr, Vec
 		{
 			C_TFPlayer *pLocalTFPlayer = C_TFPlayer::GetLocalTFPlayer();
 			CTFWeaponBase *pWeapon = pLocalTFPlayer->GetActiveTFWeapon();
-			if ( pLocalTFPlayer->GetFlags() & ( FL_ONGROUND ) && pLocalTFPlayer->IsDucked() )
-			{
-				if ( !( pLocalTFPlayer->IsPlayerClass( TF_CLASS_ENGINEER ) && pWeapon && pWeapon->GetWeaponID() != TF_WEAPON_BUILDER ) )
-					fFwd += 10.f;
 
-				if ( pLocalTFPlayer->IsPlayerClass( TF_CLASS_SPY ) || ( pLocalTFPlayer->IsPlayerClass( TF_CLASS_ENGINEER ) &&
-					pWeapon && pWeapon->GetWeaponID() != TF_WEAPON_BUILDER ) )
-					fFwd += 4.f;
-			}
-			else if ( pLocalTFPlayer->IsPlayerClass( TF_CLASS_SNIPER ) || pLocalTFPlayer->IsPlayerClass( TF_CLASS_MEDIC ) ||
-				pLocalTFPlayer->IsPlayerClass( TF_CLASS_HEAVYWEAPONS ) || pLocalTFPlayer->IsPlayerClass( TF_CLASS_SPY ) )
+			const bool bEngineer = pLocalTFPlayer->IsPlayerClass( TF_CLASS_ENGINEER ) && pWeapon && pWeapon->GetWeaponID() != TF_WEAPON_BUILDER;
+			const bool bSpy = pLocalTFPlayer->IsPlayerClass( TF_CLASS_SPY );
+			fFwd += RemapValClamped( pLocalTFPlayer->GetViewOffset().z, pLocalTFPlayer->GetClassEyeHeight().z, VEC_DUCK_VIEW_SCALED( pLocalTFPlayer ).z, 0.f, bEngineer ? 4.f : bSpy ? 14.f : 10.f );
+
+			if ( pLocalTFPlayer->GetClassEyeHeight().z == 75 )
 			{
-				fFwd += RemapValClamped( pLocalTFPlayer->GetAbsAngles().x, 65.f, 85.f, 10.f, 0.f );
+				fFwd += RemapValClamped( MainViewAngles().x, 65.f, 85.f, 10.f, 0.f );
 			}
 
 			if ( pLocalTFPlayer->IsPlayerClass( TF_CLASS_HEAVYWEAPONS ) && pWeapon && ( pWeapon->GetWeaponID() == TF_WEAPON_MINIGUN || pWeapon->GetWeaponID() == TF_WEAPON_SHOTGUN_HWG
