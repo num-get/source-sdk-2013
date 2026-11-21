@@ -170,6 +170,9 @@ public:
 
 	// Put renderables in the leaf into their appropriate lists.
 	virtual void CollateViewModelRenderables( CUtlVector< IClientRenderable * >& opaqueList, CUtlVector< IClientRenderable * >& translucentList ) = 0;
+#ifdef TF_CLIENT_DLL
+	virtual void CollateLegModelRenderables( CUtlVector< IClientRenderable * >& opaqueList, CUtlVector< IClientRenderable * >& translucentList ) = 0;
+#endif
 
 	// Call this to deactivate static prop rendering..
 	virtual void DrawStaticProps( bool enable ) = 0;

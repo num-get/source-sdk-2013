@@ -463,6 +463,13 @@ RenderGroup_t CEconWearable::GetRenderGroup()
 	if ( IsViewModelWearable() )
 		return RENDER_GROUP_VIEW_MODEL_TRANSLUCENT;
 
+#ifdef TF_CLIENT_DLL
+	C_TFPlayer *pLocalPlayer = C_TFPlayer::GetLocalTFPlayer();
+	CBasePlayer *pOwner = ToBasePlayer( GetOwnerEntity() );
+	if ( pOwner == pLocalPlayer && !pLocalPlayer->ShouldDrawLocalPlayer() && pLocalPlayer->ShouldDrawThisPlayer() && pLocalPlayer->InFirstPersonView() && !pLocalPlayer->IsTaunting() )
+		return RENDER_GROUP_LEG_MODEL;
+#endif
+
 	return BaseClass::GetRenderGroup();
 }
 

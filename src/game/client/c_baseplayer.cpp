@@ -2009,11 +2009,6 @@ bool C_BasePlayer::ShouldDrawThisPlayer()
 	}
 
 #ifdef TF_CLIENT_DLL
-	if ( CurrentViewID() == VIEW_REFRACTION || CurrentViewID() == VIEW_NONE )
-	{
-		return false;
-	}
-
 	if ( !UseVR() && ( cl_first_person_uses_world_model.GetBool() || ff_use_fp_legs.GetBool() ) )
 #else
 	if ( !UseVR() && cl_first_person_uses_world_model.GetBool() )
@@ -2039,8 +2034,9 @@ bool C_BasePlayer::ShouldDrawThisPlayer()
 //-----------------------------------------------------------------------------
 bool C_BasePlayer::ShouldDrawFirstPersonLegs()
 {
+	C_BasePlayer *pLocalPlayer = C_BasePlayer::GetLocalPlayer();
 	if (ff_use_fp_legs.GetBool())
-		return ( ShouldDrawThisPlayer() && InFirstPersonView() && DrawingMainView() && !cl_first_person_uses_world_model.GetBool() && !UseVR() );
+		return ( ShouldDrawThisPlayer() && InFirstPersonView() && ( DrawingMainView() || pLocalPlayer->IsObserver() ) && !cl_first_person_uses_world_model.GetBool() && !UseVR() );
 	
 	return false;
 }
@@ -2969,7 +2965,12 @@ void C_BasePlayer::BuildFirstPersonMeathookTransformations( CStudioHdr *hdr, Vec
 		return;
 	}
 
+#ifdef TF_CLIENT_DLL
+	C_BasePlayer *pLocalPlayer = C_BasePlayer::GetLocalPlayer();
+	if ( !DrawingMainView() && !pLocalPlayer->IsObserver() )
+#else
 	if ( !DrawingMainView() )
+#endif
 	{
 		return;
 	}
