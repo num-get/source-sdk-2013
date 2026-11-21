@@ -9287,6 +9287,14 @@ ShadowType_t C_TFPlayer::ShadowCastType( void )
 	return SHADOWS_RENDER_TO_TEXTURE_DYNAMIC;
 }
 
+RenderGroup_t C_TFPlayer::GetRenderGroup()
+{
+	if ( !ShouldDrawLocalPlayer() && ShouldDrawThisPlayer() && InFirstPersonView() && !IsTaunting() )
+		return RENDER_GROUP_LEG_MODEL;
+
+	return BaseClass::GetRenderGroup();
+}
+
 float g_flFattenAmt = 24.0;		// Roughly how far out the Heavy's minigun pokes out.
 void C_TFPlayer::GetShadowRenderBounds( Vector &mins, Vector &maxs, ShadowType_t shadowType )
 {

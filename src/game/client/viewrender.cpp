@@ -1161,6 +1161,124 @@ void CViewRender::DrawViewModels( const CViewSetup &viewRender, bool drawViewmod
 	pRenderContext->PopMatrix();
 }
 
+#ifdef TF_CLIENT_DLL
+//-----------------------------------------------------------------------------
+// Purpose: Actually draw the leg model
+// Input  : drawViewModel -
+//-----------------------------------------------------------------------------
+void CViewRender::DrawLegModels( const CViewSetup &viewRender, bool drawViewmodel )
+{
+	VPROF( "CViewRender::DrawViewModel" );
+	tmZone( TELEMETRY_LEVEL0, TMZF_NONE, "%s", __FUNCTION__ );
+
+#ifdef PORTAL //in portal, we'd like a copy of the front buffer without the gun in it for use with the depth doubler
+	g_pPortalRender->UpdateDepthDoublerTexture( viewRender );
+#endif
+
+	bool bShouldDrawPlayerViewModel = ShouldDrawViewModel( drawViewmodel );
+	bool bShouldDrawToolViewModels = ToolsEnabled();
+
+	CMatRenderContextPtr pRenderContext( materials );
+
+	PIXEVENT( pRenderContext, "DrawViewModels" );
+
+	// Restore the matrices
+	/*pRenderContext->MatrixMode( MATERIAL_PROJECTION );
+	pRenderContext->PushMatrix();
+
+	CViewSetup viewModelSetup( viewRender );
+	viewModelSetup.zNear = viewRender.zNearViewmodel;
+	viewModelSetup.zFar = viewRender.zFarViewmodel;
+	viewModelSetup.fov = viewRender.fovViewmodel;
+	viewModelSetup.m_flAspectRatio = engine->GetScreenAspectRatio();
+
+	ITexture *pRTColor = NULL;
+	ITexture *pRTDepth = NULL;
+	if( viewRender.m_eStereoEye != STEREO_EYE_MONO )
+	{
+		pRTColor = g_pSourceVR->GetRenderTarget( (ISourceVirtualReality::VREye)(viewRender.m_eStereoEye-1), ISourceVirtualReality::RT_Color );
+		pRTDepth = g_pSourceVR->GetRenderTarget( (ISourceVirtualReality::VREye)(viewRender.m_eStereoEye-1), ISourceVirtualReality::RT_Depth );
+	}
+
+	// Josh: Reset modulation color + blend
+	float one[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	render->SetColorModulation(	one );
+	render->SetBlend( 1.0f );
+
+	render->Push3DView( viewModelSetup, 0, pRTColor, GetFrustum(), pRTDepth );*/
+
+#ifdef PORTAL //the depth range hack doesn't work well enough for the portal mod (and messing with the depth hack values makes some models draw incorrectly)
+				//step up to a full depth clear if we're extremely close to a portal (in a portal environment)
+	extern bool LocalPlayerIsCloseToPortal( void ); //defined in C_Portal_Player.cpp, abstracting to a single bool function to remove explicit dependence on c_portal_player.h/cpp, you can define the function as a "return true" in other build configurations at the cost of some perf
+	bool bUseDepthHack = !LocalPlayerIsCloseToPortal();
+	if( !bUseDepthHack )
+		pRenderContext->ClearBuffers( false, true, false );
+#else
+	const bool bUseDepthHack = true;
+#endif
+
+	// FIXME: Add code to read the current depth range
+	float depthmin = 0.0f;
+	float depthmax = 1.0f;
+
+	// HACK HACK:  Munge the depth range to prevent view model from poking into walls, etc.
+	// Force clipped down range
+	if( bUseDepthHack )
+		pRenderContext->DepthRange( 0.1f + FLT_EPSILON, 0.2f );
+
+	if ( bShouldDrawPlayerViewModel || bShouldDrawToolViewModels )
+	{
+
+		CUtlVector< IClientRenderable * > opaqueLegModelList( 32 );
+		CUtlVector< IClientRenderable * > translucentLegModelList( 32 );
+
+		ClientLeafSystem()->CollateLegModelRenderables( opaqueLegModelList, translucentLegModelList );
+
+		if ( ToolsEnabled() && ( !bShouldDrawPlayerViewModel || !bShouldDrawToolViewModels ) )
+		{
+			int nOpaque = opaqueLegModelList.Count();
+			for ( int i = nOpaque-1; i >= 0; --i )
+			{
+				IClientRenderable *pRenderable = opaqueLegModelList[ i ];
+				bool bEntity = pRenderable->GetIClientUnknown()->GetBaseEntity();
+				if ( ( bEntity && !bShouldDrawPlayerViewModel ) || ( !bEntity && !bShouldDrawToolViewModels ) )
+				{
+					opaqueLegModelList.FastRemove( i );
+				}
+			}
+
+			int nTranslucent = translucentLegModelList.Count();
+			for ( int i = nTranslucent-1; i >= 0; --i )
+			{
+				IClientRenderable *pRenderable = translucentLegModelList[ i ];
+				bool bEntity = pRenderable->GetIClientUnknown()->GetBaseEntity();
+				if ( ( bEntity && !bShouldDrawPlayerViewModel ) || ( !bEntity && !bShouldDrawToolViewModels ) )
+				{
+					translucentLegModelList.FastRemove( i );
+				}
+			}
+		}
+
+		if ( !UpdateRefractIfNeededByList( opaqueLegModelList ) )
+		{
+			UpdateRefractIfNeededByList( translucentLegModelList );
+		}
+
+		DrawRenderablesInList( opaqueLegModelList );
+		DrawRenderablesInList( translucentLegModelList, STUDIO_TRANSPARENCY );
+	}
+
+	// Reset the depth range to the original values
+	if( bUseDepthHack )
+		pRenderContext->DepthRange( depthmin, depthmax );
+
+	/*render->PopView( GetFrustum() );
+
+	// Restore the matrices
+	pRenderContext->MatrixMode( MATERIAL_PROJECTION );
+	pRenderContext->PopMatrix();*/
+}
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -2158,6 +2276,9 @@ void CViewRender::RenderView( const CViewSetup &viewRender, int nClearFlags, int
 
 		// Now actually draw the viewmodel
 		DrawViewModels( viewRender, whatToDraw & RENDERVIEW_DRAWVIEWMODEL );
+#ifdef TF_CLIENT_DLL
+		DrawLegModels( viewRender, whatToDraw & RENDERVIEW_DRAWVIEWMODEL );
+#endif
 
 		DrawUnderwaterOverlay();
 

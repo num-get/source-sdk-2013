@@ -45,6 +45,9 @@ enum RenderGroup_t
 
 	RENDER_GROUP_OTHER,							// Unclassfied. Won't get drawn.
 
+#ifdef TF_CLIENT_DLL
+	RENDER_GROUP_LEG_MODEL,
+#endif
 	// This one's always gotta be last
 	RENDER_GROUP_COUNT
 };

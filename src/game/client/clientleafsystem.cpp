@@ -110,6 +110,9 @@ public:
 	virtual void SetRenderGroup( ClientRenderHandle_t handle, RenderGroup_t group );
 	virtual void ComputeTranslucentRenderLeaf( int count, const LeafIndex_t *pLeafList, const LeafFogVolume_t *pLeafFogVolumeList, int frameNumber, int viewID );
 	virtual void CollateViewModelRenderables( CUtlVector< IClientRenderable * >& opaque, CUtlVector< IClientRenderable * >& translucent );
+#ifdef TF_CLIENT_DLL
+	virtual void CollateLegModelRenderables( CUtlVector< IClientRenderable * >& opaque, CUtlVector< IClientRenderable * >& translucent );
+#endif
 	virtual void BuildRenderablesList( const SetupRenderInfo_t &info );
 			void CollateRenderablesInLeaf( int leaf, int worldListLeafIndex, const SetupRenderInfo_t &info );
 	virtual void DrawStaticProps( bool enable );
@@ -169,6 +172,15 @@ private:
 	// Adds, removes renderables from view model list
 	void AddToViewModelList( ClientRenderHandle_t handle );
 	void RemoveFromViewModelList( ClientRenderHandle_t handle );
+
+#ifdef TF_CLIENT_DLL
+	// Returns if it's a leg model render group
+	inline bool IsLegModelRenderGroup( RenderGroup_t group ) const;
+
+	// Adds, removes renderables from leg model list
+	void AddToLegModelList( ClientRenderHandle_t handle );
+	void RemoveFromLegModelList( ClientRenderHandle_t handle );
+#endif
 
 	// Insert translucent renderables into list of translucent objects
 	void InsertTranslucentRenderable( IClientRenderable* pRenderable,
@@ -315,6 +327,11 @@ private:
 
 	// List of renderables in view model render groups
 	CUtlVector< ClientRenderHandle_t >	m_ViewModels;
+
+#ifdef TF_CLIENT_DLL
+	// List of renderables in leg model render groups
+	CUtlVector< ClientRenderHandle_t >	m_LegModels;
+#endif
 
 	// Should I draw static props?
 	bool m_DrawStaticProps;
@@ -499,6 +516,9 @@ void CClientLeafSystem::LevelShutdownPreEntity()
 void CClientLeafSystem::LevelShutdownPostEntity()
 {
 	m_ViewModels.Purge();
+#ifdef TF_CLIENT_DLL
+	m_LegModels.Purge();
+#endif
 	m_Renderables.Purge();
 	m_RenderablesInLeaf.Purge();
 	m_Shadows.Purge();
@@ -635,6 +655,12 @@ void CClientLeafSystem::NewRenderable( IClientRenderable* pRenderable, RenderGro
 	{
 		AddToViewModelList( handle );
 	}
+#ifdef TF_CLIENT_DLL
+	if ( IsLegModelRenderGroup( (RenderGroup_t)info.m_RenderGroup ) )
+	{
+		AddToLegModelList( handle );
+	}
+#endif
 
 	pRenderable->RenderHandle() = handle;
 }
@@ -748,6 +774,13 @@ void CClientLeafSystem::RemoveRenderable( ClientRenderHandle_t handle )
 	{
 		RemoveFromViewModelList( handle );
 	}
+
+#ifdef TF_CLIENT_DLL
+	if ( IsLegModelRenderGroup( (RenderGroup_t)m_Renderables[handle].m_RenderGroup ) )
+	{
+		RemoveFromLegModelList( handle );
+	}
+#endif
 
 	RemoveFromTree( handle );
 	m_Renderables.Remove( handle );
@@ -1319,6 +1352,32 @@ void CClientLeafSystem::RemoveFromViewModelList( ClientRenderHandle_t handle )
 	m_ViewModels.FastRemove( i );
 }
 
+#ifdef TF_CLIENT_DLL
+//-----------------------------------------------------------------------------
+// Returns if it's a leg model render group
+//-----------------------------------------------------------------------------
+inline bool CClientLeafSystem::IsLegModelRenderGroup( RenderGroup_t group ) const
+{
+	return (group == RENDER_GROUP_LEG_MODEL);
+}
+
+//-----------------------------------------------------------------------------
+// Adds, removes renderables from leg model list
+//-----------------------------------------------------------------------------
+void CClientLeafSystem::AddToLegModelList( ClientRenderHandle_t handle )
+{
+	MEM_ALLOC_CREDIT();
+	Assert( m_LegModels.Find( handle ) == m_LegModels.InvalidIndex() );
+	m_LegModels.AddToTail( handle );
+}
+
+void CClientLeafSystem::RemoveFromLegModelList( ClientRenderHandle_t handle )
+{
+	int i = m_LegModels.Find( handle );
+	Assert( i != m_LegModels.InvalidIndex() );
+	m_LegModels.FastRemove( i );
+}
+#endif
 
 //-----------------------------------------------------------------------------
 // Call this to change the render group
@@ -1356,6 +1415,22 @@ void CClientLeafSystem::SetRenderGroup( ClientRenderHandle_t handle, RenderGroup
 			AddToViewModelList( handle );
 		}
 	}
+
+#ifdef TF_CLIENT_DLL
+	bool bOldLegModelRenderGroup = IsLegModelRenderGroup( (RenderGroup_t)pInfo->m_RenderGroup );
+	bool bNewLegModelRenderGroup = IsLegModelRenderGroup( group );
+	if ( bOldLegModelRenderGroup != bNewLegModelRenderGroup )
+	{
+		if ( bOldLegModelRenderGroup )
+		{
+			RemoveFromLegModelList( handle );
+		}
+		else
+		{
+			AddToLegModelList( handle );
+		}
+	}
+#endif
 
 	pInfo->m_RenderGroup = group;
 
@@ -1534,6 +1609,31 @@ void CClientLeafSystem::CollateViewModelRenderables( CUtlVector< IClientRenderab
 		}
 	}
 }
+
+#ifdef TF_CLIENT_DLL
+//-----------------------------------------------------------------------------
+// Purpose:
+// Input  : renderList -
+//			renderGroup -
+//-----------------------------------------------------------------------------
+void CClientLeafSystem::CollateLegModelRenderables( CUtlVector< IClientRenderable * >& opaque, CUtlVector< IClientRenderable * >& translucent )
+{
+	for ( int i = m_LegModels.Count()-1; i >= 0; --i )
+	{
+		ClientRenderHandle_t handle = m_LegModels[i];
+		RenderableInfo_t& renderable = m_Renderables[handle];
+
+		// NOTE: In some cases, this removes the entity from the view model list
+		renderable.m_pRenderable->ComputeFxBlend();
+
+		// That's why we need to test RENDER_GROUP_OPAQUE_ENTITY - it may have changed in ComputeFXBlend()
+		if ( renderable.m_RenderGroup == RENDER_GROUP_LEG_MODEL )
+		{
+			opaque.AddToTail( renderable.m_pRenderable );
+		}
+	}
+}
+#endif
 
 static RenderGroup_t DetectBucketedRenderGroup( RenderGroup_t group, float fDimension )
 {

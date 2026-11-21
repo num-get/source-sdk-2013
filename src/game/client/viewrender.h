@@ -439,6 +439,9 @@ private:
 	// Drawing primitives
 	bool			ShouldDrawViewModel( bool drawViewmodel );
 	void			DrawViewModels( const CViewSetup &view, bool drawViewmodel );
+#ifdef TF_CLIENT_DLL
+	void			DrawLegModels( const CViewSetup &view, bool drawViewmodel );
+#endif
 
 	void			PerformScreenSpaceEffects( int x, int y, int w, int h );
 

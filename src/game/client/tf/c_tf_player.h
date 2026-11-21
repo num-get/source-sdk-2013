@@ -479,6 +479,7 @@ public:
 	virtual void GetShadowRenderBounds( Vector &mins, Vector &maxs, ShadowType_t shadowType );
 	virtual void GetRenderBounds( Vector& theMins, Vector& theMaxs );
 	virtual bool GetShadowCastDirection( Vector *pDirection, ShadowType_t shadowType ) const;
+	virtual RenderGroup_t	GetRenderGroup();
 
 	CMaterialReference *GetInvulnMaterialRef( void ) { return &m_InvulnerableMaterial; }
 	bool IsNemesisOfLocalPlayer();
