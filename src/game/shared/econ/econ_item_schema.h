@@ -60,8 +60,10 @@ struct static_attrib_t
 	{
 		iDefIndex = 0;
 		m_value.asBlobPointer = NULL;
+#if defined( TF_DLL ) || defined( TF_CLIENT_DLL )
 		bShouldDelete = false;
 		bShouldRestore = false;
+#endif
 	}
 
 	~static_attrib_t()
@@ -72,14 +74,18 @@ struct static_attrib_t
 	{
 		iDefIndex = rhs.iDefIndex;
 		m_value = rhs.m_value;
+#if defined( TF_DLL ) || defined( TF_CLIENT_DLL )
 		bShouldDelete = false;
 		bShouldRestore = false;
+#endif
 	}
 
 	attrib_definition_index_t	iDefIndex;
 	attribute_data_union_t m_value;
+#if defined( TF_DLL ) || defined( TF_CLIENT_DLL )
 	bool bShouldDelete;
 	bool bShouldRestore;
+#endif
 
 	// Parses a single subsection from a multi-line attribute block that looks like:
 	//
@@ -1286,7 +1292,9 @@ public:
 	bool		IsImported( void ) const			{ return m_bImported; }
 	bool		IsAllowedInMatch( void ) const		{ return m_bAllowedInThisMatch; }
 	bool		IsBaseItem( void ) const			{ return m_bBaseItem; }
+#if defined( TF_DLL ) || defined( TF_CLIENT_DLL )
 	bool		IsModItem(void) const				{ return m_bModItem; }
+#endif
 	bool		IsBundle( void ) const				{ return m_BundleInfo != NULL; }
 	bool		HasProperName( void ) const			{ return m_bProperName; }
 	const char	*GetClassToken( void ) const		{ return m_pszClassToken; }
@@ -1607,7 +1615,9 @@ private:
 	bool			m_bHidden;
 	bool			m_bShouldShowInArmory;
 	bool			m_bBaseItem;
+#if defined( TF_DLL ) || defined( TF_CLIENT_DLL )
 	bool			m_bModItem;
+#endif
 	bool			m_bImported;
 
 	// A pack bundle is a bundle that contains items that are not for sale individually
@@ -2618,9 +2628,10 @@ public:
 	typedef CUtlMap<int, CEconItemDefinition*, int>	BaseItemDefinitionMap_t;
 	const BaseItemDefinitionMap_t &GetBaseItemDefinitionMap() const { return m_mapBaseItems; }
 
+#if defined( TF_DLL ) || defined( TF_CLIENT_DLL )
 	typedef CUtlMap<int, CEconItemDefinition*, int>	ModItemDefinitionMap_t;
 	const ModItemDefinitionMap_t& GetModItemDefinitionMap() const { return m_mapModItems; }
-
+#endif
 	typedef CUtlDict<CEconLootListDefinition *>	LootListDefinitionMap_t;
 	const LootListDefinitionMap_t &GetLootLists() const { return m_dictLootLists; }
 
@@ -2936,9 +2947,10 @@ private:
 	// List of all base items, is a sublist of mapItems
 	BaseItemDefinitionMap_t								m_mapBaseItems;
 
+#if defined( TF_DLL ) || defined( TF_CLIENT_DLL )
 	// Part of the mod... by BetaM
 	ModItemDefinitionMap_t								m_mapModItems;
-
+#endif
 #if defined(CLIENT_DLL) || defined(GAME_DLL)
 	// What is the default item definition we'll return in the client code if we can't find the correct one?
 	CEconItemDefinition								   *m_pDefaultItemDefinition;

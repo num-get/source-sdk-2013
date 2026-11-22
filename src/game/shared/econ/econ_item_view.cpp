@@ -445,9 +445,13 @@ GameItemDefinition_t *CEconItemView::GetStaticData( void ) const
 //-----------------------------------------------------------------------------
 int32 CEconItemView::GetQuality() const
 {
+#if defined( TF_DLL ) || defined( TF_CLIENT_DLL )
 	return GetOrigin() == kEconItemOrigin_Max
 		 ? GetItemQuality()
 		 : GetSOCData()
+#else
+	return GetSOCData()
+#endif
 		 ? GetSOCData()->GetQuality()
 #ifdef TF_CLIENT_DLL
 		 : GetFlags() & kEconItemFlagClient_StoreItem

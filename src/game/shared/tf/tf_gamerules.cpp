@@ -860,7 +860,6 @@ ConVar tf_sticky_radius_ramp_time( "tf_sticky_radius_ramp_time", "2.0", FCVAR_DE
 ConVar tf_sticky_airdet_radius( "tf_sticky_airdet_radius", "0.85", FCVAR_DEVELOPMENTONLY | FCVAR_CHEAT | FCVAR_REPLICATED, "Radius Scale if detonated in the air" );
 
 ConVar ff_minigun_spinup_penalty( "ff_minigun_spinup_penalty", "1", FCVAR_REPLICATED, "Apply damage and accuracy penalty on the minigun during the first second of spun-up time." );
-ConVar ff_sword_weapon_switch_penalty( "ff_sword_weapon_switch_penalty", "1", FCVAR_REPLICATED, "75% slower deploy and holster speed on sword weapons, must be set as a launch option for this command to be functional." );
 ConVar ff_use_new_grenade( "ff_use_new_grenade", "1", FCVAR_REPLICATED, "Uses the modern grenade explosion radius (146Hu) instead of the older ones (159Hu), direct hit will always deal full damage rather than depending on where the grenade struck the enemy." );
 ConVar ff_use_new_parachute( "ff_use_new_parachute", "1", FCVAR_REPLICATED, "Remove the parachute updraft effect while on fire, -25% max air velocity, cannot redeploy parachute." );
 ConVar ff_old_kamikaze( "ff_old_kamikaze", "0", FCVAR_REPLICATED, "Equipping the Rocket Jumper prevents self damage from the Kamikaze taunt kill." );
@@ -17229,14 +17228,16 @@ void CTFGameRules::SetUpVisionFilterKeyValues( void )
 	// No special vision
 	KeyValues *pKVFlag = new KeyValues( "0" );
 	pKVFlag->SetString( "flamethrower_rainbow_new_flame", "new_flame" );						
-	//pKVFlag->SetString( "flamethrower_rainbow_FP", "flamethrower" );
+	pKVFlag->SetString( "flamethrower_rainbow", "flamethrower" );
+	pKVFlag->SetString( "flamethrower_rainbow_FP", "flamethrower" );
 	pKVBlock->AddSubKey( pKVFlag );
 
 	// Pyrovision
 	pKVFlag = new KeyValues( "1" );		//TF_VISION_FILTER_PYRO
 	pKVFlag->SetString( "new_flame", "flamethrower_rainbow_new_flame");							// We weren't changing the default flamethrower previously; let's do that going forward
 	pKVFlag->SetString( "flamethrower_rainbow_new_flame", "flamethrower_rainbow_new_flame" );	// Rainblower defaults to rainbows and we want to ensure that we use it
-	//pKVFlag->SetString( "flamethrower_rainbow_FP", "flamethrower_rainbow_FP" );
+	pKVFlag->SetString( "flamethrower_rainbow", "flamethrower_rainbow" );
+	pKVFlag->SetString( "flamethrower_rainbow_FP", "flamethrower_rainbow_FP" );
 	pKVFlag->SetString( "projectile_fireball", "projectile_fireball_pyrovision" );
 	pKVFlag->SetString( "taunt_pyro_gasblast_fireblast", "taunt_pyro_gasblast_rainbow" );
 	pKVFlag->SetString( "burningplayer_blue", "burningplayer_rainbow_blue" );

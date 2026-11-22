@@ -353,10 +353,11 @@ CTFWearableItem::CTFWearableItem()
 //-----------------------------------------------------------------------------
 ShadowType_t CEconWearable::ShadowCastType()
 {
+#ifdef TF_CLIENT_DLL
 	CBasePlayer *pOwner = ToBasePlayer( GetOwnerEntity() );
 	if ( pOwner && !pOwner->ShouldDrawLocalPlayer() && pOwner->ShouldDrawFirstPersonLegs() )
 		return SHADOWS_NONE;
-
+#endif
 	if ( ShouldDraw() )
 	{
 		return SHADOWS_RENDER_TO_TEXTURE_DYNAMIC;
@@ -389,6 +390,7 @@ bool CEconWearable::ShouldDraw( void )
 	}
 	else
 	{
+#ifdef TF_CLIENT_DLL
 		if ( pPlayerOwner->ShouldDrawLocalPlayer() || !pPlayerOwner->ShouldDrawFirstPersonLegs() )
 		{
 			// Non-viewmodel mode.
@@ -397,6 +399,13 @@ bool CEconWearable::ShouldDraw( void )
 				return false;
 			}
 		}
+#else
+		// Non-viewmodel mode.
+		if ( IsViewModelWearable() )
+		{
+			return false;
+		}
+#endif
 	}
 
 	if ( !ShouldDrawWhenPlayerIsDead() && !pPlayerOwner->IsAlive() )

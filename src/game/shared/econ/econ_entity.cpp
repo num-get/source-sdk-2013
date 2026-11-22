@@ -1137,7 +1137,11 @@ void CEconEntity::UpdateAttachmentModels( void )
 	{
 		bool bShouldShowAttachment = false;
 		CBasePlayer *pOwner = ToBasePlayer( GetOwnerEntity() );
+#ifdef TF_CLIENT_DLL
 		if ( pOwner && ( !pOwner->ShouldDrawThisPlayer() || ( !pOwner->ShouldDrawLocalPlayer() && pOwner->ShouldDrawFirstPersonLegs() ) ) )
+#else
+		if ( pOwner && !pOwner->ShouldDrawThisPlayer() )
+#endif
 		{
 			// Drawing the viewmodel
 			bShouldShowAttachment = true;
@@ -1624,7 +1628,11 @@ void CEconEntity::UpdateSingleParticleSystem( bool bVisible, const attachedparti
 	bool bIsVM = false;
 	C_BasePlayer *pOwner = ToBasePlayer(GetOwnerEntity());
 	bool bDrawThisEffect = true;
+#ifdef TF_CLIENT_DLL
 	if ( !pOwner->ShouldDrawThisPlayer() || ( !pOwner->ShouldDrawLocalPlayer() && pOwner->ShouldDrawFirstPersonLegs() ) )
+#else
+	if ( !pOwner->ShouldDrawThisPlayer() )
+#endif
 	{
 		// only draw effects designated for this
 		if ( !pSystem->bDrawInViewModel )

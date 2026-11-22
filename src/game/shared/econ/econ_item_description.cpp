@@ -2666,9 +2666,8 @@ static bool IsItemEquipped( uint32 unAccountID, const CEconItemDefinition *pSear
 
 	CPlayerInventory *pInv = InventoryManager()->GetInventoryForAccount( unAccountID );
 
-	// If it does not have an account ID, just use the local inventory.
 	if ( !pInv )
-		pInv = InventoryManager()->GetLocalInventory();
+		return false;
 
 	for ( int i = 0; i < pInv->GetItemCount(); i++ )
 	{
@@ -2689,7 +2688,7 @@ static bool IsItemEquipped( uint32 unAccountID, const CEconItemDefinition *pSear
 		*ppFoundSetItemDef = pInvItemDef;
 		return true;
 	}
-
+#ifdef TF_CLIENT_DLL
 	// If it's not an item from base tf2, check for mod items.
 	for ( int i = 0; i < TFInventoryManager()->GetModItemCount(); i++)
 	{
@@ -2710,6 +2709,7 @@ static bool IsItemEquipped( uint32 unAccountID, const CEconItemDefinition *pSear
 		*ppFoundSetItemDef = pInvItemDef;
 		return true;
 	}
+#endif
 
 	return false;
 }

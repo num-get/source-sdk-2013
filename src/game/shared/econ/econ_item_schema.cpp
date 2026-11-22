@@ -2306,7 +2306,9 @@ m_bIsPackBundle( false ),
 m_pOwningPackBundle( NULL ),
 m_bIsPackItem( false ),
 m_bBaseItem( false ),
+#if defined( TF_DLL ) || defined( TF_CLIENT_DLL )
 m_bModItem( false ),
+#endif
 m_pszItemLogClassname( NULL ),
 m_pszItemIconClassname( NULL ),
 m_pszDatabaseAuditTable( NULL ),
@@ -3017,9 +3019,9 @@ const char *CEconItemSchema::FindStringTableEntry( const char *pszTableName, int
 #error "Need to add support for streamable weapons to this configuration, or disable streamable weapons here."
 #endif
 #endif // WITH_STREAMABLE_WEAPONS
-
-extern ConVar ff_sword_weapon_switch_penalty;
-
+#if defined( TF_DLL ) || defined( TF_CLIENT_DLL )
+ConVar ff_sword_weapon_switch_penalty( "ff_sword_weapon_switch_penalty", "1", FCVAR_REPLICATED, "75% slower deploy and holster speed on sword weapons, must be set as a launch option for this command to be functional." );
+#endif
 bool CEconItemDefinition::BInitFromKV( KeyValues *pKVItem, CUtlVector<CUtlString> *pVecErrors /* = NULL */ )
 {
 	// Set standard members
@@ -3180,7 +3182,9 @@ bool CEconItemDefinition::BInitFromKV( KeyValues *pKVItem, CUtlVector<CUtlString
 	m_bHidden = m_pKVItem->GetInt( "hidden", 0 ) != 0;
 	m_bShouldShowInArmory = m_pKVItem->GetInt( "show_in_armory", 0 ) != 0;
 	m_bBaseItem = m_pKVItem->GetInt( "baseitem", 0 ) != 0;
+#if defined( TF_DLL ) || defined( TF_CLIENT_DLL )
 	m_bModItem = m_pKVItem->GetInt("moditem", 0) != 0;
+#endif
 	m_pszItemLogClassname = m_pKVItem->GetString( "item_logname", NULL );
 	m_pszItemIconClassname = m_pKVItem->GetString( "item_iconname", NULL );
 	m_pszDatabaseAuditTable = m_pKVItem->GetString( "database_audit_table", NULL );
@@ -3329,12 +3333,13 @@ bool CEconItemDefinition::BInitFromKV( KeyValues *pKVItem, CUtlVector<CUtlString
 		}
 	}
 
+#if defined( TF_DLL ) || defined( TF_CLIENT_DLL )
 	bool bShouldRestore = true;
 	if ( V_stristr ( GetItemClass(), "tf_weapon_sword" ) )
 	{
 		bShouldRestore = false;
 	}
-
+#endif
 	// Single-line static attribute parsing.
 	{
 		KeyValues *pKVStaticAttrsKey = m_pKVItem->FindKey( "static_attrs" );
@@ -3345,6 +3350,7 @@ bool CEconItemDefinition::BInitFromKV( KeyValues *pKVItem, CUtlVector<CUtlString
 				static_attrib_t staticAttrib;
 
 				SCHEMA_INIT_SUBSTEP( staticAttrib.BInitFromKV_SingleLine( GetDefinitionName(), pKVKey, pVecErrors, false ) );
+#if defined( TF_DLL ) || defined( TF_CLIENT_DLL )
 				if ( !staticAttrib.bShouldDelete || ( staticAttrib.bShouldRestore && bShouldRestore ) )
 				{
 					m_vecStaticAttributes.AddToTail( staticAttrib );
@@ -3352,6 +3358,12 @@ bool CEconItemDefinition::BInitFromKV( KeyValues *pKVItem, CUtlVector<CUtlString
 					// Does this attribute specify a tag to apply to this item definition?
 					Assert( staticAttrib.GetAttributeDefinition() );
 				}
+#else
+				m_vecStaticAttributes.AddToTail( staticAttrib );
+
+				// Does this attribute specify a tag to apply to this item definition?
+				Assert( staticAttrib.GetAttributeDefinition() );
+#endif
 			}
 		}
 	}
@@ -3448,6 +3460,7 @@ bool static_attrib_t::BInitFromKV_MultiLine( const char *pszContext, KeyValues *
 
 		const char *pszValue = pKVAttribute->GetString( "value", NULL );
 
+#if defined( TF_DLL ) || defined( TF_CLIENT_DLL )
 		if ( !ff_sword_weapon_switch_penalty.GetBool() && V_stristr (pAttrDef->GetAttributeClass(), "is_a_sword") && strcmp(pszValue, "72") == 0 )
 		{
 			bShouldDelete = true;
@@ -3459,7 +3472,7 @@ bool static_attrib_t::BInitFromKV_MultiLine( const char *pszContext, KeyValues *
 		{
 			bShouldDelete = true;
 		}
-
+#endif
 		const bool bSuccessfullyLoadedValue = pAttrType->BConvertStringToEconAttributeValue( pAttrDef, pszValue, &m_value, true );
 
 		SCHEMA_INIT_CHECK(
@@ -3493,6 +3506,7 @@ bool static_attrib_t::BInitFromKV_SingleLine( const char *pszContext, KeyValues 
 
 		const char *pszValue = pKVAttribute->GetString();
 
+#if defined( TF_DLL ) || defined( TF_CLIENT_DLL )
 		if ( !ff_sword_weapon_switch_penalty.GetBool() && V_stristr (pAttrDef->GetAttributeClass(), "is_a_sword") && strcmp(pszValue, "72") == 0 )
 		{
 			bShouldDelete = true;
@@ -3504,7 +3518,7 @@ bool static_attrib_t::BInitFromKV_SingleLine( const char *pszContext, KeyValues 
 		{
 			bShouldDelete = true;
 		}
-
+#endif
 		const bool bSuccessfullyLoadedValue = pAttrType->BConvertStringToEconAttributeValue( pAttrDef, pszValue, &m_value, bEnableTerribleBackwardsCompatibilitySchemaParsingCode );
 
 		SCHEMA_INIT_CHECK(
@@ -3847,7 +3861,9 @@ CEconItemSchema::CEconItemSchema( )
 ,	m_mapToolsItems( DefLessFunc(int) )
 ,	m_mapPaintKitTools( DefLessFunc(uint32) )
 ,	m_mapBaseItems( DefLessFunc(int) )
+#if defined( TF_DLL ) || defined( TF_CLIENT_DLL )
 ,	m_mapModItems( DefLessFunc(int) )
+#endif
 ,	m_unVersion( 0 )
 #if defined(CLIENT_DLL) || defined(GAME_DLL)
 ,	m_pDefaultItemDefinition( NULL )
@@ -4342,7 +4358,9 @@ void CEconItemSchema::Reset( void )
 	m_mapToolsItems.Purge();
 	m_mapPaintKitTools.Purge();
 	m_mapBaseItems.Purge();
+#if defined( TF_DLL ) || defined( TF_CLIENT_DLL )
 	m_mapModItems.Purge();
+#endif
 	m_mapRecipes.PurgeAndDeleteElements();
 	m_vecTimedRewards.Purge();
 	m_dictItemSets.PurgeAndDeleteElements();
@@ -4462,8 +4480,11 @@ bool CEconItemSchema::BInitTextBuffer( CUtlBuffer &buffer, CUtlVector<CUtlString
 
 	Reset();
 	m_pKVRawDefinition = new KeyValues( "CEconItemSchema" );
-	//if ( m_pKVRawDefinition->LoadFromBuffer( NULL, buffer ) )
+#if defined( TF_DLL ) || defined( TF_CLIENT_DLL )
 	if ( m_pKVRawDefinition->LoadFromFile( g_pFullFileSystem, "scripts/items/items_custom.txt", "GAME" ) )
+#else
+	if ( m_pKVRawDefinition->LoadFromBuffer( NULL, buffer ) )
+#endif
 	{
 		return BInitSchema( m_pKVRawDefinition, pVecErrors )
 			&& BPostSchemaInit( pVecErrors );
@@ -5318,7 +5339,9 @@ bool CEconItemSchema::BInitItems( KeyValues *pKVItems, CUtlVector<CUtlString> *p
 	m_mapToolsItems.Purge();
 	m_mapPaintKitTools.Purge();
 	m_mapBaseItems.Purge();
+#if defined( TF_DLL ) || defined( TF_CLIENT_DLL )
 	m_mapModItems.Purge();
+#endif
 	m_vecBundles.Purge();
 	m_mapQuestObjectives.PurgeAndDeleteElements();
 
@@ -5388,10 +5411,12 @@ bool CEconItemSchema::BInitItems( KeyValues *pKVItems, CUtlVector<CUtlString> *p
 				{
 					m_mapBaseItems.Insert( nItemIndex, pItemDef );
 				}
+#if defined( TF_DLL ) || defined( TF_CLIENT_DLL )
 				if ( pItemDef->IsModItem() )
 				{
 					m_mapModItems.Insert(nItemIndex, pItemDef);
 				}
+#endif
 
 				// Cache off bundles for the link phase below.
 				if ( pItemDef->IsBundle() )
